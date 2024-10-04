@@ -33,22 +33,24 @@ const isPasswordVisible = ref(false)
               width="50"
               height="50"
             />
-            <h1 class="font-weight-bold">
+            <h1
+              class="font-weight-bold"
+            >
               StaySearch
             </h1>
           </RouterLink>
         </v-card-item>
         <v-card-text class="pt-2 px-10">
           <h2 class="mb-1">
-            Welcome to StaySearch! 👋🏻
+            Adventure starts here 🚀
           </h2>
           <p class="mb-0 text-disabled">
-            Please sign-in to your account and start searching.
+            Make your search for boarding houses easy and fast!
           </p>
         </v-card-text>
-        <v-form @submit.prevent="() => {}">
+          <v-form @submit.prevent="() => {}">
           <v-row no-gutters>
-            <v-col cols="12">
+            <v-col>
               <v-select
                 class="px-10"
                 color="green-darken-1"
@@ -59,18 +61,31 @@ const isPasswordVisible = ref(false)
               ></v-select>
             </v-col>
             <!-- Username -->
-            <v-col cols="12" >
+            <v-col cols="12">
               <v-text-field
                 class="px-10"
                 color="green-darken-1"
                 v-model="form.username"
-                label="Username or Email"
-                placeholder="johndoe or johndoe@email.com"
+                label="Username"
+                placeholder="Johndoe"
                 variant="outlined"
               />
             </v-col>
+            <!-- email -->
+            <v-col cols="12">
+              <v-text-field
+                class="px-10"
+                color="green-darken-1"
+                v-model="form.email"
+                label="Email"
+                placeholder="johndoe@email.com"
+                type="email"
+                variant="outlined"
+              />
+            </v-col>
+
             <!-- password -->
-            <v-col cols="12" class="text-center">
+            <v-col cols="12">
               <v-text-field
                 class="px-10"
                 color="green-darken-1"
@@ -99,12 +114,12 @@ const isPasswordVisible = ref(false)
               cols="12"
               class="text-center text-base pt-10"
             >
-              <span class="text-disabled">New on our platform?</span>
+              <span class="text-disabled">Already have an account?</span>
               <RouterLink
                 style="text-decoration: none;color: green;"
                 class="ms-2"
-                to="signup"
-              >Create an account
+                to="login"
+              >Sign in instead
               </RouterLink>
             </v-col>
 
@@ -140,6 +155,7 @@ const isPasswordVisible = ref(false)
                   </v-icon>
                 </v-btn>
               </div>
+
             </v-col>
           </v-row>
         </v-form>
@@ -151,5 +167,11 @@ const isPasswordVisible = ref(false)
 </template>
 
 
-
+<style>
+.icon-circle {
+  background-color: black;
+  border-radius: 50%;
+  padding: 23px;
+}
+</style>
 
