@@ -90,7 +90,7 @@ const isPasswordVisible = ref(false)
                 type="submit"
                 to="/"
               >
-                Sign up
+                Login
               </v-btn>
             </v-col>
 
