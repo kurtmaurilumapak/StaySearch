@@ -1,26 +1,47 @@
 
 <template>
   <v-app>
-    
     <!-- Navigation Bar -->
     <v-app-bar app dark class="navbar"
-    color="rgba(0, 0, 0)"
-    density="comfortable"
-    elavation="10"
-    flat
-    floating
+      color="rgba(0, 0, 0)"
+      density="comfortable"
+      elevation="10"
+      flat
+      floating
     >
       <v-toolbar-title>
         <h3>StaySearch</h3>
       </v-toolbar-title>
+
       <v-spacer></v-spacer>
-      
-      <v-spacer></v-spacer>
-      <v-btn text @click="scrollToSection('home')">Home</v-btn>
-      <v-btn text @click="scrollToSection('gallery')">Accomodations</v-btn>
-      <v-btn text @click="scrollToSection('about')">About us</v-btn>
-      <v-btn text @click="$router.push({ name: 'signup' })">Sign up</v-btn>
+
+
+      <v-btn text class="d-none d-md-flex" @click="scrollToSection('home')">Home</v-btn>
+      <v-btn text class="d-none d-md-flex" @click="scrollToSection('gallery')">Accommodations</v-btn>
+      <v-btn text class="d-none d-md-flex" @click="scrollToSection('about')">About us</v-btn>
+      <v-btn text class="d-none d-md-flex" @click="$router.push({ name: 'signup' })" style="background-color: green;">Sign up</v-btn>
+
+      <v-app-bar-nav-icon class="d-flex d-md-none" @click="drawer = !drawer"></v-app-bar-nav-icon>
+
     </v-app-bar>
+
+
+    <v-navigation-drawer v-model="drawer" app temporary class="drawer" color="black">
+      <v-list>
+        <v-list-item @click="scrollToSection('home')">
+          <v-list-item-title>Home</v-list-item-title>
+        </v-list-item>
+        <v-list-item @click="scrollToSection('gallery')">
+          <v-list-item-title>Accommodations</v-list-item-title>
+        </v-list-item>
+        <v-list-item @click="scrollToSection('about')">
+          <v-list-item-title>About us</v-list-item-title>
+        </v-list-item>
+        <v-list-item @click="$router.push({ name: 'signup' })" style="background-color: green;">
+          <v-list-item-title>Sign up</v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
 
     <!-- Hero Section -->
     <v-container fluid class="hero" id="home">
@@ -35,7 +56,7 @@
 </v-container>
 
     <!-- Services Section -->
-    <v-container fluid class="gallery pa-4 text-center" id="gallery">
+    <v-container fluid class="pa-4 text-center" id="gallery">
   <v-row
     align="center"
     class="fill-height"
@@ -46,7 +67,7 @@
         cols="12"
         md="4"
       >
-      <v-hover class="galleryItem" v-slot="{ isHovering, props }">
+      <v-hover v-slot="{ isHovering, props }">
           <v-card :class="{ 'on-hover': isHovering }"
             :elevation="isHovering ? 20 : 2"
           
@@ -78,6 +99,8 @@
       <v-img :src="selectedImage" aspect-ratio="16/9" class="clear-modal-image"></v-img>
       <v-card-actions>
         <v-spacer></v-spacer>
+        <v-btn text color="green-darken-2">View Details</v-btn>
+
         <v-btn color="primary" @click="dialog = false">Close</v-btn>
       </v-card-actions>
     </v-card>
@@ -129,6 +152,7 @@ export default {
   data: () => ({
     dialog: false, // Controls the dialog visibility
     selectedImage: null, // Stores the selected image for the moda
+    drawer: false,
     items: [
       {
         title: 'Jays Boarding House',
@@ -192,12 +216,13 @@ export default {
     transparent: 'rgba(255, 255, 255, 0)',
   }),
   methods: {
-  scrollToSection(sectionId) {
-    const section = document.getElementById(sectionId);
-    if (section) {
-      section.scrollIntoView({ behavior: 'smooth' });
-    }
-  },
+    scrollToSection(sectionId) {
+      const section = document.getElementById(sectionId);
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth' });
+        this.drawer = false;
+      }
+    },
   openModal(image) {
   this.selectedImage = image; // Set the clicked image
   this.dialog = true; // Open the dialog
@@ -207,16 +232,16 @@ export default {
 </script>
 <style scoped>
 .hero {
-  background-image: url('https://i.pinimg.com/originals/e3/81/8f/e3818ff238b67c0863dcce505d3be4b4.gif');
+  background-image: url('https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExZDF1YjNzZjFsemVubDV3OW15aWRjOHdvN21zZ2dxaTQzZGFhdjNuaiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/82jROlcRerLJeBni9u/giphy.gif');
 height: 100vh;
 background-size: cover;
 background-position: center;
-animation: slideshow 15s infinite ease-in-out; /* 15s for each transition */
+
 }
 
 /* Keyframes for sliding backgrounds */
 
-.gallery {
+#gallery {
   background-color: #388e3c;
 }
 .gallery h2 {
@@ -229,13 +254,14 @@ animation: slideshow 15s infinite ease-in-out; /* 15s for each transition */
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
-.navbar {
-  align-items: center;  
-}
 .navbar h3{
   color: #B9F6CA;
 }
 .navbar .v-btn:hover{
+  background-color: #B9F6CA;
+  color: black;
+}
+.drawer .v-list-item {
   background-color: #B9F6CA;
   color: black;
 }
