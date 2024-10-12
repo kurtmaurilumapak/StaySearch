@@ -98,7 +98,7 @@ const passwordRules = [
             >
               <v-btn-toggle
                 v-model="user"
-                class="my-auto border border-2"
+                class="my-auto border"
                 color="green-darken-1"
               >
                 <v-btn value="student">Student</v-btn>
