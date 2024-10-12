@@ -19,7 +19,7 @@
       <v-btn text @click="scrollToSection('home')">Home</v-btn>
       <v-btn text @click="scrollToSection('gallery')">Accomodations</v-btn>
       <v-btn text @click="scrollToSection('about')">About us</v-btn>
-      <v-btn text @click="$router.push({ name: 'register' })">Sign up</v-btn>
+      <v-btn text @click="$router.push({ name: 'signup' })">Sign up</v-btn>
     </v-app-bar>
 
     <!-- Hero Section -->
@@ -29,7 +29,7 @@
   <h1 class="display-2 font-weight-bold mb-3 text-center text-h3" color="black">
     Search for a Boarding House near Caraga State University
   </h1>
-  <v-btn color="green-darken-1" class="mt-5" large @click="$router.push({ name: 'register' })">Find</v-btn>
+  <v-btn color="green-darken-1" class="mt-5" large @click="$router.push({ name: 'signup' })">Find</v-btn>
 </v-col>
 </v-row>
 </v-container>
