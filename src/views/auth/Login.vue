@@ -7,9 +7,10 @@ const form = ref({
   username: '',
   email: '',
   password: '',
-  privacyPolicies: false,
 })
-const isPasswordVisible = ref(false)
+const visible = ref(false)
+const user = ref('student')
+
 </script>
 
 
@@ -48,15 +49,19 @@ const isPasswordVisible = ref(false)
         </v-card-text>
         <v-form @submit.prevent="() => {}">
           <v-row no-gutters>
-            <v-col cols="12">
-              <v-select
-                class="px-10"
+            <!-- User Type -->
+            <v-col
+              cols="12"
+              class="d-flex justify-center py-5"
+            >
+              <v-btn-toggle
+                v-model="user"
+                class="my-auto border border-2"
                 color="green-darken-1"
-                clearable
-                label="User Type"
-                :items="['Student', 'House Owner']"
-                variant="outlined"
-              ></v-select>
+              >
+                <v-btn value="student">Student</v-btn>
+                <v-btn value="house_owner">House Owner</v-btn>
+              </v-btn-toggle>
             </v-col>
             <!-- Username -->
             <v-col cols="12" >
@@ -78,9 +83,9 @@ const isPasswordVisible = ref(false)
                 label="Password"
                 placeholder="············"
                 variant="outlined"
-                :type="isPasswordVisible ? 'text' : 'password'"
-                :append-inner-icon="isPasswordVisible ? 'ri-eye-off-line' : 'ri-eye-line'"
-                @click:append-inner="isPasswordVisible = !isPasswordVisible"
+                :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
+                :type="visible ? 'text' : 'password'"
+                @click:append-inner="visible = !visible"
               />
             </v-col>
             <v-col cols="12" class="text-center pt-5">
@@ -101,8 +106,8 @@ const isPasswordVisible = ref(false)
             >
               <span class="text-disabled">New on our platform?</span>
               <RouterLink
-                style="text-decoration: none;color: green;"
-                class="ms-2"
+                style="text-decoration: none;color: mediumseagreen;"
+                class="ms-2 font-weight-bold"
                 to="signup"
               >Create an account
               </RouterLink>
@@ -123,17 +128,26 @@ const isPasswordVisible = ref(false)
               class="text-center pt-5"
             >
               <div style="display: flex; gap: 8px; justify-content: center;">
-                <v-btn fab icon @click="signupWithGoogle">
+                <v-btn
+                  @click="signupWithGoogle"
+                  color= "white"
+                  size="x-large"
+                >
                   <v-icon
+                    class="font-weight-black"
                     color="red-darken-1"
                     size="x-large"
                   >
                     mdi-google
                   </v-icon>
                 </v-btn>
-                <v-btn fab icon @click="signupWithFacebook">
+                <v-btn
+                  @click="signupWithFacebook"
+                  color="blue-accent-3"
+                  size="x-large"
+                >
                   <v-icon
-                    color="blue-darken-1"
+                    color="white"
                     size="x-large"
                   >
                     mdi-facebook
