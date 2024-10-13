@@ -99,16 +99,16 @@
       <v-img :src="selectedImage" aspect-ratio="16/9" class="clear-modal-image"></v-img>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn text color="green-darken-2">View Details</v-btn>
+        <v-btn text style="background-color: #388E3C;">View Details</v-btn>
 
-        <v-btn color="primary" @click="dialog = false">Close</v-btn>
+        <v-btn color="primary" @click="dialog = false" style="border: 1cap solid;">Close</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </v-container>
     
 
-    <!-- Testimonials Section -->
+    <!-- About Section -->
     <v-container id="about" class="py-16 text-center">
 <h2>About StaySearch</h2>
 <v-row>
@@ -131,7 +131,10 @@
               <v-img :src="developer.avatar"></v-img>
             </v-avatar>
             <h4 class="mt-3">{{ developer.name }}</h4>
-            <p>"{{ developer.text }}"</p>
+            <v-btn :href="'https://' + developer.text" target="_blank">
+              <v-icon >
+                mdi-facebook </v-icon>
+            </v-btn>
 
           </v-card>
         </v-col>
@@ -198,19 +201,19 @@ export default {
     ],
     developers: [
       {
-        avatar: 'https://cdn.myanimelist.net/r/200x268/images/characters/15/428959.jpg?s=2f0400dfeada369839a11506464bafe4',
+        avatar: 'https://scontent.fcgy3-1.fna.fbcdn.net/v/t1.30497-1/453178253_471506465671661_2781666950760530985_n.png?stp=dst-png_s200x200&_nc_cat=1&ccb=1-7&_nc_sid=136b72&_nc_eui2=AeHJVnJ4u6QE_dM-TsXgfPAoWt9TLzuBU1Ba31MvO4FTUAdwZh5ICdR8uLsn7jJLylhCHbRWn1alp9fwITHM-zq0&_nc_ohc=dmcmeAdPEz4Q7kNvgHCkDfv&_nc_ht=scontent.fcgy3-1.fna&_nc_gid=AZ8MNjum2RFA_IKRAzdm0ia&oh=00_AYAGR0f142ly1oJyrvSvvK6KuaRwrc2F3dt9100FJQtKGQ&oe=67334FFA',
         name: 'Ainor Jamal',
-        text: 'BUGO'
+        text: 'facebook.com/ainor.jamal.9'
       },
       {
-        avatar: 'https://cdn.myanimelist.net/r/200x268/images/characters/15/428959.jpg?s=2f0400dfeada369839a11506464bafe4',
+        avatar: 'https://scontent.fcgy3-1.fna.fbcdn.net/v/t39.30808-6/278384899_1621300201553680_3154144050592710379_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHsBnhZi4UpGCrhq0qd-lwfv5Dt5lRqKfS_kO3mVGop9DTxJ245b2ubBmWxO4K_HLXTc7a4YFEVtq5DcDc6Lb5c&_nc_ohc=xfX8FgVR47oQ7kNvgHy58zC&_nc_ht=scontent.fcgy3-1.fna&_nc_gid=A1aG7GYvqR0C54fFMBbZ5cA&oh=00_AYBw9KV3AVAbtqQO-a0gQmlrE7ka-3_0EstU0jW6PQyqJA&oe=6711A121',
         name: 'Kurt Lumapak',
-        text: 'GwaPo'
+        text: 'facebook.com/kurtniezas01'
       },
       {
-        avatar: 'https://cdn.myanimelist.net/r/200x268/images/characters/15/428959.jpg?s=2f0400dfeada369839a11506464bafe4',
+        avatar: 'https://scontent.fcgy3-1.fna.fbcdn.net/v/t39.30808-1/414713350_1645837936165455_7931494424647193135_n.jpg?stp=dst-jpg_s200x200&_nc_cat=110&ccb=1-7&_nc_sid=0ecb9b&_nc_eui2=AeEl3wjtqx1mASZbbPom193vV2fpz0Tp331XZ-nPROnffdDt3iJ611emik_tOX2RN9jaVYVguJHMa4FVhcPSf4Sa&_nc_ohc=EWQMoAQT-48Q7kNvgHQbn9I&_nc_ht=scontent.fcgy3-1.fna&_nc_gid=A0PwDMkACWw0xqLPJUcOr_B&oh=00_AYDpYWxne7w_cv2ZXbr93q0Qnqg1Bq3a3uk9bX4LBZUggg&oe=6711B1BA',
         name: 'Harold Florendo',
-        text: 'bright'
+        text: 'facebook.com/harold.florendo.777'
       },
     ],
     transparent: 'rgba(255, 255, 255, 0)',
@@ -282,5 +285,8 @@ background-color: rgba(255, 255, 255, 1); /* Ensure modal background is solid */
 
 .show-btns {
   color: rgba(255, 255, 255, 1) !important;
+}
+#aboutus .v-btn {
+  border-radius: 50%;
 }
 </style>
