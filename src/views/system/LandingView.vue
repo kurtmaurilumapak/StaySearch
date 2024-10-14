@@ -3,14 +3,32 @@
   <v-app>
     <!-- Navigation Bar -->
     <v-app-bar app dark class="navbar"
-      color="rgba(0, 0, 0)"
-      density="comfortable"
-      elevation="10"
-      flat
-      floating
+               color="rgba(0, 0, 0)"
+               density="comfortable"
+               elevation="10"
+               flat
+               floating
     >
       <v-toolbar-title>
-        <h3>StaySearch</h3>
+        <div
+          style="text-decoration: none;color: inherit;"
+          to="/"
+          class="d-flex align-center gap-3"
+        >
+          <img
+            src="@/assets/logo.png"
+            alt="Logo"
+            width="40"
+            height="40"
+            @click="scrollToSection('home')"
+          />
+          <h2
+            class="font-weight-bold cursor-default"
+            @click="scrollToSection('home')"
+          >
+            StaySearch
+          </h2>
+        </div>
       </v-toolbar-title>
 
       <v-spacer></v-spacer>
@@ -19,7 +37,7 @@
       <v-btn text class="d-none d-md-flex" @click="scrollToSection('home')">Home</v-btn>
       <v-btn text class="d-none d-md-flex" @click="scrollToSection('gallery')">Accommodations</v-btn>
       <v-btn text class="d-none d-md-flex" @click="scrollToSection('about')">About us</v-btn>
-      <v-btn text class="d-none d-md-flex" @click="$router.push({ name: 'signup' })" style="background-color: green;">Sign up</v-btn>
+      <v-btn text class="d-none d-md-flex ml-5 mr-5" @click="$router.push({ name: 'signup' })" style="background-color: green;">Sign up</v-btn>
 
       <v-app-bar-nav-icon class="d-flex d-md-none" @click="drawer = !drawer"></v-app-bar-nav-icon>
 
@@ -45,83 +63,83 @@
 
     <!-- Hero Section -->
     <v-container fluid class="hero" id="home">
-<v-row class="fill-height align-center justify-center text-center">
-<v-col>
-  <h1 class="display-2 font-weight-bold mb-3 text-center text-h3" color="black">
-    Search for a Boarding House near Caraga State University
-  </h1>
-  <v-btn color="green-darken-1" class="mt-5" large @click="$router.push({ name: 'signup' })">Find</v-btn>
-</v-col>
-</v-row>
-</v-container>
+      <v-row class="fill-height align-center justify-center text-center">
+        <v-col>
+          <h1 class="display-2 font-weight-bold mb-3 text-center text-h3" color="black">
+            Search for a Boarding House near Caraga State University
+          </h1>
+          <v-btn size="x-large" color="green-darken-1" class="mt-5 px-10" large @click="$router.push({ name: 'signup' })">Find</v-btn>
+        </v-col>
+      </v-row>
+    </v-container>
 
     <!-- Services Section -->
     <v-container fluid class="pa-4 text-center" id="gallery">
-  <v-row
-    align="center"
-    class="fill-height"
-    justify="center"
-  >
-    <template v-for="(item, i) in items" :key="i">
-      <v-col
-        cols="12"
-        md="4"
+      <v-row
+        align="center"
+        class="fill-height"
+        justify="center"
       >
-      <v-hover v-slot="{ isHovering, props }">
-          <v-card :class="{ 'on-hover': isHovering }"
-            :elevation="isHovering ? 20 : 2"
-          
-            v-bind="props"
-            @click="openModal(item.img)"
-            
+        <template v-for="(item, i) in items" :key="i">
+          <v-col
+            cols="12"
+            md="4"
           >
-          
-            <v-img
-            
-              :src="item.img"
-              height="255px"
-              cover       
-            >
-              <v-card-title class="text-h6 text-white d-flex flex-column">
-                <p class="mt-21">
-                  {{ item.title }}
-                </p>
-              </v-card-title>
-            </v-img>
-            
-          </v-card>
-      </v-hover>
-      </v-col>
-    </template>
-  </v-row>
-  <v-dialog v-model="dialog" max-width="600px">
-    <v-card style="opacity: 1;">
-      <v-img :src="selectedImage" aspect-ratio="16/9" class="clear-modal-image"></v-img>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn text style="background-color: #388E3C;">View Details</v-btn>
+            <v-hover v-slot="{ isHovering, props }">
+              <v-card :class="{ 'on-hover': isHovering }"
+                      :elevation="isHovering ? 20 : 2"
 
-        <v-btn color="primary" @click="dialog = false" style="border: 1cap solid;">Close</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
-</v-container>
-    
+                      v-bind="props"
+                      @click="openModal(item.img)"
+
+              >
+
+                <v-img
+
+                  :src="item.img"
+                  height="255px"
+                  cover
+                >
+                  <v-card-title class="text-h6 text-white d-flex flex-column">
+                    <p class="mt-21">
+                      {{ item.title }}
+                    </p>
+                  </v-card-title>
+                </v-img>
+
+              </v-card>
+            </v-hover>
+          </v-col>
+        </template>
+      </v-row>
+      <v-dialog v-model="dialog" max-width="600px">
+        <v-card style="opacity: 1;">
+          <v-img :src="selectedImage" aspect-ratio="16/9" class="clear-modal-image"></v-img>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn text style="background-color: #388E3C;">View Details</v-btn>
+
+            <v-btn color="primary" @click="dialog = false" style="border: 1cap solid;">Close</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-container>
+
 
     <!-- About Section -->
     <v-container id="about" class="py-16 text-center">
-<h2>About StaySearch</h2>
-<v-row>
-<v-col cols="12" md="8" class="mx-auto">
-  <p class="text-h6">
-    StaySearch is a web platform designed to help students and residents find affordable and accessible boarding houses near Caraga State University (CSU). We strive to simplify the process of finding the perfect place to stay by offering a comprehensive list of available options. Our goal is to connect boarders with safe, convenient, and budget-friendly accommodations, ensuring they have a comfortable living experience while studying at CSU.
-  </p>
-  <p class="text-h6">
-    Whether you’re a new student or a returning one, StaySearch makes it easy for you to find a home away from home. Our platform provides detailed information on boarding houses, including location, amenities, and pricing, to help you make an informed decision. StaySearch is more than just a listing site — it's your go-to guide for student housing around CSU.
-  </p>
-</v-col>
-</v-row>
-</v-container>
+      <h2>About StaySearch</h2>
+      <v-row>
+        <v-col cols="12" md="8" class="mx-auto">
+          <p class="text-h6">
+            StaySearch is a web platform designed to help students and residents find affordable and accessible boarding houses near Caraga State University (CSU). We strive to simplify the process of finding the perfect place to stay by offering a comprehensive list of available options. Our goal is to connect boarders with safe, convenient, and budget-friendly accommodations, ensuring they have a comfortable living experience while studying at CSU.
+          </p>
+          <p class="text-h6">
+            Whether you’re a new student or a returning one, StaySearch makes it easy for you to find a home away from home. Our platform provides detailed information on boarding houses, including location, amenities, and pricing, to help you make an informed decision. StaySearch is more than just a listing site — it's your go-to guide for student housing around CSU.
+          </p>
+        </v-col>
+      </v-row>
+    </v-container>
     <v-container id="aboutus" class="py-16 text-center">
       <h2>Developers</h2>
       <v-row>
@@ -151,6 +169,7 @@
 </template>
 
 <script>
+import AppLayout from '@/components/layout/AppLayout.vue'
 export default {
   data: () => ({
     dialog: false, // Controls the dialog visibility
@@ -197,7 +216,7 @@ export default {
         subtext: 'Newly released songs.',
         img: 'https://scontent.fcgy3-1.fna.fbcdn.net/v/t39.30808-6/451420833_1617888938782482_2155335286028533962_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeFeLfEnXu8wPudJxWHPHjG-YRSpwmuvgy9hFKnCa6-DLwtXCUEa7ofy3U9EDQLpvSisDf7qgvVqp7HU-6-_r051&_nc_ohc=1T6xX4exa6MQ7kNvgFZ4PGk&_nc_ht=scontent.fcgy3-1.fna&_nc_gid=AcVYrdxnWekAL_sCd6_ixz6&oh=00_AYCr3FBAvBUj713TlUN33tu3Fsyr2YE8DUcSFLaonS4rOw&oe=670EF35A',
       },
-      
+
     ],
     developers: [
       {

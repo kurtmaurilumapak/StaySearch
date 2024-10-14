@@ -11,13 +11,7 @@ import AppLayout from '@/components/layout/AppLayout.vue'
     <template #content>
       <Navbar />
       <v-row justify="space-around">
-        <v-col cols="12">
-          <v-btn
-
-            size="large"
-            class="mt-10 ml-5"
-            @click="$router.push('/owner/create')"
-          >create post</v-btn>
+        <v-col cols="12" md="6">
         </v-col>
       </v-row>
     </template>
