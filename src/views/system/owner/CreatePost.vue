@@ -39,9 +39,9 @@ const clearimg = (index) => {
 
 
 <template>
-    <v-row style="height: 100vh; overflow: hidden">
+    <v-row style="height: 100vh;" class="overflow-hidden">
       <!-- POSTING MENU -->
-      <v-col cols="12" md="3">
+      <v-col cols="12" md="4" lg="3" >
         <v-card style="height: 100vh;"
         >
           <v-card-title class="d-flex align-center border py-3">
@@ -103,9 +103,9 @@ const clearimg = (index) => {
                 <v-card
                   class="overflow-y-auto"
                   height="200"
-                  max-width="400"
+                  width="auto"
                   elevation="0"
-                  style="border: black dashed 2px; border-radius: 10px"
+                  style="border: green dashed 2px; border-radius: 10px"
                   color="grey-lighten-3"
                   @dragover.prevent
                   @drop.prevent="handleDrop"
@@ -140,6 +140,7 @@ const clearimg = (index) => {
               <v-col cols="12">
                 <v-text-field
                   v-model="create.price"
+                  color="green-darken-1"
                   variant="outlined"
                   label="Price"
                   prepend-icon="mdi-currency-php"
@@ -158,10 +159,10 @@ const clearimg = (index) => {
               <v-col cols="6">
                 <v-select
                   v-model="create.type"
+                  color="green-darken-1"
                   label="House Type"
                   variant="outlined"
                   :items="['All Boys', 'All Girls', 'Mix']"
-                  clearable
                 ></v-select>
               </v-col>
               <v-col cols="6">
@@ -185,11 +186,19 @@ const clearimg = (index) => {
       </v-col>
 
       <!-- PREVIEW -->
-      <v-col cols="12" md="9" class="d-flex justify-center align-center">
-        <v-container max-width="900" class="border" style="border-radius: 10px">
-          <span class="font-weight-bold">Preview</span>
-          <v-card>
-            <v-card-text class="border" style="border-radius: 10px">
+      <v-col cols="12" md="8" lg="9" class="d-flex justify-center align-center">
+        <v-container
+          max-width="900"
+          class="border"
+          style="border-radius: 10px"
+        >
+          <span class="font-weight-bold pl-3">Preview</span>
+          <v-card
+            class="my-2 mx-2"
+            style="border-radius: 10px;"
+            :elevation="5"
+          >
+            <v-card-text>
               <v-row>
                 <v-col>
                   <div v-if="create.images.length" class="d-flex flex-wrap mt-4">
