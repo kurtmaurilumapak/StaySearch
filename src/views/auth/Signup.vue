@@ -87,7 +87,6 @@ const passwordRules = [
           </p>
         </v-card-text>
           <v-form
-            v-model="isValid"
             @submit.prevent="handleSignup"
           >
           <v-row no-gutters>
@@ -137,7 +136,7 @@ const passwordRules = [
                 color="green-darken-1"
                 v-model="form.username"
                 label="Username"
-                placeholder="Johndoe"
+                placeholder="johndoe"
                 variant="outlined"
                 :rules="usernameRules"
               />
