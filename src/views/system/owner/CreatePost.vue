@@ -158,7 +158,8 @@ const clearimg = (index) => {
               <v-col cols="6">
                 <v-select
                   v-model="create.type"
-                  label="Select"
+                  label="House Type"
+                  variant="outlined"
                   :items="['All Boys', 'All Girls', 'Mix']"
                   clearable
                 ></v-select>
