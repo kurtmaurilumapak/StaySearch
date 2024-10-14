@@ -212,29 +212,5 @@ const openDialog = () => {
       </v-menu>
     </template>
   </v-navigation-drawer>
-
-  <v-navigation-drawer
-    v-model="nav.drawer"
-    temporary
-    location="end"
-    class="d-md-none"
-  >
-
-    <v-list>
-
-      <v-divider></v-divider>
-
-    </v-list>
-    <template v-slot:append>
-      <div class="pa-2">
-        <v-btn
-          color="red"
-          block
-        >
-          Logout
-        </v-btn>
-      </div>
-    </template>
-  </v-navigation-drawer>
 </template>
 
