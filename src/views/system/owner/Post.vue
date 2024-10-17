@@ -2,7 +2,9 @@
 //import { ref } from 'vue'
 import Navbar from '@/components/common/Navbar.vue'
 import AppLayout from '@/components/layout/AppLayout.vue'
+import { ref } from 'vue'
 
+const rating = ref(4.5)
 </script>
 
 
@@ -10,14 +12,416 @@ import AppLayout from '@/components/layout/AppLayout.vue'
   <AppLayout>
     <template #content>
       <Navbar />
-      <v-row justify="space-around">
-        <v-col cols="12">
-          <v-btn
+      <v-row
+        style="height: calc(100vh + 12px);"
+        class="mr-md-0"
+      >
+        <!-- CREATE POST -->
+        <v-col cols="12" md="2" class="d-none d-md-block">
+          <v-row>
+            <v-col cols="12">
+              <RouterLink
+                style="text-decoration: none;color: inherit;"
+                to="/"
+                class="d-flex align-center justify-center ga-1 my-5"
+              >
+                <img
+                  src="@/assets/logo.png"
+                  alt="Logo"
+                  width="40"
+                  height="40"
+                />
+                <h2 class="font-weight-bold">
+                  StaySearch
+                </h2>
+              </RouterLink>
+            </v-col>
+            <v-col cols="12" class="d-flex justify-center">
+              <v-btn
+                width="90%"
+                color="green-darken-2"
+                prepend-icon="mdi-plus"
+                @click="$router.push('/owner/create')"
+              >create post</v-btn>
+            </v-col>
+          </v-row>
+        </v-col>
 
-            size="large"
-            class="mt-10 ml-5"
-            @click="$router.push('/owner/create')"
-          >create post</v-btn>
+        <!-- CREATED POSTS -->
+        <v-col
+          cols="12"
+          md="10"
+          class="d-flex justify-center align-center"
+        >
+
+          <v-card
+            :elevation="7"
+            style="border-radius: 20px"
+
+          >
+
+            <v-card-title
+              class="py-3"
+            >
+              <v-row>
+                <v-col cols="2" class="d-flex justify-center">
+                  <v-avatar
+                    image="https://cdn.vuetifyjs.com/images/john.jpg"
+                    size="150"
+                  >
+                  </v-avatar>
+                </v-col>
+                <v-col>
+                  <h1>NAME</h1>
+                  <span>EMAIL</span>
+                  <p>SOCIALS</p>
+                </v-col>
+                <v-col cols="1">
+                  <v-fab
+                    icon="mdi-bell"
+                  >
+                  </v-fab>
+                </v-col>
+              </v-row>
+            </v-card-title>
+
+            <v-divider></v-divider>
+            <v-spacer></v-spacer>
+
+            <!-- CONTENTS -->
+            <v-card-text
+              style="overflow-y: auto; max-height: 80vh;"
+            >
+              <v-row
+                class="border"
+              >
+
+                <!-- CARD POSTS -->
+                <v-col cols="12" md="6" lg="4" class="d-flex justify-center align-center">
+                  <v-card
+                    class="border rounded-lg"
+                    @click="$router.push('/owner/create')"
+                    width="100%"
+                  >
+                    <v-card-text>
+                      <v-row>
+                        <v-col cols="5">
+                          <v-img
+                            class="bg-white rounded-lg"
+                            src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                            max-width="100%"
+                            height="180"
+                            cover
+                          ></v-img>
+                        </v-col>
+                        <v-col cols="7">
+                          <v-row>
+                            <v-col cols="12">
+                              <div class="d-flex align-center">
+                                <span>{{ rating }}</span>
+                                <v-rating
+                                  v-model="rating"
+                                  half-increments
+                                  readonly
+                                  :length="5"
+                                  :size="26"
+                                  color="green-accent-4"
+                                />
+                              </div>
+                              <h1 class="text-h6">House Name</h1>
+                              <h2 class="text-subtitle-1">Address</h2>
+                            </v-col>
+                            <v-col cols="12">
+                              <span class="text-body-2">Tags</span>
+                            </v-col>
+                            <v-col cols="12" class="d-flex justify-end">
+                              <h2 class="text-h6">Price/month</h2>
+                            </v-col>
+                          </v-row>
+                        </v-col>
+                      </v-row>
+                    </v-card-text>
+                  </v-card>
+                </v-col>
+                <v-col cols="12" md="6" lg="4" class="d-flex justify-center align-center">
+                  <v-card
+                    class="border rounded-lg"
+                    @click="$router.push('/owner/create')"
+                    width="100%"
+                  >
+                    <v-card-text>
+                      <v-row>
+                        <v-col cols="5">
+                          <v-img
+                            class="bg-white rounded-lg"
+                            src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                            max-width="100%"
+                            height="180"
+                            cover
+                          ></v-img>
+                        </v-col>
+                        <v-col cols="7">
+                          <v-row>
+                            <v-col cols="12">
+                              <div class="d-flex align-center">
+                                <span>{{ rating }}</span>
+                                <v-rating
+                                  v-model="rating"
+                                  half-increments
+                                  readonly
+                                  :length="5"
+                                  :size="26"
+                                  color="green-accent-4"
+                                />
+                              </div>
+                              <h1 class="text-h6">House Name</h1>
+                              <h2 class="text-subtitle-1">Address</h2>
+                            </v-col>
+                            <v-col cols="12">
+                              <span class="text-body-2">Tags</span>
+                            </v-col>
+                            <v-col cols="12" class="d-flex justify-end">
+                              <h2 class="text-h6">Price/month</h2>
+                            </v-col>
+                          </v-row>
+                        </v-col>
+                      </v-row>
+                    </v-card-text>
+                  </v-card>
+                </v-col>
+                <v-col cols="12" md="6" lg="4" class="d-flex justify-center align-center">
+                  <v-card
+                    class="border rounded-lg"
+                    @click="$router.push('/owner/create')"
+                    width="100%"
+                  >
+                    <v-card-text>
+                      <v-row>
+                        <v-col cols="5">
+                          <v-img
+                            class="bg-white rounded-lg"
+                            src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                            max-width="100%"
+                            height="180"
+                            cover
+                          ></v-img>
+                        </v-col>
+                        <v-col cols="7">
+                          <v-row>
+                            <v-col cols="12">
+                              <div class="d-flex align-center">
+                                <span>{{ rating }}</span>
+                                <v-rating
+                                  v-model="rating"
+                                  half-increments
+                                  readonly
+                                  :length="5"
+                                  :size="26"
+                                  color="green-accent-4"
+                                />
+                              </div>
+                              <h1 class="text-h6">House Name</h1>
+                              <h2 class="text-subtitle-1">Address</h2>
+                            </v-col>
+                            <v-col cols="12">
+                              <span class="text-body-2">Tags</span>
+                            </v-col>
+                            <v-col cols="12" class="d-flex justify-end">
+                              <h2 class="text-h6">Price/month</h2>
+                            </v-col>
+                          </v-row>
+                        </v-col>
+                      </v-row>
+                    </v-card-text>
+                  </v-card>
+                </v-col>
+                <v-col cols="12" md="6" lg="4" class="d-flex justify-center align-center">
+                  <v-card
+                    class="border rounded-lg"
+                    @click="$router.push('/owner/create')"
+                    width="100%"
+                  >
+                    <v-card-text>
+                      <v-row>
+                        <v-col cols="5">
+                          <v-img
+                            class="bg-white rounded-lg"
+                            src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                            max-width="100%"
+                            height="180"
+                            cover
+                          ></v-img>
+                        </v-col>
+                        <v-col cols="7">
+                          <v-row>
+                            <v-col cols="12">
+                              <div class="d-flex align-center">
+                                <span>{{ rating }}</span>
+                                <v-rating
+                                  v-model="rating"
+                                  half-increments
+                                  readonly
+                                  :length="5"
+                                  :size="26"
+                                  color="green-accent-4"
+                                />
+                              </div>
+                              <h1 class="text-h6">House Name</h1>
+                              <h2 class="text-subtitle-1">Address</h2>
+                            </v-col>
+                            <v-col cols="12">
+                              <span class="text-body-2">Tags</span>
+                            </v-col>
+                            <v-col cols="12" class="d-flex justify-end">
+                              <h2 class="text-h6">Price/month</h2>
+                            </v-col>
+                          </v-row>
+                        </v-col>
+                      </v-row>
+                    </v-card-text>
+                  </v-card>
+                </v-col>
+                <v-col cols="12" md="6" lg="4" class="d-flex justify-center align-center">
+                  <v-card
+                    class="border rounded-lg"
+                    @click="$router.push('/owner/create')"
+                    width="100%"
+                  >
+                    <v-card-text>
+                      <v-row>
+                        <v-col cols="5">
+                          <v-img
+                            class="bg-white rounded-lg"
+                            src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                            max-width="100%"
+                            height="180"
+                            cover
+                          ></v-img>
+                        </v-col>
+                        <v-col cols="7">
+                          <v-row>
+                            <v-col cols="12">
+                              <div class="d-flex align-center">
+                                <span>{{ rating }}</span>
+                                <v-rating
+                                  v-model="rating"
+                                  half-increments
+                                  readonly
+                                  :length="5"
+                                  :size="26"
+                                  color="green-accent-4"
+                                />
+                              </div>
+                              <h1 class="text-h6">House Name</h1>
+                              <h2 class="text-subtitle-1">Address</h2>
+                            </v-col>
+                            <v-col cols="12">
+                              <span class="text-body-2">Tags</span>
+                            </v-col>
+                            <v-col cols="12" class="d-flex justify-end">
+                              <h2 class="text-h6">Price/month</h2>
+                            </v-col>
+                          </v-row>
+                        </v-col>
+                      </v-row>
+                    </v-card-text>
+                  </v-card>
+                </v-col>
+                <v-col cols="12" md="6" lg="4" class="d-flex justify-center align-center">
+                  <v-card
+                    class="border rounded-lg"
+                    @click="$router.push('/owner/create')"
+                    width="100%"
+                  >
+                    <v-card-text>
+                      <v-row>
+                        <v-col cols="5">
+                          <v-img
+                            class="bg-white rounded-lg"
+                            src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                            max-width="100%"
+                            height="180"
+                            cover
+                          ></v-img>
+                        </v-col>
+                        <v-col cols="7">
+                          <v-row>
+                            <v-col cols="12">
+                              <div class="d-flex align-center">
+                                <span>{{ rating }}</span>
+                                <v-rating
+                                  v-model="rating"
+                                  half-increments
+                                  readonly
+                                  :length="5"
+                                  :size="26"
+                                  color="green-accent-4"
+                                />
+                              </div>
+                              <h1 class="text-h6">House Name</h1>
+                              <h2 class="text-subtitle-1">Address</h2>
+                            </v-col>
+                            <v-col cols="12">
+                              <span class="text-body-2">Tags</span>
+                            </v-col>
+                            <v-col cols="12" class="d-flex justify-end">
+                              <h2 class="text-h6">Price/month</h2>
+                            </v-col>
+                          </v-row>
+                        </v-col>
+                      </v-row>
+                    </v-card-text>
+                  </v-card>
+                </v-col>
+                <v-col cols="12" md="6" lg="4" class="d-flex justify-center align-center">
+                  <v-card
+                    class="border rounded-lg"
+                    @click="$router.push('/owner/create')"
+                    width="100%"
+                  >
+                    <v-card-text>
+                      <v-row>
+                        <v-col cols="5">
+                          <v-img
+                            class="bg-white rounded-lg"
+                            src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                            max-width="100%"
+                            height="180"
+                            cover
+                          ></v-img>
+                        </v-col>
+                        <v-col cols="7">
+                          <v-row>
+                            <v-col cols="12">
+                              <div class="d-flex align-center">
+                                <span>{{ rating }}</span>
+                                <v-rating
+                                  v-model="rating"
+                                  half-increments
+                                  readonly
+                                  :length="5"
+                                  :size="26"
+                                  color="green-accent-4"
+                                />
+                              </div>
+                              <h1 class="text-h6">House Name</h1>
+                              <h2 class="text-subtitle-1">Address</h2>
+                            </v-col>
+                            <v-col cols="12">
+                              <span class="text-body-2">Tags</span>
+                            </v-col>
+                            <v-col cols="12" class="d-flex justify-end">
+                              <h2 class="text-h6">Price/month</h2>
+                            </v-col>
+                          </v-row>
+                        </v-col>
+                      </v-row>
+                    </v-card-text>
+                  </v-card>
+                </v-col>
+              </v-row>
+            </v-card-text>
+          </v-card>
         </v-col>
       </v-row>
     </template>

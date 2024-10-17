@@ -109,7 +109,7 @@ const clearimg = (index) => {
                     class="overflow-y-auto"
                     height="200"
                     width="auto"
-                    elevation="0"
+                    :elevation="0"
                     style="border: green dashed 2px; border-radius: 10px"
                     color="grey-lighten-3"
                     @dragover.prevent
@@ -150,7 +150,7 @@ const clearimg = (index) => {
                     color="green-darken-1"
                     variant="outlined"
                     label="Price"
-                    prepend-icon="mdi-currency-php"
+                    prepend-inner-icon="mdi-currency-php"
                     v-mask="'#,###'"
                   />
                 </v-col>

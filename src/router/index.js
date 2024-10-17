@@ -37,7 +37,12 @@ const router = createRouter({
       path: '/owner/messages',
       name: 'messages',
       component: () => import('@/views/system/owner/Messages.vue'),
-    }
+    },
+    {
+      path: '/student/page',
+      name: 'student',
+      component: () => import('@/views/system/student/StudentInterface.vue'),
+    },
   ]
 })
 
