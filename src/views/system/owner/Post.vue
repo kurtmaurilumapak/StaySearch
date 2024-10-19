@@ -5,16 +5,18 @@ import AppLayout from '@/components/layout/AppLayout.vue'
 import { ref } from 'vue'
 
 const rating = ref(4.5)
+const drawer = ref(false);
 </script>
 
 
 <template>
   <AppLayout>
     <template #content>
-      <Navbar />
+      <Navbar
+        v-model="drawer"
+      />
       <v-row
         style="height: calc(100vh + 12px);"
-        class="mr-md-0"
       >
         <!-- CREATE POST -->
         <v-col cols="12" md="2" class="d-none d-md-block">
@@ -42,7 +44,9 @@ const rating = ref(4.5)
                 color="green-darken-2"
                 prepend-icon="mdi-plus"
                 @click="$router.push('/owner/create')"
-              >create post</v-btn>
+              >
+                create post
+              </v-btn>
             </v-col>
           </v-row>
         </v-col>
@@ -56,31 +60,38 @@ const rating = ref(4.5)
 
           <v-card
             :elevation="7"
-            style="border-radius: 20px"
+            style="border-radius: 0; height: 100vh"
 
           >
 
             <v-card-title
-              class="py-3"
+              class="py-5"
+              style="background-color: darkseagreen;"
             >
               <v-row>
-                <v-col cols="2" class="d-flex justify-center">
-                  <v-avatar
-                    image="https://cdn.vuetifyjs.com/images/john.jpg"
-                    size="150"
+                <v-col cols="8" class="d-flex d-md-none align-center">
+                  <v-btn
+                    color="green-darken-2"
+                    @click="$router.push('/owner/create')"
+                    block
                   >
-                  </v-avatar>
+                    create post
+                  </v-btn>
                 </v-col>
-                <v-col>
-                  <h1>NAME</h1>
-                  <span>EMAIL</span>
-                  <p>SOCIALS</p>
-                </v-col>
-                <v-col cols="1">
-                  <v-fab
+                <v-col cols="4" md="12" class="d-flex justify-md-end justify-center">
+                  <v-btn
+                    class="ma-2"
+                    color="black"
                     icon="mdi-bell"
-                  >
-                  </v-fab>
+                    variant="text"
+                  ></v-btn>
+                  <v-btn
+                    class="ma-2 d-flex d-lg-none"
+                    color="black"
+                    icon="mdi-menu"
+                    variant="text"
+                    @click="drawer = !drawer"
+                  ></v-btn>
                 </v-col>
               </v-row>
             </v-card-title>
@@ -90,10 +101,9 @@ const rating = ref(4.5)
 
             <!-- CONTENTS -->
             <v-card-text
-              style="overflow-y: auto; max-height: 80vh;"
+              style="overflow-y: auto; max-height: 81.5vh;"
             >
               <v-row
-                class="border"
               >
 
                 <!-- CARD POSTS -->

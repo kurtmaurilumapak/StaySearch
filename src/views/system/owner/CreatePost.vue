@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, shallowRef } from 'vue'
 import AppLayout from '@/components/layout/AppLayout.vue'
 
 const create = ref({
@@ -7,16 +7,22 @@ const create = ref({
   price: '',
   name: '',
   detail: '',
-  type: '',
-  utilities: {
-    electricity: '',
-    water: '',
-    wifi: ''
-  },
   currentIndex: 0,
   leaveCreatePage: false,
-  active: 1
+  active: 1,
+  availableTags: [
+    'All Boys',
+    'All Girls',
+    'Mix',
+    'Near CSU',
+    'Free Wifi',
+    'Free Water',
+    'Free Electricity',
+  ],
+  previewTags: []
 })
+
+const tags = shallowRef([])
 
 const handleFiles = (event) => {
   const selectedFiles = event.target.files
@@ -34,6 +40,15 @@ const handleDrop = (event) => {
 const clearimg = (index) => {
   create.value.images.splice(index, 1)
 }
+
+const toggleTag = (tag) => {
+  const index = create.value.previewTags.indexOf(tag);
+  if (index > -1) {
+    create.value.previewTags.splice(index, 1); // Remove tag if already selected
+  } else {
+    create.value.previewTags.push(tag); // Add tag if not selected
+  }
+};
 
 
 </script>
@@ -163,21 +178,26 @@ const clearimg = (index) => {
                     auto-grow
                   ></v-textarea>
                 </v-col>
-                <v-col cols="6">
-                  <v-select
-                    v-model="create.type"
-                    color="green-darken-1"
-                    label="House Type"
-                    variant="outlined"
-                    :items="['All Boys', 'All Girls', 'Mix']"
-                  ></v-select>
-                </v-col>
-                <v-col cols="6" class="mb-10">
-                  <h2>Inclusion</h2>
-                  <v-checkbox v-model="create.utilities.electricity" label="Electricity"
-                              value="Electricity"></v-checkbox>
-                  <v-checkbox v-model="create.utilities.water" label="Water" value="Water"></v-checkbox>
-                  <v-checkbox v-model="create.utilities.wifi" label="Wifi" value="Wifi"></v-checkbox>
+                <v-col cols="12">
+
+                  <v-chip-group v-model="tags" column multiple>
+                    <v-chip
+                      color="pink"
+                      label
+                    >
+                      <v-icon icon="mdi-label" start></v-icon>
+                      Tags:
+                    </v-chip>
+                    <v-chip
+                      v-for="(tag, index) in create.availableTags"
+                      :key="index"
+                      :text="tag"
+                      label
+                      filter
+                      @click="toggleTag(tag)"
+                    >
+                    </v-chip>
+                  </v-chip-group>
                 </v-col>
 
               </v-row>
@@ -208,7 +228,7 @@ const clearimg = (index) => {
               style="border-radius: 10px;"
               :elevation="5"
             >
-              <v-card-text>
+              <v-card-text style="overflow-y: auto; max-height: 81.5vh;">
                 <v-row>
                   <v-col>
                     <div v-if="create.images.length" class="d-flex flex-wrap mt-4">
@@ -263,22 +283,34 @@ const clearimg = (index) => {
                         <h2>{{ create.detail || 'Details' }}</h2>
                       </v-col>
                       <v-col cols="12">
-                        <h2>House Type: {{ create.type }}</h2>
-                      </v-col>
-                      <v-col cols="12">
-                        <h2>Inclusion: </h2>
-                        <h2>
-                          <v-icon v-if="create.utilities.electricity" left style="font-size: 20px;">mdi-check</v-icon>
-                          {{ create.utilities.electricity || '' }}
-                        </h2>
-                        <h2>
-                          <v-icon v-if="create.utilities.water" left style="font-size: 20px;">mdi-check</v-icon>
-                          {{ create.utilities.water || '' }}
-                        </h2>
-                        <h2>
-                          <v-icon v-if="create.utilities.wifi" left style="font-size: 20px;">mdi-check</v-icon>
-                          {{ create.utilities.wifi || '' }}
-                        </h2>
+                        <div v-if="tags.length">
+                          <v-chip
+                            color="pink"
+                            label
+                          >
+                            <v-icon icon="mdi-label" start></v-icon>
+                            Tags:
+                          </v-chip>
+                          <v-chip
+                            v-for="(tag, index) in create.previewTags"
+                            :key="index"
+                            class="ma-1"
+                            color="green-darken-2"
+                            label
+                          >
+                            {{ tag }}
+                          </v-chip>
+                        </div>
+                        <div v-else>
+                          <v-chip
+                            color="pink"
+                            label
+                          >
+                            <v-icon icon="mdi-label" start></v-icon>
+                            Tags:
+                          </v-chip>
+                          <v-chip class="ma-2" color="grey" label>No Tags Added</v-chip>
+                        </div>
                       </v-col>
                     </v-row>
                   </v-col>

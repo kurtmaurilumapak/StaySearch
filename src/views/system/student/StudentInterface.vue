@@ -32,27 +32,25 @@ function onClick () {
         :elevation="2"
       >
         <v-row class="d-flex align-center">
-          <v-col cols="2">
-            <v-toolbar-title>
-              <RouterLink
-                style="text-decoration: none;color: inherit;"
-                to="/"
-                class="d-flex align-center ga-1 my-5 ml-5"
-              >
-                <img
-                  src="@/assets/logo.png"
-                  alt="Logo"
-                  width="30"
-                  height="30"
-                />
-                <h3 class="font-weight-bold">
-                  StaySearch
-                </h3>
-              </RouterLink>
-            </v-toolbar-title>
+          <v-col cols="4">
+            <RouterLink
+              style="text-decoration: none;color: inherit;"
+              to="/"
+              class="d-flex align-center ga-1 my-5 ml-5"
+            >
+              <img
+                src="@/assets/logo.png"
+                alt="Logo"
+                width="30"
+                height="30"
+              />
+              <h2 class="font-weight-bold">
+                StaySearch
+              </h2>
+            </RouterLink>
           </v-col>
 
-          <v-col cols="8">
+          <v-col cols="5" md="6" class="d-none d-sm-block pr-10">
             <v-text-field
               :loading="search.loading"
               append-inner-icon="mdi-magnify"
@@ -66,11 +64,19 @@ function onClick () {
             ></v-text-field>
           </v-col>
 
-          <v-col cols="1" class="d-flex align-center justify-space-between">
-            <v-icon
-            >
-              mdi-bell
-            </v-icon>
+          <v-col cols="8" sm="2" class="d-flex align-center justify-end pr-10">
+            <v-btn
+              class="d-flex d-sm-none"
+              color="black"
+              icon="mdi-magnify"
+              variant="text"
+            ></v-btn>
+            <v-btn
+              class="ma-2"
+              color="black"
+              icon="mdi-bell"
+              variant="text"
+            ></v-btn>
 
             <v-menu location="bottom">
               <template v-slot:activator="{ props }">
