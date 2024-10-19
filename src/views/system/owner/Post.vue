@@ -5,7 +5,7 @@ import AppLayout from '@/components/layout/AppLayout.vue'
 import { ref } from 'vue'
 
 const rating = ref(4.5)
-const drawer = ref(false);
+const drawer = ref(true);
 </script>
 
 
@@ -93,6 +93,7 @@ const drawer = ref(false);
                     @click="drawer = !drawer"
                   ></v-btn>
                 </v-col>
+
               </v-row>
             </v-card-title>
 
