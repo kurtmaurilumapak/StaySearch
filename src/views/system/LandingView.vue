@@ -37,7 +37,7 @@
       <v-btn text class="d-none d-md-flex" @click="scrollToSection('home')">Home</v-btn>
       <v-btn text class="d-none d-md-flex" @click="scrollToSection('gallery')">Accommodations</v-btn>
       <v-btn text class="d-none d-md-flex" @click="scrollToSection('about')">About us</v-btn>
-      <v-btn text class="d-none d-md-flex" @click="$router.push({ name: 'signup' })" style="background-color: green;">Sign up</v-btn>
+      <v-btn text class="d-none d-md-flex" @click="$router.push({ name: 'login' })" style="background-color: green;">Sign in</v-btn>
 
       <v-app-bar-nav-icon class="d-flex d-md-none" @click="drawer = !drawer"></v-app-bar-nav-icon>
 
