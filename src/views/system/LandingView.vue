@@ -3,48 +3,44 @@
   <v-app>
     <!-- Navigation Bar -->
     <v-app-bar app dark class="navbar"
-               color="rgba(0, 0, 0)"
                density="comfortable"
                elevation="10"
                flat
                floating
     >
-      <v-toolbar-title>
-        <div
-          style="text-decoration: none;color: inherit;"
-          to="/"
-          class="d-flex align-center gap-3"
-        >
-          <img
-            src="@/assets/logo.png"
-            alt="Logo"
-            width="40"
-            height="40"
-            @click="scrollToSection('home')"
-          />
-          <h2
-            class="font-weight-bold cursor-default"
-            @click="scrollToSection('home')"
+      <v-row>
+        <v-col cols="4">
+          <RouterLink
+            style="text-decoration: none;color: inherit;"
+            to="/"
+            class="d-flex align-center ga-1 my-5 ml-5"
           >
-            StaySearch
-          </h2>
-        </div>
-      </v-toolbar-title>
-
-      <v-spacer></v-spacer>
-
-
-      <v-btn text class="d-none d-md-flex" @click="scrollToSection('home')">Home</v-btn>
-      <v-btn text class="d-none d-md-flex" @click="scrollToSection('gallery')">Accommodations</v-btn>
-      <v-btn text class="d-none d-md-flex" @click="scrollToSection('about')">About us</v-btn>
-      <v-btn text class="d-none d-md-flex ml-5 mr-5" @click="$router.push({ name: 'signup' })" style="background-color: green;">Sign up</v-btn>
-
+            <img
+              src="@/assets/logo.png"
+              alt="Logo"
+              width="30"
+              height="30"
+            />
+            <h2 class="font-weight-bold">
+              StaySearch
+            </h2>
+          </RouterLink>
+        </v-col>
+        <v-col cols="4" class="d-flex align-center justify-center">
+          <v-btn class="d-none d-md-flex" @click="scrollToSection('home')">Home</v-btn>
+          <v-btn class="d-none d-md-flex" @click="scrollToSection('gallery')">Accommodations</v-btn>
+          <v-btn class="d-none d-md-flex" @click="scrollToSection('about')">About us</v-btn>
+        </v-col>
+        <v-col cols="4" class="d-flex align-center justify-end">
+          <v-btn class="d-none d-md-flex ml-5 mr-5" @click="$router.push({ name: 'signup' })" style="background-color: green;">Sign up</v-btn>
+        </v-col>
+      </v-row>
       <v-app-bar-nav-icon class="d-flex d-md-none" @click="drawer = !drawer"></v-app-bar-nav-icon>
 
     </v-app-bar>
 
 
-    <v-navigation-drawer v-model="drawer" app temporary class="drawer" color="black">
+    <v-navigation-drawer v-model="drawer" app temporary class="drawer">
       <v-list>
         <v-list-item @click="scrollToSection('home')">
           <v-list-item-title>Home</v-list-item-title>
@@ -65,7 +61,7 @@
     <v-container fluid class="hero" id="home">
       <v-row class="fill-height align-center justify-center text-center">
         <v-col>
-          <h1 class="display-2 font-weight-bold mb-3 text-center text-h3" color="black">
+          <h1 class="display-2 font-weight-bold mb-3 text-center text-h3">
             Search for a Boarding House near Caraga State University
           </h1>
           <v-btn size="x-large" color="green-darken-1" class="mt-5 px-10" large @click="$router.push({ name: 'signup' })">Find</v-btn>
@@ -117,7 +113,7 @@
           <v-img :src="selectedImage" aspect-ratio="16/9" class="clear-modal-image"></v-img>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn text style="background-color: #388E3C;">View Details</v-btn>
+            <v-btn style="background-color: #388E3C;">View Details</v-btn>
 
             <v-btn color="primary" @click="dialog = false" style="border: 1cap solid;">Close</v-btn>
           </v-card-actions>
@@ -149,7 +145,7 @@
               <v-img :src="developer.avatar"></v-img>
             </v-avatar>
             <h4 class="mt-3">{{ developer.name }}</h4>
-            <v-btn :href="'https://' + developer.text" target="_blank">
+            <v-btn fab icon :href="'https://' + developer.text" target="_blank">
               <v-icon >
                 mdi-facebook </v-icon>
             </v-btn>
@@ -169,7 +165,6 @@
 </template>
 
 <script>
-import AppLayout from '@/components/layout/AppLayout.vue'
 export default {
   data: () => ({
     dialog: false, // Controls the dialog visibility
@@ -226,7 +221,7 @@ export default {
       },
       {
         avatar: 'https://scontent.fcgy3-1.fna.fbcdn.net/v/t39.30808-6/278384899_1621300201553680_3154144050592710379_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHsBnhZi4UpGCrhq0qd-lwfv5Dt5lRqKfS_kO3mVGop9DTxJ245b2ubBmWxO4K_HLXTc7a4YFEVtq5DcDc6Lb5c&_nc_ohc=xfX8FgVR47oQ7kNvgHy58zC&_nc_ht=scontent.fcgy3-1.fna&_nc_gid=A1aG7GYvqR0C54fFMBbZ5cA&oh=00_AYBw9KV3AVAbtqQO-a0gQmlrE7ka-3_0EstU0jW6PQyqJA&oe=6711A121',
-        name: 'Kurt Lumapak',
+        name: 'Kurt Mauri Lumapak',
         text: 'facebook.com/kurtniezas01'
       },
       {
