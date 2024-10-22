@@ -20,7 +20,7 @@ const drawer = ref(true);
       >
         <!-- CREATE POST -->
         <v-col cols="12" md="2" class="d-none d-md-block">
-          <v-row>
+          <v-row class="pl-5">
             <v-col cols="12">
               <RouterLink
                 style="text-decoration: none;color: inherit;"

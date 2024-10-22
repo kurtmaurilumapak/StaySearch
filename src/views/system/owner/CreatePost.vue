@@ -286,6 +286,7 @@ const toggleTag = (tag) => {
                         <div v-if="tags.length">
                           <v-chip
                             color="pink"
+                            class="mr-1"
                             label
                           >
                             <v-icon icon="mdi-label" start></v-icon>
@@ -309,7 +310,7 @@ const toggleTag = (tag) => {
                             <v-icon icon="mdi-label" start></v-icon>
                             Tags:
                           </v-chip>
-                          <v-chip class="ma-2" color="grey" label>No Tags Added</v-chip>
+                          <v-chip class="ma-1" color="grey" label>No Tags Added</v-chip>
                         </div>
                       </v-col>
                     </v-row>
