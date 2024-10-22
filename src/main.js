@@ -2,7 +2,7 @@
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import { mask } from 'vue-the-mask';
+import { mask } from 'vue-the-mask';  
 
 import '@mdi/font/css/materialdesignicons.css'
 import 'vuetify/styles'
