@@ -2,6 +2,7 @@
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import { mask } from 'vue-the-mask';
 
 import '@mdi/font/css/materialdesignicons.css'
 import 'vuetify/styles'
@@ -17,10 +18,11 @@ const vuetify = createVuetify({
   components,
   directives,
   icons: {
-    defaultSet: 'mdi', // This is already the default value - only for display purposes
+    defaultSet: 'mdi',
   },
 })
 
+app.directive('mask', mask);
 app.use(createPinia())
 app.use(router)
 app.use(vuetify)

@@ -3,30 +3,44 @@
   <v-app>
     <!-- Navigation Bar -->
     <v-app-bar app dark class="navbar"
-      color="rgba(0, 0, 0)"
-      density="comfortable"
-      elevation="10"
-      flat
-      floating
+               density="comfortable"
+               elevation="10"
+               flat
+               floating
     >
-      <v-toolbar-title>
-        <h3>StaySearch</h3>
-      </v-toolbar-title>
-
-      <v-spacer></v-spacer>
-
-
-      <v-btn text class="d-none d-md-flex" @click="scrollToSection('home')">Home</v-btn>
-      <v-btn text class="d-none d-md-flex" @click="scrollToSection('gallery')">Accommodations</v-btn>
-      <v-btn text class="d-none d-md-flex" @click="scrollToSection('about')">About us</v-btn>
-      <v-btn text class="d-none d-md-flex" @click="$router.push({ name: 'signup' })" style="background-color: green;">Sign up</v-btn>
-
+      <v-row>
+        <v-col cols="4">
+          <RouterLink
+            style="text-decoration: none;color: inherit;"
+            to="/"
+            class="d-flex align-center ga-1 my-5 ml-5"
+          >
+            <img
+              src="@/assets/logo.png"
+              alt="Logo"
+              width="30"
+              height="30"
+            />
+            <h2 class="font-weight-bold">
+              StaySearch
+            </h2>
+          </RouterLink>
+        </v-col>
+        <v-col cols="4" class="d-flex align-center justify-center">
+          <v-btn class="d-none d-md-flex" @click="scrollToSection('home')">Home</v-btn>
+          <v-btn class="d-none d-md-flex" @click="scrollToSection('gallery')">Accommodations</v-btn>
+          <v-btn class="d-none d-md-flex" @click="scrollToSection('about')">About us</v-btn>
+        </v-col>
+        <v-col cols="4" class="d-flex align-center justify-end">
+          <v-btn class="d-none d-md-flex ml-5 mr-5" @click="$router.push({ name: 'signup' })" style="background-color: green;">Sign up</v-btn>
+        </v-col>
+      </v-row>
       <v-app-bar-nav-icon class="d-flex d-md-none" @click="drawer = !drawer"></v-app-bar-nav-icon>
 
     </v-app-bar>
 
 
-    <v-navigation-drawer v-model="drawer" app temporary class="drawer" color="black">
+    <v-navigation-drawer v-model="drawer" app temporary class="drawer">
       <v-list>
         <v-list-item @click="scrollToSection('home')">
           <v-list-item-title>Home</v-list-item-title>
@@ -45,83 +59,83 @@
 
     <!-- Hero Section -->
     <v-container fluid class="hero" id="home">
-<v-row class="fill-height align-center justify-center text-center">
-<v-col>
-  <h1 class="display-2 font-weight-bold mb-3 text-center text-h3" color="black">
-    Search for a Boarding House near Caraga State University
-  </h1>
-  <v-btn color="green-darken-1" class="mt-5" large @click="$router.push({ name: 'signup' })">Find</v-btn>
-</v-col>
-</v-row>
-</v-container>
+      <v-row class="fill-height align-center justify-center text-center">
+        <v-col>
+          <h1 class="display-2 font-weight-bold mb-3 text-center text-h3">
+            Search for a Boarding House near Caraga State University
+          </h1>
+          <v-btn size="x-large" color="green-darken-1" class="mt-5 px-10" large @click="$router.push({ name: 'signup' })">Find</v-btn>
+        </v-col>
+      </v-row>
+    </v-container>
 
     <!-- Services Section -->
     <v-container fluid class="pa-4 text-center" id="gallery">
-  <v-row
-    align="center"
-    class="fill-height"
-    justify="center"
-  >
-    <template v-for="(item, i) in items" :key="i">
-      <v-col
-        cols="12"
-        md="4"
+      <v-row
+        align="center"
+        class="fill-height"
+        justify="center"
       >
-      <v-hover v-slot="{ isHovering, props }">
-          <v-card :class="{ 'on-hover': isHovering }"
-            :elevation="isHovering ? 20 : 2"
-          
-            v-bind="props"
-            @click="openModal(item.img)"
-            
+        <template v-for="(item, i) in items" :key="i">
+          <v-col
+            cols="12"
+            md="4"
           >
-          
-            <v-img
-            
-              :src="item.img"
-              height="255px"
-              cover       
-            >
-              <v-card-title class="text-h6 text-white d-flex flex-column">
-                <p class="mt-21">
-                  {{ item.title }}
-                </p>
-              </v-card-title>
-            </v-img>
-            
-          </v-card>
-      </v-hover>
-      </v-col>
-    </template>
-  </v-row>
-  <v-dialog v-model="dialog" max-width="600px">
-    <v-card style="opacity: 1;">
-      <v-img :src="selectedImage" aspect-ratio="16/9" class="clear-modal-image"></v-img>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn text color="green-darken-2">View Details</v-btn>
+            <v-hover v-slot="{ isHovering, props }">
+              <v-card :class="{ 'on-hover': isHovering }"
+                      :elevation="isHovering ? 20 : 2"
 
-        <v-btn color="primary" @click="dialog = false">Close</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
-</v-container>
-    
+                      v-bind="props"
+                      @click="openModal(item.img)"
 
-    <!-- Testimonials Section -->
+              >
+
+                <v-img
+
+                  :src="item.img"
+                  height="255px"
+                  cover
+                >
+                  <v-card-title class="text-h6 text-white d-flex flex-column">
+                    <p class="mt-21">
+                      {{ item.title }}
+                    </p>
+                  </v-card-title>
+                </v-img>
+
+              </v-card>
+            </v-hover>
+          </v-col>
+        </template>
+      </v-row>
+      <v-dialog v-model="dialog" max-width="600px">
+        <v-card style="opacity: 1;">
+          <v-img :src="selectedImage" aspect-ratio="16/9" class="clear-modal-image"></v-img>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn style="background-color: #388E3C;">View Details</v-btn>
+
+            <v-btn color="primary" @click="dialog = false" style="border: 1cap solid;">Close</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-container>
+
+
+    <!-- About Section -->
     <v-container id="about" class="py-16 text-center">
-<h2>About StaySearch</h2>
-<v-row>
-<v-col cols="12" md="8" class="mx-auto">
-  <p class="text-h6">
-    StaySearch is a web platform designed to help students and residents find affordable and accessible boarding houses near Caraga State University (CSU). We strive to simplify the process of finding the perfect place to stay by offering a comprehensive list of available options. Our goal is to connect boarders with safe, convenient, and budget-friendly accommodations, ensuring they have a comfortable living experience while studying at CSU.
-  </p>
-  <p class="text-h6">
-    Whether you’re a new student or a returning one, StaySearch makes it easy for you to find a home away from home. Our platform provides detailed information on boarding houses, including location, amenities, and pricing, to help you make an informed decision. StaySearch is more than just a listing site — it's your go-to guide for student housing around CSU.
-  </p>
-</v-col>
-</v-row>
-</v-container>
+      <h2>About StaySearch</h2>
+      <v-row>
+        <v-col cols="12" md="8" class="mx-auto">
+          <p class="text-h6">
+            StaySearch is a web platform designed to help students and residents find affordable and accessible boarding houses near Caraga State University (CSU). We strive to simplify the process of finding the perfect place to stay by offering a comprehensive list of available options. Our goal is to connect boarders with safe, convenient, and budget-friendly accommodations, ensuring they have a comfortable living experience while studying at CSU.
+          </p>
+          <p class="text-h6">
+            Whether you’re a new student or a returning one, StaySearch makes it easy for you to find a home away from home. Our platform provides detailed information on boarding houses, including location, amenities, and pricing, to help you make an informed decision. StaySearch is more than just a listing site — it's your go-to guide for student housing around CSU.
+          </p>
+        </v-col>
+      </v-row>
+    </v-container>
     <v-container id="aboutus" class="py-16 text-center">
       <h2>Developers</h2>
       <v-row>
@@ -131,7 +145,10 @@
               <v-img :src="developer.avatar"></v-img>
             </v-avatar>
             <h4 class="mt-3">{{ developer.name }}</h4>
-            <p>"{{ developer.text }}"</p>
+            <v-btn fab icon :href="'https://' + developer.text" target="_blank">
+              <v-icon >
+                mdi-facebook </v-icon>
+            </v-btn>
 
           </v-card>
         </v-col>
@@ -194,23 +211,23 @@ export default {
         subtext: 'Newly released songs.',
         img: 'https://scontent.fcgy3-1.fna.fbcdn.net/v/t39.30808-6/451420833_1617888938782482_2155335286028533962_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeFeLfEnXu8wPudJxWHPHjG-YRSpwmuvgy9hFKnCa6-DLwtXCUEa7ofy3U9EDQLpvSisDf7qgvVqp7HU-6-_r051&_nc_ohc=1T6xX4exa6MQ7kNvgFZ4PGk&_nc_ht=scontent.fcgy3-1.fna&_nc_gid=AcVYrdxnWekAL_sCd6_ixz6&oh=00_AYCr3FBAvBUj713TlUN33tu3Fsyr2YE8DUcSFLaonS4rOw&oe=670EF35A',
       },
-      
+
     ],
     developers: [
       {
-        avatar: 'https://cdn.myanimelist.net/r/200x268/images/characters/15/428959.jpg?s=2f0400dfeada369839a11506464bafe4',
+        avatar: 'https://scontent.fcgy3-1.fna.fbcdn.net/v/t1.30497-1/453178253_471506465671661_2781666950760530985_n.png?stp=dst-png_s200x200&_nc_cat=1&ccb=1-7&_nc_sid=136b72&_nc_eui2=AeHJVnJ4u6QE_dM-TsXgfPAoWt9TLzuBU1Ba31MvO4FTUAdwZh5ICdR8uLsn7jJLylhCHbRWn1alp9fwITHM-zq0&_nc_ohc=dmcmeAdPEz4Q7kNvgHCkDfv&_nc_ht=scontent.fcgy3-1.fna&_nc_gid=AZ8MNjum2RFA_IKRAzdm0ia&oh=00_AYAGR0f142ly1oJyrvSvvK6KuaRwrc2F3dt9100FJQtKGQ&oe=67334FFA',
         name: 'Ainor Jamal',
-        text: 'BUGO'
+        text: 'facebook.com/ainor.jamal.9'
       },
       {
-        avatar: 'https://cdn.myanimelist.net/r/200x268/images/characters/15/428959.jpg?s=2f0400dfeada369839a11506464bafe4',
-        name: 'Kurt Lumapak',
-        text: 'GwaPo'
+        avatar: 'https://scontent.fcgy3-1.fna.fbcdn.net/v/t39.30808-6/278384899_1621300201553680_3154144050592710379_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHsBnhZi4UpGCrhq0qd-lwfv5Dt5lRqKfS_kO3mVGop9DTxJ245b2ubBmWxO4K_HLXTc7a4YFEVtq5DcDc6Lb5c&_nc_ohc=xfX8FgVR47oQ7kNvgHy58zC&_nc_ht=scontent.fcgy3-1.fna&_nc_gid=A1aG7GYvqR0C54fFMBbZ5cA&oh=00_AYBw9KV3AVAbtqQO-a0gQmlrE7ka-3_0EstU0jW6PQyqJA&oe=6711A121',
+        name: 'Kurt Mauri Lumapak',
+        text: 'facebook.com/kurtniezas01'
       },
       {
-        avatar: 'https://cdn.myanimelist.net/r/200x268/images/characters/15/428959.jpg?s=2f0400dfeada369839a11506464bafe4',
+        avatar: 'https://scontent.fcgy3-1.fna.fbcdn.net/v/t39.30808-1/414713350_1645837936165455_7931494424647193135_n.jpg?stp=dst-jpg_s200x200&_nc_cat=110&ccb=1-7&_nc_sid=0ecb9b&_nc_eui2=AeEl3wjtqx1mASZbbPom193vV2fpz0Tp331XZ-nPROnffdDt3iJ611emik_tOX2RN9jaVYVguJHMa4FVhcPSf4Sa&_nc_ohc=EWQMoAQT-48Q7kNvgHQbn9I&_nc_ht=scontent.fcgy3-1.fna&_nc_gid=A0PwDMkACWw0xqLPJUcOr_B&oh=00_AYDpYWxne7w_cv2ZXbr93q0Qnqg1Bq3a3uk9bX4LBZUggg&oe=6711B1BA',
         name: 'Harold Florendo',
-        text: 'bright'
+        text: 'facebook.com/harold.florendo.777'
       },
     ],
     transparent: 'rgba(255, 255, 255, 0)',
@@ -282,5 +299,8 @@ background-color: rgba(255, 255, 255, 1); /* Ensure modal background is solid */
 
 .show-btns {
   color: rgba(255, 255, 255, 1) !important;
+}
+#aboutus .v-btn {
+  border-radius: 50%;
 }
 </style>
