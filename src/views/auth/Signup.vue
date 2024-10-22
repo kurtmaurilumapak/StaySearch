@@ -54,9 +54,15 @@ const passwordRules = [
 <template>
   <AppLayout>
     <template #content>
+      <img
+        style="position: absolute; height: 100%; width: 100%; pointer-events: none;"
+        src="@/assets/background.png"
+        alt="background"
+      >
+      <div style="position: absolute; height: 100%; width: 100%; background-color: rgba(0, 128, 0, 0.4); pointer-events: none;"></div>
+
       <v-row
-        class="pt-2"
-        style="height: calc(100vh + 12px); overflow-y: auto"
+        style="height: calc(100vh + 12px); overflow-y: auto; background-color: forestgreen"
       >
         <v-col cols="12" class="d-flex justify-center align-center">
           <v-card
@@ -84,14 +90,18 @@ const passwordRules = [
               </RouterLink>
             </v-card-item>
             <v-card-text class="pt-2 px-10">
-              <h2 class="mb-1">
-                Adventure starts here 🚀
-              </h2>
+              <div class="d-flex align-end">
+                <h2 class="mb-1">
+                  Adventure starts here
+                </h2>
+                <h1 class="text-h3">🚀</h1>
+              </div>
               <p class="mb-0 text-disabled">
                 Make your search for boarding houses easy and fast!
               </p>
             </v-card-text>
             <v-form
+              class="pb-8"
               @submit.prevent="handleSignup"
             >
               <v-row no-gutters>
@@ -221,13 +231,13 @@ const passwordRules = [
                       color= "white"
                       size="x-large"
                     >
-                      <v-icon
-                        class="font-weight-black"
-                        color="red-darken-1"
-                        size="x-large"
-                      >
-                        mdi-google
-                      </v-icon>
+                      <img
+                        style="pointer-events: none"
+                        src="@/assets/google.png"
+                        alt="Google Icon"
+                        height="32"
+                        width="32"
+                      />
                     </v-btn>
                     <v-btn
                       @click="signupWithFacebook"
@@ -236,7 +246,7 @@ const passwordRules = [
                     >
                       <v-icon
                         color="white"
-                        size="x-large"
+                        size="xx-large"
                       >
                         mdi-facebook
                       </v-icon>
@@ -246,8 +256,6 @@ const passwordRules = [
                 </v-col>
               </v-row>
             </v-form>
-            <v-card-text>
-            </v-card-text>
           </v-card>
         </v-col>
       </v-row>
