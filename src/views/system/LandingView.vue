@@ -36,7 +36,7 @@
       <v-btn text class="d-none d-md-flex" @click="scrollToSection('home')">Home</v-btn>
       <v-btn text class="d-none d-md-flex" @click="scrollToSection('gallery')">Accommodations</v-btn>
       <v-btn text class="d-none d-md-flex" @click="scrollToSection('about')">About us</v-btn>
-      <v-btn text class="d-none d-md-flex ml-5 mr-5" @click="$router.push({ name: 'signup' })" style="background-color: green;">Sign up</v-btn>
+      <v-btn text class="d-none d-md-flex ml-5 mr-5" @click="$router.push({ name: 'login' })" style="background-color: green; color: white;">Sign in</v-btn>
 
       <v-app-bar-nav-icon class="d-flex d-md-none" @click="drawer = !drawer"></v-app-bar-nav-icon>
 
@@ -67,7 +67,7 @@
           <h1 class="display-2 font-weight-bold mb-3 text-center text-h3">
             Search for a Boarding House near Caraga State University
           </h1>
-          <v-btn size="x-large" color="green-darken-1" class="mt-5 px-10" large @click="$router.push({ name: 'signup' })">Find</v-btn>
+          <v-btn size="x-large" color="green-darken-1" class="mt-5 px-10" large @click="$router.push({ name: 'login' })">Find</v-btn>
         </v-col>
       </v-row>
     </v-container>

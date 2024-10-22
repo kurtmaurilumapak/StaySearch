@@ -4,6 +4,7 @@ import Navbar from '@/components/common/Navbar.vue'
 import AppLayout from '@/components/layout/AppLayout.vue'
 import { ref } from 'vue'
 
+const rating = ref(4.5)
 const drawer = ref(true);
 </script>
 
@@ -19,7 +20,7 @@ const drawer = ref(true);
       >
         <!-- CREATE POST -->
         <v-col cols="12" md="2" class="d-none d-md-block">
-          <v-row>
+          <v-row class="pl-5">
             <v-col cols="12">
               <RouterLink
                 style="text-decoration: none;color: inherit;"
@@ -37,14 +38,15 @@ const drawer = ref(true);
                 </h2>
               </RouterLink>
             </v-col>
-          
+            
+          </v-row>
+        </v-col>
+
+        <!-- CREATED POSTS -->
         
 
-          
-
-            
-            
-              
+              <v-row>
+                
                 <v-col cols="4" md="12" class="d-flex justify-md-end justify-center">
                   <v-btn
                     class="ma-2"
@@ -61,16 +63,15 @@ const drawer = ref(true);
                   ></v-btn>
                 </v-col>
 
+              </v-row>
+            
 
             <v-divider></v-divider>
             <v-spacer></v-spacer>
 
             <!-- CONTENTS -->
-           
-            </v-row>
-            </v-col>
+         
       </v-row>
-   
     </template>
   </AppLayout>
 </template>
