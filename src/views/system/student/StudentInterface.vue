@@ -128,6 +128,7 @@ function onClick () {
             class="border rounded-lg"
             @click="$router.push('/owner/create')"
             width="100%"
+
           >
             <v-card-text>
               <v-row>
