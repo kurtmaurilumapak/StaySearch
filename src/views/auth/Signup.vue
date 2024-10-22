@@ -66,7 +66,8 @@ const isFormValid = computed(() => {
       <div class="overlay"></div>
 
       <v-row
-        style="height: calc(100vh + 12px); overflow-y: auto; background-color: forestgreen"
+        style="height: calc(100vh + 12px); overflow-y: auto;"
+        class="mx-0"
       >
         <v-col cols="12" class="d-flex justify-center align-center">
           <v-card
