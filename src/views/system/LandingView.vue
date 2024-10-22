@@ -8,33 +8,36 @@
                flat
                floating
     >
-      <v-row>
-        <v-col cols="4">
-          <RouterLink
-            style="text-decoration: none;color: inherit;"
-            to="/"
-            class="d-flex align-center ga-1 my-5 ml-5"
+      <v-toolbar-title>
+        <div
+          style="text-decoration: none;color: inherit;"
+          to="/"
+          class="d-flex align-center gap-3"
+        >
+          <img
+            src="@/assets/logo.png"
+            alt="Logo"
+            width="40"
+            height="40"
+            @click="scrollToSection('home')"
+          />
+          <h2
+            class="font-weight-bold cursor-default"
+            @click="scrollToSection('home')"
           >
-            <img
-              src="@/assets/logo.png"
-              alt="Logo"
-              width="30"
-              height="30"
-            />
-            <h2 class="font-weight-bold">
-              StaySearch
-            </h2>
-          </RouterLink>
-        </v-col>
-        <v-col cols="4" class="d-flex align-center justify-center">
-          <v-btn class="d-none d-md-flex" @click="scrollToSection('home')">Home</v-btn>
-          <v-btn class="d-none d-md-flex" @click="scrollToSection('gallery')">Accommodations</v-btn>
-          <v-btn class="d-none d-md-flex" @click="scrollToSection('about')">About us</v-btn>
-        </v-col>
-        <v-col cols="4" class="d-flex align-center justify-end">
-          <v-btn class="d-none d-md-flex ml-5 mr-5" @click="$router.push({ name: 'signup' })" style="background-color: green;">Sign up</v-btn>
-        </v-col>
-      </v-row>
+            StaySearch
+          </h2>
+        </div>
+      </v-toolbar-title>
+
+      <v-spacer></v-spacer>
+
+
+      <v-btn text class="d-none d-md-flex" @click="scrollToSection('home')">Home</v-btn>
+      <v-btn text class="d-none d-md-flex" @click="scrollToSection('gallery')">Accommodations</v-btn>
+      <v-btn text class="d-none d-md-flex" @click="scrollToSection('about')">About us</v-btn>
+      <v-btn text class="d-none d-md-flex ml-5 mr-5" @click="$router.push({ name: 'login' })" style="background-color: green; color: white;">Sign in</v-btn>
+
       <v-app-bar-nav-icon class="d-flex d-md-none" @click="drawer = !drawer"></v-app-bar-nav-icon>
 
     </v-app-bar>
@@ -51,8 +54,8 @@
         <v-list-item @click="scrollToSection('about')">
           <v-list-item-title>About us</v-list-item-title>
         </v-list-item>
-        <v-list-item @click="$router.push({ name: 'signup' })" style="background-color: green;">
-          <v-list-item-title>Sign up</v-list-item-title>
+        <v-list-item @click="$router.push({ name: 'login' })" style="background-color: green;">
+          <v-list-item-title>Sign in</v-list-item-title>
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
@@ -64,7 +67,7 @@
           <h1 class="display-2 font-weight-bold mb-3 text-center text-h3">
             Search for a Boarding House near Caraga State University
           </h1>
-          <v-btn size="x-large" color="green-darken-1" class="mt-5 px-10" large @click="$router.push({ name: 'signup' })">Find</v-btn>
+          <v-btn size="x-large" color="green-darken-1" class="mt-5 px-10" large @click="$router.push({ name: 'login' })">Find</v-btn>
         </v-col>
       </v-row>
     </v-container>
@@ -113,14 +116,14 @@
           <v-img :src="selectedImage" aspect-ratio="16/9" class="clear-modal-image"></v-img>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn style="background-color: #388E3C;">View Details</v-btn>
+            <v-btn text style="background-color: #388E3C;">View Details</v-btn>
 
-            <v-btn color="primary" @click="dialog = false" style="border: 1cap solid;">Close</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </v-container>
-
+        <v-btn color="primary" @click="dialog = false" style="border: 1cap solid;">Close</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+</v-container>
+    
 
     <!-- About Section -->
     <v-container id="about" class="py-16 text-center">
@@ -172,17 +175,17 @@ export default {
     drawer: false,
     items: [
       {
-        title: 'Jays Boarding House',
+        title: 'Sample Title',
         img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvYuZYTDHcMw28NyHdJNRXJb_dvdhYfGZK-w&s',
       },
       {
-        title: 'Rock',
+        title: 'Sample Title',
         text: 'Greatest Rock Hits',
         subtext: 'Lose yourself in rock tunes.',
         img: 'https://www.kayak.com.ph/rimg/himg/45/bc/5f/expediav2-287511-eddf8e-547412.jpg?width=1366&height=768&crop=true',
       },
       {
-        title: 'Mellow Moods',
+        title: 'Sample Title',
         text: 'Ambient Bass',
         subtext: 'Chill beats to mellow you out.',
         img: 'https://scontent.fcgy3-1.fna.fbcdn.net/v/t39.30808-6/442476318_25673811025568212_4360100489536965015_n.jpg?stp=cp6_dst-jpg&_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeEhXW6Gypnr25K1NPwDBQLue7zkL0HBtuJ7vOQvQcG24sAgCcKWudthCpAT5uRqY2C6dgg_YoRDxBaMBYvOAVdg&_nc_ohc=WsO07hF50HMQ7kNvgHpzbSh&_nc_ht=scontent.fcgy3-1.fna&_nc_gid=Apj5QGRvfZ2UWr9f7IH-u5N&oh=00_AYDMTdCa0mMejXiEpjOFloXnehqsKuCW6uC8uVgepdJLGQ&oe=670EEF19',
@@ -244,6 +247,9 @@ export default {
   this.selectedImage = image; // Set the clicked image
   this.dialog = true; // Open the dialog
 },
+  checklogin() {
+    alert("You must sign in first before viewing details");
+  }
 }
 }
 </script>

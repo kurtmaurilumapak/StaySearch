@@ -7,10 +7,16 @@ const form = ref({
   username: '',
   email: '',
   password: '',
+  loading: false,
 })
+
+function load () {
+  form.value.loading = true
+  setTimeout(() => (form.value.loading = false), 3000)
+}
+
 const visible = ref(false)
 const user = ref('student')
-
 
 </script>
 
@@ -23,7 +29,7 @@ const user = ref('student')
         src="@/assets/background.png"
         alt="background"
       >
-      <div style="position: absolute; height: 100%; width: 100%; background-color: rgba(0, 128, 0, 0.4); pointer-events: none;"></div>
+      <div class="overlay"></div>
 
       <v-row
         style="height: calc(100vh + 12px); overflow-y: auto;"
@@ -32,9 +38,17 @@ const user = ref('student')
           <v-card
             style="border-radius: 20px;"
             :elevation="12"
-            max-width="448"
+            max-width="475"
           >
-            <v-card-item class="justify-center py-10">
+            <img
+              style="position: absolute; z-index: -1"
+              src="@/assets/authbg.png"
+              alt="cardbg"
+              height="100%"
+              width="100%"
+            >
+
+            <v-card-item class="justify-center py-5 text-white">
               <RouterLink
                 style="text-decoration: none;color: inherit;"
                 to="/"
@@ -52,18 +66,21 @@ const user = ref('student')
               </RouterLink>
             </v-card-item>
             <v-card-text class="pt-2 px-10">
-              <div class="d-flex align-end">
-                <h2 class="mb-1">
+              <div class="d-flex align-end text-white">
+                <h1 class="mb-1">
                   Welcome to StaySearch!
-                </h2>
-                <h1 class="text-h3">👋🏻</h1>
+                </h1>
+                <h1 class="text-h2 float">👋🏻</h1>
               </div>
 
-              <p class="mb-0 text-disabled">
+              <p class="mb-0 text-white">
                 Please sign-in to your account and start searching.
               </p>
             </v-card-text>
-            <v-form @submit.prevent="() => {}">
+            <v-form
+              style="background-color: white; margin-left: 5%; margin-right: 5%; padding-bottom: 5%; border-radius: 20px"
+              @submit.prevent="() => {}"
+            >
               <v-row no-gutters>
                 <!-- User Type -->
                 <v-col
@@ -101,17 +118,18 @@ const user = ref('student')
                     label="Password"
                     placeholder="············"
                     variant="outlined"
-                    :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
+                    :append-inner-icon="visible ? 'mdi-eye' : 'mdi-eye-off'"
                     :type="visible ? 'text' : 'password'"
                     @click:append-inner="visible = !visible"
                   />
                 </v-col>
                 <v-col cols="12" class="text-center pt-5">
                   <v-btn
+                    :loading="form.loading"
                     color="green-darken-1"
                     width="50%"
                     type="submit"
-                    to="/"
+                    @click="load"
                   >
                     Login
                   </v-btn>
@@ -183,3 +201,30 @@ const user = ref('student')
     </template>
   </AppLayout>
 </template>
+
+
+<style>
+.overlay {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(135deg, rgba(0, 128, 0, 0.4) 0%, rgba(0, 128, 0, 0.1) 50%, rgba(0, 128, 0, 0.4) 100%);
+  pointer-events: none;
+}
+
+.float {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px); /* Move up */
+  }
+  100% {
+    transform: translateY(0); /* Move back down */
+  }
+}
+</style>
