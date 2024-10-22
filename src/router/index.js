@@ -19,6 +19,11 @@ const router = createRouter({
       component: () => import('@/views/auth/Login.vue'),
     },
     {
+      path: '/owner/dashboard',
+      name: 'dashboard',
+      component: () => import('@/views/system/owner/Dashboard.vue'),
+    },
+    {
       path: '/owner/post',
       name: 'post',
       component: () => import('@/views/system/owner/Post.vue'),
@@ -27,7 +32,17 @@ const router = createRouter({
       path: '/owner/create',
       name: 'create',
       component: () => import('@/views/system/owner/CreatePost.vue'),
-    }
+    },
+    {
+      path: '/owner/messages',
+      name: 'messages',
+      component: () => import('@/views/system/owner/Messages.vue'),
+    },
+    {
+      path: '/student/page',
+      name: 'student',
+      component: () => import('@/views/system/student/StudentInterface.vue'),
+    },
   ]
 })
 
