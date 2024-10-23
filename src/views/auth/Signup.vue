@@ -2,15 +2,15 @@
 import AppLayout from '@/components/layout/AppLayout.vue'
 
 import { ref, computed } from 'vue'
-
-const form = ref({
+const formDataDefault = {
   firstname: '',
   lastname: '',
   username: '',
   email: '',
   password: '',
   loading: false,
-})
+}
+const form = ref({ formDataDefault })
 
 function load () {
   form.value.loading = true
