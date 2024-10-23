@@ -51,35 +51,39 @@ export default {
                flat
                floating
     >
-      <v-toolbar-title>
-        <div
-          style="text-decoration: none;color: inherit;"
-          to="/"
-          class="d-flex align-center gap-3"
-        >
-          <img
-            src="@/assets/logo.png"
-            alt="Logo"
-            width="40"
-            height="40"
-            @click="scrollToSection('home')"
-          />
-          <h2
-            class="font-weight-bold cursor-default"
-            @click="scrollToSection('home')"
+      <v-row>
+        <v-col cols="6">
+          <RouterLink
+            style="text-decoration: none;color: inherit;"
+            to="/"
+            class="d-flex align-center justify-start ga-1 mx-5"
           >
-            StaySearch
-          </h2>
-        </div>
-      </v-toolbar-title>
+            <img
+              src="@/assets/logo.png"
+              alt="Logo"
+              width="40"
+              height="40"
+              @click="scrollToSection('home')"
+            />
+            <h2
+              class="font-weight-bold"
+              @click="scrollToSection('home')">
+              StaySearch
+            </h2>
+          </RouterLink>
+        </v-col>
+        <v-col cols="6" class="d-flex justify-end align-center">
+          <v-btn class="d-none d-md-flex" @click="scrollToSection('home')">Home</v-btn>
+          <v-btn class="d-none d-md-flex" @click="scrollToSection('gallery')">Accommodations</v-btn>
+          <v-btn class="d-none d-md-flex" @click="scrollToSection('about')">About us</v-btn>
+          <v-btn class="d-none d-md-flex ml-5 mr-5" @click="$router.push({ name: 'login' })" style="background-color: green; color: white;">Sign in</v-btn>
+        </v-col>
+      </v-row>
 
-      <v-spacer></v-spacer>
 
 
-      <v-btn text class="d-none d-md-flex" @click="scrollToSection('home')">Home</v-btn>
-      <v-btn text class="d-none d-md-flex" @click="scrollToSection('gallery')">Accommodations</v-btn>
-      <v-btn text class="d-none d-md-flex" @click="scrollToSection('about')">About us</v-btn>
-      <v-btn text class="d-none d-md-flex ml-5 mr-5" @click="$router.push({ name: 'login' })" style="background-color: green; color: white; ">Sign in</v-btn>
+
+
 
       <v-app-bar-nav-icon class="d-flex d-md-none" @click="drawer = !drawer"></v-app-bar-nav-icon>
 
