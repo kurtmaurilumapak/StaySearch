@@ -77,7 +77,7 @@ const isFormValid = computed(() => {
           >
             <img
               style="position: absolute; z-index: -1"
-              src="@/assets/authbg.png"
+              src="@/assets/auth/signup.png"
               alt="cardbg"
               height="100%"
               width="100%"
@@ -102,13 +102,13 @@ const isFormValid = computed(() => {
               </RouterLink>
             </v-card-item>
             <v-card-text class="pt-2 px-10">
-              <div class="d-flex align-end text-white">
+              <div class="d-flex align-end text-white cursor-default">
                 <h1 class="mb-1">
                   Adventure starts here
                 </h1>
                 <h1 class="text-h2 float">🚀</h1>
               </div>
-              <p class="mb-0 text-white">
+              <p class="mb-0 text-white cursor-default">
                 Make your search for boarding houses easy and fast!
               </p>
             </v-card-text>
@@ -220,7 +220,7 @@ const isFormValid = computed(() => {
                   class="d-flex align-center pt-5"
                 >
                   <v-divider />
-                  <span class="mx-4">or</span>
+                  <span class="mx-4 text-overline">or</span>
                   <v-divider />
                 </v-col>
 

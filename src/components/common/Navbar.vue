@@ -15,7 +15,6 @@ const nav = ref({
 <template>
   <v-navigation-drawer
     :width="100"
-    color="green-lighten-5 border"
   >
     <v-list
       nav
