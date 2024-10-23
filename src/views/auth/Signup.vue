@@ -67,7 +67,7 @@ const isFormValid = computed(() => {
 
       <v-row
         style="height: calc(100vh + 12px); overflow-y: auto;"
-        class="mx-0"
+        class="d-flex justify-center align-start mx-0">
       >
         <v-col cols="12" class="d-flex justify-center align-center">
           <v-card
