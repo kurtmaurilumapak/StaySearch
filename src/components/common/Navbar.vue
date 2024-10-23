@@ -5,7 +5,7 @@ import { ref } from 'vue'
 const nav = ref({
   navItems: [
     { title: 'DASHBOARD', path: '/owner/dashboard', icon: 'mdi-view-dashboard'},
-    { title: 'POSTS', path: '/owner/post', icon: 'mdi-image-filter-center-focus-weak' },
+    { title: 'POSTS', path: '/owner/post', icon: 'mdi-image-filter-center-focus-weak ' },
     { title: 'MESSAGES', path: '/owner/messages', icon: 'mdi-message-processing'},
   ],
 })
@@ -58,7 +58,6 @@ const nav = ref({
         color="green-darken-4"
         :key="index"
         :to="item.path"
-
       >
         <v-icon size="25">{{ item.icon }}</v-icon>
         <v-list-item-title class="text-center">{{ item.title }}</v-list-item-title>
