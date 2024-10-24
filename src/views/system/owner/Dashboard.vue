@@ -79,7 +79,7 @@ const drawer = ref(true);
     class="mx-auto my-8"
     elevation="16"
     max-width="344"
-    color="green-lighten-2
+    color="green-lighten-4
 "
   >
     <v-card-item>
@@ -108,7 +108,7 @@ const drawer = ref(true);
     class="mx-auto my-8"
     elevation="16"
     max-width="344"
-    color="green-lighten-2
+    color="green-lighten-4
 "
   >
     <v-card-item>
@@ -138,7 +138,7 @@ const drawer = ref(true);
     class="mx-auto my-8"
     elevation="16"
     max-width="344"
-    color="green-lighten-2
+    color="green-lighten-4
 "
   >
     <v-card-item>
