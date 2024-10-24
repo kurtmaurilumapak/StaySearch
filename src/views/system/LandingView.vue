@@ -1,47 +1,46 @@
-<script>
+<script setup>
 import { ref } from 'vue'
-export default {
-  data: () => ({
-    dialog: false, // Controls the dialog visibility
-    selectedImage: null, // Stores the selected image for the moda
-    drawer: false,
-    developers: [
-      {
-        avatar: 'https://scontent.fcgy3-1.fna.fbcdn.net/v/t1.30497-1/453178253_471506465671661_2781666950760530985_n.png?stp=dst-png_s200x200&_nc_cat=1&ccb=1-7&_nc_sid=136b72&_nc_eui2=AeHJVnJ4u6QE_dM-TsXgfPAoWt9TLzuBU1Ba31MvO4FTUAdwZh5ICdR8uLsn7jJLylhCHbRWn1alp9fwITHM-zq0&_nc_ohc=dmcmeAdPEz4Q7kNvgHCkDfv&_nc_ht=scontent.fcgy3-1.fna&_nc_gid=AZ8MNjum2RFA_IKRAzdm0ia&oh=00_AYAGR0f142ly1oJyrvSvvK6KuaRwrc2F3dt9100FJQtKGQ&oe=67334FFA',
-        name: 'Ainor Jamal',
-        text: 'facebook.com/ainor.jamal.9'
-      },
-      {
-        avatar: 'https://scontent.fcgy3-1.fna.fbcdn.net/v/t39.30808-6/278384899_1621300201553680_3154144050592710379_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHsBnhZi4UpGCrhq0qd-lwfv5Dt5lRqKfS_kO3mVGop9DTxJ245b2ubBmWxO4K_HLXTc7a4YFEVtq5DcDc6Lb5c&_nc_ohc=xfX8FgVR47oQ7kNvgHy58zC&_nc_ht=scontent.fcgy3-1.fna&_nc_gid=A1aG7GYvqR0C54fFMBbZ5cA&oh=00_AYBw9KV3AVAbtqQO-a0gQmlrE7ka-3_0EstU0jW6PQyqJA&oe=6711A121',
-        name: 'Kurt Mauri Lumapak',
-        text: 'facebook.com/kurtniezas01'
-      },
-      {
-        avatar: 'https://scontent.fcgy3-1.fna.fbcdn.net/v/t39.30808-1/414713350_1645837936165455_7931494424647193135_n.jpg?stp=dst-jpg_s200x200&_nc_cat=110&ccb=1-7&_nc_sid=0ecb9b&_nc_eui2=AeEl3wjtqx1mASZbbPom193vV2fpz0Tp331XZ-nPROnffdDt3iJ611emik_tOX2RN9jaVYVguJHMa4FVhcPSf4Sa&_nc_ohc=EWQMoAQT-48Q7kNvgHQbn9I&_nc_ht=scontent.fcgy3-1.fna&_nc_gid=A0PwDMkACWw0xqLPJUcOr_B&oh=00_AYDpYWxne7w_cv2ZXbr93q0Qnqg1Bq3a3uk9bX4LBZUggg&oe=6711B1BA',
-        name: 'Harold Florendo',
-        text: 'facebook.com/harold.florendo.777'
-      }, 
-    ],
-    transparent: 'rgba(255, 255, 255, 0)',
-  }),
-  methods: {
-    scrollToSection(sectionId) {
-      const section = document.getElementById(sectionId);
-      if (section) {
-        section.scrollIntoView({ behavior: 'smooth' });
-        this.drawer = false;
-      }
-    },
-  openModal(image) {
-  this.selectedImage = image; // Set the clicked image
-  this.dialog = true; // Open the dialog
-},
-  checklogin() {
-    alert("You must sign in first before viewing details");
+
+
+const dialog = ref(false) 
+const selectedImage = ref(null) 
+const drawer = ref(false)
+const transparent = 'rgba(255, 255, 255, 0)'
+
+const developers = [
+  {
+    avatar: 'https://scontent.fcgy3-1.fna.fbcdn.net/v/t1.30497-1/453178253_471506465671661_2781666950760530985_n.png?stp=dst-png_s200x200&_nc_cat=1&ccb=1-7&_nc_sid=136b72&_nc_eui2=AeHJVnJ4u6QE_dM-TsXgfPAoWt9TLzuBU1Ba31MvO4FTUAdwZh5ICdR8uLsn7jJLylhCHbRWn1alp9fwITHM-zq0&_nc_ohc=dmcmeAdPEz4Q7kNvgHCkDfv&_nc_ht=scontent.fcgy3-1.fna&_nc_gid=AZ8MNjum2RFA_IKRAzdm0ia&oh=00_AYAGR0f142ly1oJyrvSvvK6KuaRwrc2F3dt9100FJQtKGQ&oe=67334FFA',
+    name: 'Ainor Jamal',
+    text: 'facebook.com/ainor.jamal.9'
+  },
+  {
+    avatar: 'https://scontent.fcgy3-1.fna.fbcdn.net/v/t39.30808-6/278384899_1621300201553680_3154144050592710379_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHsBnhZi4UpGCrhq0qd-lwfv5Dt5lRqKfS_kO3mVGop9DTxJ245b2ubBmWxO4K_HLXTc7a4YFEVtq5DcDc6Lb5c&_nc_ohc=xfX8FgVR47oQ7kNvgHy58zC&_nc_ht=scontent.fcgy3-1.fna&_nc_gid=A1aG7GYvqR0C54fFMBbZ5cA&oh=00_AYBw9KV3AVAbtqQO-a0gQmlrE7ka-3_0EstU0jW6PQyqJA&oe=6711A121',
+    name: 'Kurt Mauri Lumapak',
+    text: 'facebook.com/kurtniezas01'
+  },
+  {
+    avatar: 'https://scontent.fcgy3-1.fna.fbcdn.net/v/t39.30808-1/414713350_1645837936165455_7931494424647193135_n.jpg?stp=dst-jpg_s200x200&_nc_cat=110&ccb=1-7&_nc_sid=0ecb9b&_nc_eui2=AeEl3wjtqx1mASZbbPom193vV2fpz0Tp331XZ-nPROnffdDt3iJ611emik_tOX2RN9jaVYVguJHMa4FVhcPSf4Sa&_nc_ohc=EWQMoAQT-48Q7kNvgHQbn9I&_nc_ht=scontent.fcgy3-1.fna&_nc_gid=A0PwDMkACWw0xqLPJUcOr_B&oh=00_AYDpYWxne7w_cv2ZXbr93q0Qnqg1Bq3a3uk9bX4LBZUggg&oe=6711B1BA',
+    name: 'Harold Florendo',
+    text: 'facebook.com/harold.florendo.777'
+  }, 
+]
+
+
+const scrollToSection = (sectionId) => {
+  const section = document.getElementById(sectionId)
+  if (section) {
+    section.scrollIntoView({ behavior: 'smooth' })
+    drawer.value = false
   }
 }
+
+const openModal = (image) => {
+  selectedImage.value = image 
+  dialog.value = true 
 }
+
 </script>
+
 <template>
   <v-app>
     <!-- Navigation Bar -->
@@ -407,6 +406,7 @@ export default {
     </v-footer>
   </v-app>
 </template>
+
 <style scoped>
 .hero {
   background-image: url('https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExZDF1YjNzZjFsemVubDV3OW15aWRjOHdvN21zZ2dxaTQzZGFhdjNuaiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/82jROlcRerLJeBni9u/giphy.gif');
