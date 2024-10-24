@@ -1,12 +1,15 @@
 <script setup>
 import { ref } from 'vue'
 
+import dashboardIcon from '@/assets/navbar/dashboard.png';
+import postsIcon from '@/assets/navbar/post.png';
+import reservationsIcon from '@/assets/navbar/reservation.png';
 
 const nav = ref({
   navItems: [
-    { title: 'DASHBOARD', path: '/owner/dashboard', icon: 'mdi-view-dashboard'},
-    { title: 'POSTS', path: '/owner/post', icon: 'mdi-image-filter-center-focus-weak ' },
-    { title: 'MESSAGES', path: '/owner/messages', icon: 'mdi-message-processing'},
+    { title: 'DASHBOARD', path: '/owner/dashboard', icon: dashboardIcon },
+    { title: 'POSTS', path: '/owner/post', icon: postsIcon },
+    { title: 'RESERVATIONS', path: '/owner/messages', icon: reservationsIcon },
   ],
 })
 
@@ -14,17 +17,17 @@ const nav = ref({
 
 <template>
   <v-navigation-drawer
-    :width="100"
+    :width="80"
   >
     <v-list
-      nav
+
     >
       <v-list-item class="d-flex justify-center">
         <v-menu location="left">
           <template v-slot:activator="{ props }">
             <v-avatar
               image="https://cdn.vuetifyjs.com/images/john.jpg"
-              size="50"
+              size="40"
               v-bind="props"
             >
             </v-avatar>
@@ -49,17 +52,16 @@ const nav = ref({
         </v-menu>
       </v-list-item>
 
-      <v-divider></v-divider>
+      <v-divider class="my-2"></v-divider>
 
       <v-list-item
-        class="d-flex flex-column text-center my-5"
+        class="d-flex flex-column text-center py-3"
         v-for="(item, index) in nav.navItems"
-        color="green-darken-4"
         :key="index"
         :to="item.path"
       >
-        <v-icon size="25">{{ item.icon }}</v-icon>
-        <v-list-item-title class="text-center">{{ item.title }}</v-list-item-title>
+        <img :src="item.icon" alt="icon" width="30" />
+        <p class="text-center" style="font-size: 10px; font-weight: bold">{{ item.title }}</p>
       </v-list-item>
     </v-list>
   </v-navigation-drawer>
