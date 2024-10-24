@@ -358,8 +358,6 @@ const openModal = (image) => {
           </v-col>
         </v-row>
       </v-col>
-
-
     </v-row>
 
     <!-- Dialog Modal for Image Viewing -->
