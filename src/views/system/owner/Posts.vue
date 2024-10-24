@@ -42,7 +42,6 @@ const drawer = ref(true);
               <v-btn
                 width="90%"
                 color="green-darken-2"
-                prepend-icon="mdi-plus"
                 @click="$router.push('/owner/create')"
               >
                 create post
@@ -69,7 +68,7 @@ const drawer = ref(true);
               style="background-color: darkseagreen;"
             >
               <v-row>
-                <v-col cols="8" class="d-flex d-md-none align-center">
+                <v-col cols="6" sm="4" class="d-flex d-md-none align-center">
                   <v-btn
                     color="green-darken-2"
                     @click="$router.push('/owner/create')"
@@ -78,7 +77,7 @@ const drawer = ref(true);
                     create post
                   </v-btn>
                 </v-col>
-                <v-col cols="4" md="12" class="d-flex justify-md-end justify-center">
+                <v-col cols="6" sm="8" md="12" class="d-flex justify-end">
                   <v-btn
                     class="ma-2"
                     color="black"
@@ -102,7 +101,7 @@ const drawer = ref(true);
 
             <!-- CONTENTS -->
             <v-card-text
-              style="overflow-y: auto; max-height: 81.5vh;"
+              style="overflow-y: auto; max-height: 100vh;"
             >
               <v-row
               >
