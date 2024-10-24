@@ -5,7 +5,6 @@ import { ref } from 'vue'
 const dialog = ref(false) 
 const selectedImage = ref(null) 
 const drawer = ref(false)
-const transparent = 'rgba(255, 255, 255, 0)'
 
 const developers = [
   {
@@ -42,7 +41,9 @@ const openModal = (image) => {
 </script>
 
 <template>
-  <v-app>
+  <v-app
+  class="overflow-hidden"
+  >
     <!-- Navigation Bar -->
     <v-app-bar app dark class="navbar"
                density="comfortable"
@@ -118,12 +119,134 @@ const openModal = (image) => {
       </v-row>
     </v-container>
 
-    <v-container fluid class="pa-4 text-center" id="gallery">
-    <v-row align="center" justify="center">
-      <!-- Image 1 -->
-      <v-col cols="4">
+    <v-container fluid class="pa-4 text-center d-flex flex-column align-center justify-center" id="gallery">
+    <v-row class="w-lg-75 d-flex justify-center">
+      <v-col cols="12">
+        <v-row>
+          <!-- Image 1 -->
+          <v-col cols="12" md="4">
+            <v-hover v-slot="{ isHovering, props }">
+              <v-card
+                :class="{ 'on-hover': isHovering }"
+                :elevation="isHovering ? 20 : 2"
+                width="100%"
+                v-bind="props"
+                @click="openModal('https://cdn.vuetifyjs.com/images/parallax/material.jpg')"
+              >
+                <v-img
+                  src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                  max-width="100%"
+                  height="500"
+                  cover
+                >
+                  <v-card-title class="text-h6 text-white d-flex flex-column">
+                    <p class="mt-21">Sample Title 1</p>
+                  </v-card-title>
+                </v-img>
+              </v-card>
+            </v-hover>
+          </v-col>
+
+          <!-- Image 2 -->
+          <v-col cols="12" md="8">
+            <v-hover v-slot="{ isHovering, props }">
+              <v-card
+                :class="{ 'on-hover': isHovering }"
+                :elevation="isHovering ? 20 : 2"
+                width="100%"
+                v-bind="props"
+                @click="openModal('https://www.kayak.com.ph/rimg/himg/45/bc/5f/expediav2-287511-eddf8e-547412.jpg?width=1366&height=768&crop=true')"
+              >
+                <v-img
+                  src="https://www.kayak.com.ph/rimg/himg/45/bc/5f/expediav2-287511-eddf8e-547412.jpg?width=1366&height=768&crop=true"
+                  height="500"
+                  cover
+                >
+                  <v-card-title class="text-h6 text-white d-flex flex-column">
+                    <p class="mt-21">Sample Title 2</p>
+                  </v-card-title>
+                </v-img>
+              </v-card>
+            </v-hover>
+          </v-col>
+        </v-row>
+      </v-col>
+
+      <v-col cols="12">
+        <v-row>
+          <!-- Image 3 -->
+          <v-col cols="12" md="4">
+            <v-hover v-slot="{ isHovering, props }">
+              <v-card
+
+                :class="{ 'on-hover': isHovering }"
+                :elevation="isHovering ? 20 : 2"
+                v-bind="props"
+                @click="openModal('https://cdn.vuetifyjs.com/images/parallax/material.jpg')"
+              >
+                <v-img
+                  src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                  height="500"
+                  cover
+                >
+                  <v-card-title class="text-h6 text-white d-flex flex-column">
+                    <p class="mt-21">Sample Title 3</p>
+                  </v-card-title>
+                </v-img>
+              </v-card>
+            </v-hover>
+          </v-col>
+
+          <!-- Image 4 -->
+          <v-col cols="12" md="4">
+            <v-hover v-slot="{ isHovering, props }">
+              <v-card
+                :class="{ 'on-hover': isHovering }"
+                :elevation="isHovering ? 20 : 2"
+                v-bind="props"
+                @click="openModal('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvYuZYTDHcMw28NyHdJNRXJb_dvdhYfGZK-w&s')"
+              >
+                <v-img
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvYuZYTDHcMw28NyHdJNRXJb_dvdhYfGZK-w&s"
+                  height="500"
+                  cover
+                >
+                  <v-card-title class="text-h6 text-white d-flex flex-column">
+                    <p class="mt-21">Sample Title 4</p>
+                  </v-card-title>
+                </v-img>
+              </v-card>
+            </v-hover>
+          </v-col>
+
+          <!-- Image 5 -->
+          <v-col cols="12" md="4">
+            <v-hover v-slot="{ isHovering, props }">
+              <v-card
+                :class="{ 'on-hover': isHovering }"
+                :elevation="isHovering ? 20 : 2"
+                v-bind="props"
+                @click="openModal('https://cdn.vuetifyjs.com/images/parallax/material.jpg')"
+              >
+                <v-img
+                  src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                  height="500"
+                  cover
+                >
+                  <v-card-title class="text-h6 text-white d-flex flex-column">
+                    <p class="mt-21">Sample Title 5</p>
+                  </v-card-title>
+                </v-img>
+              </v-card>
+            </v-hover>
+          </v-col>
+        </v-row>
+      </v-col>
+
+      <!-- Image 6 -->
+      <v-col cols="12">
         <v-hover v-slot="{ isHovering, props }">
-          <v-card 
+          <v-card
             :class="{ 'on-hover': isHovering }"
             :elevation="isHovering ? 20 : 2"
             v-bind="props"
@@ -131,230 +254,113 @@ const openModal = (image) => {
           >
             <v-img
               src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-              height="255px"
+              height=500
               cover
             >
               <v-card-title class="text-h6 text-white d-flex flex-column">
-                <p class="mt-21">Sample Title 1</p>
+                <p class="mt-21">Sample Title 6</p>
               </v-card-title>
             </v-img>
           </v-card>
         </v-hover>
       </v-col>
 
-      <!-- Image 2 with Child -->
-      <v-col cols="8">
+      <!-- Image 7 -->
+      <v-col cols="12" md="6">
         <v-hover v-slot="{ isHovering, props }">
-          <v-card 
+          <v-card
             :class="{ 'on-hover': isHovering }"
             :elevation="isHovering ? 20 : 2"
             v-bind="props"
-            @click="openModal('https://www.kayak.com.ph/rimg/himg/45/bc/5f/expediav2-287511-eddf8e-547412.jpg?width=1366&height=768&crop=true')"
+            @click="openModal('https://cdn.vuetifyjs.com/images/parallax/material.jpg')"
           >
             <v-img
-              src="https://www.kayak.com.ph/rimg/himg/45/bc/5f/expediav2-287511-eddf8e-547412.jpg?width=1366&height=768&crop=true"
-              height="255px"
+              src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+              height="500"
               cover
             >
               <v-card-title class="text-h6 text-white d-flex flex-column">
-                <p class="mt-21">Sample Title 2</p>
+                <p class="mt-21">Sample Title 7</p>
               </v-card-title>
             </v-img>
           </v-card>
         </v-hover>
-
-
-      
       </v-col>
 
-      <!-- Image 3 -->
-      
+      <!-- Image 8 -->
+      <v-col cols="12" md="6">
+        <v-hover v-slot="{ isHovering, props }">
+          <v-card
+            :class="{ 'on-hover': isHovering }"
+            :elevation="isHovering ? 20 : 2"
+            v-bind="props"
+            @click="openModal('https://cdn.vuetifyjs.com/images/parallax/material.jpg')"
+          >
+            <v-img
+              src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+              height="500"
+              cover
+            >
+              <v-card-title class="text-h6 text-white d-flex flex-column">
+                <p class="mt-21">Sample Title 8</p>
+              </v-card-title>
+            </v-img>
+          </v-card>
+        </v-hover>
+      </v-col>
+
+      <v-col cols="12">
+        <v-row>
+          <!-- Image 9 -->
+          <v-col cols="12" md="8">
+            <v-hover v-slot="{ isHovering, props }">
+              <v-card
+                :class="{ 'on-hover': isHovering }"
+                :elevation="isHovering ? 20 : 2"
+                width="100%"
+                v-bind="props"
+                @click="openModal('https://cdn.vuetifyjs.com/images/parallax/material.jpg')"
+              >
+                <v-img
+                  src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                  max-width="100%"
+                  height="500"
+                  cover
+                >
+                  <v-card-title class="text-h6 text-white d-flex flex-column">
+                    <p class="mt-21">Sample Title 9</p>
+                  </v-card-title>
+                </v-img>
+              </v-card>
+            </v-hover>
+          </v-col>
+
+          <!-- Image 10 -->
+          <v-col cols="12" md="4">
+            <v-hover v-slot="{ isHovering, props }">
+              <v-card
+                :class="{ 'on-hover': isHovering }"
+                :elevation="isHovering ? 20 : 2"
+                v-bind="props"
+                @click="openModal('https://cdn.vuetifyjs.com/images/parallax/material.jpg')"
+              >
+                <v-img
+                  src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                  height="500"
+                  cover
+                >
+                  <v-card-title class="text-h6 text-white d-flex flex-column">
+                    <p class="mt-21">Sample Title 10</p>
+                  </v-card-title>
+                </v-img>
+              </v-card>
+            </v-hover>
+          </v-col>
+        </v-row>
+      </v-col>
+
 
     </v-row>
-    <v-row>
-      <v-col cols="6">
-        <v-hover v-slot="{ isHovering, props }">
-          <v-card 
-            :class="{ 'on-hover': isHovering }"
-            :elevation="isHovering ? 20 : 2"
-            v-bind="props"
-            @click="openModal('https://cdn.vuetifyjs.com/images/parallax/material.jpg')"
-          >
-            <v-img
-              src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-              height="255px"
-              cover
-            >
-              <v-card-title class="text-h6 text-white d-flex flex-column">
-                <p class="mt-21">Sample Title 3</p>
-              </v-card-title>
-            </v-img>
-          </v-card>
-        </v-hover>
-      </v-col>
-
-      <!-- Image 4 -->
-      <v-col cols="3">
-        <v-hover v-slot="{ isHovering, props }">
-          <v-card 
-            :class="{ 'on-hover': isHovering }"
-            :elevation="isHovering ? 20 : 2"
-            v-bind="props"
-            @click="openModal('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvYuZYTDHcMw28NyHdJNRXJb_dvdhYfGZK-w&s')"
-          >
-            <v-img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvYuZYTDHcMw28NyHdJNRXJb_dvdhYfGZK-w&s"
-              height=255px
-              cover
-            >
-              <v-card-title class="text-h6 text-white d-flex flex-column">
-                <p class="mt-21">Sample Title 4</p>
-              </v-card-title>
-            </v-img>
-          </v-card>
-        </v-hover>
-      </v-col>
-
-      <!-- Image 5 -->
-      <v-col cols="3" style="border: 1px solid black">
-        <v-hover v-slot="{ isHovering, props }">
-          <v-card 
-            :class="{ 'on-hover': isHovering }"
-            :elevation="isHovering ? 20 : 2"
-            v-bind="props"
-            @click="openModal('https://cdn.vuetifyjs.com/images/parallax/material.jpg')"
-          >
-            <v-img
-              src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-              height=255px
-              cover
-            >
-              <v-card-title class="text-h6 text-white d-flex flex-column">
-                <p class="mt-21">Sample Title 5</p>
-              </v-card-title>
-            </v-img>
-          </v-card>
-        </v-hover>
-      </v-col>
-      </v-row>
-    
-   
-      <v-row>
-        <v-col cols="4">
-        <v-hover v-slot="{ isHovering, props }">
-          <v-card 
-            :class="{ 'on-hover': isHovering }"
-            :elevation="isHovering ? 20 : 2"
-            v-bind="props"
-            @click="openModal('https://cdn.vuetifyjs.com/images/parallax/material.jpg')"
-          >
-            <v-img
-              src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-              height=255px
-              cover
-            >
-              <v-card-title class="text-h6 text-white d-flex flex-column">
-                <p class="mt-21">Sample Title 5</p>
-              </v-card-title>
-            </v-img>
-          </v-card>
-          </v-hover>
-        
-        </v-col>
-        <v-col cols="8">
-        <v-row>
-          <v-col cols="6" >
-          <v-hover v-slot="{ isHovering, props }">
-          <v-card 
-            :class="{ 'on-hover': isHovering }"
-            :elevation="isHovering ? 20 : 2"
-            v-bind="props"
-            @click="openModal('https://cdn.vuetifyjs.com/images/parallax/material.jpg')"
-          >
-            <v-img
-              src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-              height=120px
-              cover
-            >
-              <v-card-title class="text-h6 text-white d-flex flex-column">
-                <p class="mt-21">Sample Title 5</p>
-              </v-card-title>
-            </v-img>
-          </v-card>
-         </v-hover>
-        
-        </v-col>
-        <v-col cols="6" >
-          <v-hover v-slot="{ isHovering, props }">
-          <v-card 
-            :class="{ 'on-hover': isHovering }"
-            :elevation="isHovering ? 20 : 2"
-            v-bind="props"
-            @click="openModal('https://cdn.vuetifyjs.com/images/parallax/material.jpg')"
-          >
-            <v-img
-              src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-              height=120px
-              cover
-            >
-              <v-card-title class="text-h6 text-white d-flex flex-column">
-                <p class="mt-21">Sample Title 5</p>
-              </v-card-title>
-            </v-img>
-          </v-card>
-         </v-hover>
-        
-        </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="6">
-        <v-hover v-slot="{ isHovering, props }">
-          <v-card 
-            :class="{ 'on-hover': isHovering }"
-            :elevation="isHovering ? 20 : 2"
-            v-bind="props"
-            @click="openModal('https://cdn.vuetifyjs.com/images/parallax/material.jpg')"
-          >
-            <v-img
-              src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-              height=135px
-              cover
-            >
-              <v-card-title class="text-h6 text-white d-flex flex-column">
-                <p class="mt-21">Sample Title 5</p>
-              </v-card-title>
-            </v-img>
-          </v-card>
-        </v-hover>
-        
-       </v-col>
-       <v-col cols="6">
-          <v-hover v-slot="{ isHovering, props }">
-          <v-card 
-            :class="{ 'on-hover': isHovering }"
-            :elevation="isHovering ? 20 : 2"
-            v-bind="props"
-            @click="openModal('https://cdn.vuetifyjs.com/images/parallax/material.jpg')"
-          >
-            <v-img
-              src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-              height=135px
-              cover
-            >
-              <v-card-title class="text-h6 text-white d-flex flex-column">
-                <p class="mt-21">Sample Title 5</p>
-              </v-card-title>
-            </v-img>
-          </v-card>
-         </v-hover>
-        
-        </v-col>
-        </v-row>
-        
-       </v-col>
-      
-      
-      </v-row>
 
     <!-- Dialog Modal for Image Viewing -->
     <v-dialog v-model="dialog" max-width="600px">
@@ -363,7 +369,7 @@ const openModal = (image) => {
       </v-card>
     </v-dialog>
   </v-container>
-    
+
 
     <!-- About Section -->
     <v-container id="about" class="py-16 text-center">
