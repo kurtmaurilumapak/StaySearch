@@ -8,8 +8,8 @@ import reservationsIcon from '@/assets/navbar/reservation.png';
 const nav = ref({
   navItems: [
     { title: 'DASHBOARD', path: '/owner/dashboard', icon: dashboardIcon },
-    { title: 'POSTS', path: '/owner/post', icon: postsIcon },
-    { title: 'RESERVATIONS', path: '/owner/messages', icon: reservationsIcon },
+    { title: 'POSTS', path: '/owner/posts', icon: postsIcon },
+    { title: 'RESERVATIONS', path: '/owner/reservations', icon: reservationsIcon },
   ],
 })
 
