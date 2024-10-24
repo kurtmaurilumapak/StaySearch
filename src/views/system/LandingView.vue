@@ -129,13 +129,11 @@ const openModal = (image) => {
               <v-card
                 :class="{ 'on-hover': isHovering }"
                 :elevation="isHovering ? 20 : 2"
-                width="100%"
                 v-bind="props"
                 @click="openModal('https://cdn.vuetifyjs.com/images/parallax/material.jpg')"
               >
                 <v-img
                   src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                  max-width="100%"
                   height="500"
                   cover
                 >
@@ -153,7 +151,6 @@ const openModal = (image) => {
               <v-card
                 :class="{ 'on-hover': isHovering }"
                 :elevation="isHovering ? 20 : 2"
-                width="100%"
                 v-bind="props"
                 @click="openModal('https://www.kayak.com.ph/rimg/himg/45/bc/5f/expediav2-287511-eddf8e-547412.jpg?width=1366&height=768&crop=true')"
               >
