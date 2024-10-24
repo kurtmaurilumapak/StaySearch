@@ -216,7 +216,7 @@ const openModal = (image) => {
       </v-col>
 
       <!-- Image 5 -->
-      <v-col cols="3" style="border: 1px solid black">
+      <v-col cols="3">
         <v-hover v-slot="{ isHovering, props }">
           <v-card 
             :class="{ 'on-hover': isHovering }"

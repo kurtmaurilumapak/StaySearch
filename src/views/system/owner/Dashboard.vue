@@ -74,6 +74,94 @@ const drawer = ref(true);
             <!-- CONTENTS -->
             <v-card-text style="overflow-y: auto; max-height: 81.5vh;">
               <v-row>
+                <v-col cols="12" md="4" lg="4" class="justify-center align-center">
+                  <v-card
+    class="mx-auto my-8"
+    elevation="16"
+    max-width="344"
+    color="green-lighten-2
+"
+  >
+    <v-card-item>
+      <v-card-title class="align-center">
+        Number of Posts 
+      </v-card-title>
+
+     
+    </v-card-item>
+
+    <v-card-text class="text-h1">
+      10
+    </v-card-text>
+    <v-divider></v-divider>
+    <v-card-actions  class="d-flex justify-center">
+      <v-btn fab icons target="_blank"> 
+              <v-icon>
+                mdi-arrow-right-circle </v-icon>
+            </v-btn>
+    </v-card-actions>
+  </v-card>
+
+                </v-col>
+                <v-col cols="12" md="4" lg="4" class="justify-center align-center">
+                  <v-card
+    class="mx-auto my-8"
+    elevation="16"
+    max-width="344"
+    color="green-lighten-2
+"
+  >
+    <v-card-item>
+      <v-card-title>
+        Number of Tenants
+      </v-card-title>
+
+    
+    </v-card-item>
+
+    <v-card-text class="text-h1">
+      43
+    </v-card-text>
+    <v-divider></v-divider>
+    <v-card-actions  class="d-flex justify-center">
+      <v-btn fab icons target="_blank"> 
+              <v-icon>
+                mdi-arrow-right-circle </v-icon>
+            </v-btn>
+    </v-card-actions>
+    
+  </v-card>
+
+                </v-col>
+                <v-col cols="12" md="4" lg="4" class="justify-center align-center">
+                  <v-card
+    class="mx-auto my-8"
+    elevation="16"
+    max-width="344"
+    color="green-lighten-2
+"
+  >
+    <v-card-item>
+      <v-card-title>
+        Reservations
+      </v-card-title>
+
+      
+    </v-card-item>
+
+    <v-card-text class="text-h1">
+      5
+    </v-card-text>
+    <v-divider></v-divider>
+    <v-card-actions  class="d-flex justify-center">
+      <v-btn fab icons target="_blank"> 
+              <v-icon>
+                mdi-arrow-right-circle </v-icon>
+            </v-btn>
+    </v-card-actions>
+  </v-card>
+                  
+                </v-col>
                 <!-- CARD POSTS -->
               </v-row>
             </v-card-text>
