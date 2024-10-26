@@ -6,7 +6,6 @@ import { ref } from 'vue'
 const drawer = ref(true);
 </script>
 
-
 <template>
   <AppLayout>
     <template #content>
@@ -73,12 +72,86 @@ const drawer = ref(true);
             <v-spacer></v-spacer>
 
             <!-- CONTENTS -->
-            <v-card-text style="overflow-y: auto; max-height: 81.5vh;">
+            <v-card-text elevation="16" style="overflow-y: auto; max-height: 81.5vh;border: 1px solid black;">
               <v-row>
-                
-                
-                
-                <!-- CARD POSTS -->
+                <v-col cols="12">
+                  <v-row class="justify-center align-center" style="border: 1px solid black; border-radius: 10px;">
+                    <h2 class="text-center">Boarding House</h2>
+                  </v-row>
+                  <v-row>
+                    <v-col cols="6">
+                      <h3>Name:</h3>
+                    </v-col>
+                    <v-col cols="6">
+                      <h3>Date:</h3>
+                    </v-col>
+                    
+                  </v-row>
+                  <v-divider></v-divider>
+                  <v-row>
+                    <v-col cols="6">
+                      <h3>Name:</h3>
+                    </v-col>
+                    <v-col cols="6">
+                      <h3>Date:</h3>
+                    </v-col>
+                    
+                  </v-row>
+                  <v-divider></v-divider>
+                  <v-row>
+                    <v-col cols="6">
+                      <h3>Name:</h3>
+                    </v-col>
+                    <v-col cols="6">
+                      <h3>Date:</h3>
+                    </v-col>
+                    
+                  </v-row>
+                </v-col>
+              </v-row>
+            </v-card-text>
+            <v-card-text elevation="16" style="overflow-y: auto; max-height: 81.5vh;border: 1px solid black;">
+              <v-row>
+                <v-col cols="12">
+                  <v-row class="justify-center align-center" style="border: 1px solid black; border-radius: 10px;">
+                    <h2 class="text-center">Boarding House</h2>
+                  </v-row>
+                  <v-row>
+                    <v-col cols="6">
+                      <h3>Name:</h3>
+                    </v-col>
+                    <v-col cols="6">
+                      <h3>Date</h3>
+                    </v-col>
+                  </v-row>
+                  <v-divider></v-divider>
+                  <v-row>
+                    <v-col cols="6">
+                      <h3>Name:</h3>
+                    </v-col>
+                    <v-col cols="6">
+                      <h3>Date:</h3>
+                    </v-col>
+                    
+                  </v-row>
+                </v-col>
+              </v-row>
+            </v-card-text>
+            <v-card-text elevation="16" style="overflow-y: auto; max-height: 81.5vh;border: 1px solid black;">
+              <v-row>
+                <v-col cols="12">
+                  <v-row class="justify-center align-center" style="border: 1px solid black; border-radius: 10px;">
+                    <h2 class="text-center">Boarding House</h2>
+                  </v-row>
+                  <v-row>
+                    <v-col cols="6">
+                      <h3>Name:</h3>
+                    </v-col>
+                    <v-col cols="6">
+                      <h3>Date</h3>
+                    </v-col>
+                  </v-row>
+                </v-col>
               </v-row>
             </v-card-text>
           </v-card>
