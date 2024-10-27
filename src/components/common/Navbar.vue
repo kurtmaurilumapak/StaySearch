@@ -38,6 +38,7 @@ const nav = ref({
           >
             <v-list-item
               class="text-center"
+              @click="$router.push('/owner/settings')"
             >
               SETTINGS
             </v-list-item>

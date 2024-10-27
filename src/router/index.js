@@ -39,6 +39,11 @@ const router = createRouter({
       component: () => import('@/views/system/owner/Reservations.vue'),
     },
     {
+      path: '/owner/settings',
+      name: 'owner settings',
+      component: () => import('@/views/system/owner/OwnerSettings.vue'),
+    },
+    {
       path: '/student/page',
       name: 'student',
       component: () => import('@/views/system/student/StudentInterface.vue'),
