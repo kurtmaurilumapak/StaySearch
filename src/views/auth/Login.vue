@@ -4,13 +4,13 @@ import AppLayout from '@/components/layout/AppLayout.vue'
 import { ref } from 'vue'
 
 const form = ref({
-  username: '',
+  user: [],
   email: '',
   password: '',
   loading: false,
 })
 
-function load () {
+const load = () => {
   form.value.loading = true
   setTimeout(() => (form.value.loading = false), 3000)
 }
@@ -99,14 +99,14 @@ const user = ref('student')
                     <v-btn value="house_owner" style="flex: 1;">House Owner</v-btn>
                   </v-btn-toggle>
                 </v-col>
-                <!-- Username -->
+                <!-- Email -->
                 <v-col cols="12" >
                   <v-text-field
                     class="px-10"
                     color="green-darken-1"
-                    v-model="form.username"
-                    label="Username or Email"
-                    placeholder="johndoe or johndoe@email.com"
+                    v-model="form.email"
+                    label="Email"
+                    placeholder="johndoe@email.com"
                     variant="outlined"
                   />
                 </v-col>

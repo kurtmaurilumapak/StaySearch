@@ -14,7 +14,7 @@ const sorts = [
 ]
 const rating = ref(4.5)
 
-function onClick () {
+const onClick = () => {
   search.value.loading = true
   setTimeout(() => {
     search.value.loading = false

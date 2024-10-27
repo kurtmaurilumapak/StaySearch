@@ -3,16 +3,16 @@ import AppLayout from '@/components/layout/AppLayout.vue'
 
 import { ref, computed } from 'vue'
 const formDataDefault = {
+  user: [],
   firstname: '',
   lastname: '',
-  username: '',
   email: '',
   password: '',
   loading: false,
 }
 const form = ref({ formDataDefault })
 
-function load () {
+const load = () => {
   form.value.loading = true
   setTimeout(() => (form.value.loading = false), 3000)
 }

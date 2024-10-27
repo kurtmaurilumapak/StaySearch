@@ -52,11 +52,12 @@ const openModal = (image) => {
       <v-row>
         <v-col cols="6">
           <RouterLink
-            style="text-decoration: none;color: inherit;"
+            style="text-decoration: none;color: inherit; cursor: default;"
             to="/"
             class="d-flex align-center justify-start ga-1 mx-5"
           >
             <img
+              class="cursor-pointer"
               src="@/assets/logo.png"
               alt="Logo"
               width="40"
@@ -64,7 +65,7 @@ const openModal = (image) => {
               @click="scrollToSection('home')"
             />
             <h2
-              class="font-weight-bold"
+              class="font-weight-bold cursor-pointer"
               @click="scrollToSection('home')">
               StaySearch
             </h2>
@@ -417,7 +418,6 @@ background-size: cover;
 background-position: center;
 
 }
-
 
 #gallery {
   background-color: #388e3c;
