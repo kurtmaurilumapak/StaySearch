@@ -1,16 +1,15 @@
 <script setup>
+import { ref } from 'vue'
 import AppLayout from '@/components/layout/AppLayout.vue'
 
-import { ref } from 'vue'
-
 const form = ref({
-  username: '',
+  user: [],
   email: '',
   password: '',
   loading: false,
 })
 
-function load () {
+const load = () => {
   form.value.loading = true
   setTimeout(() => (form.value.loading = false), 3000)
 }
@@ -33,7 +32,7 @@ const user = ref('student')
 
       <v-row
         style="height: calc(100vh + 12px); overflow-y: auto;"
-        class="mx-0"
+        class="d-flex justify-center align-start mx-0">
       >
         <v-col cols="12" class="d-flex justify-center align-center">
           <v-card
@@ -43,7 +42,7 @@ const user = ref('student')
           >
             <img
               style="position: absolute; z-index: -1"
-              src="@/assets/authbg.png"
+              src="@/assets/auth/login.png"
               alt="cardbg"
               height="100%"
               width="100%"
@@ -67,14 +66,14 @@ const user = ref('student')
               </RouterLink>
             </v-card-item>
             <v-card-text class="pt-2 px-10">
-              <div class="d-flex align-end text-white">
-                <h1 class="mb-1">
+              <div class="d-flex align-end text-white cursor-default">
+                <h1 class="mb-1" style="font-size: 26px;">
                   Welcome to StaySearch!
                 </h1>
-                <h1 class="text-h2 float">👋🏻</h1>
+                <p class="text-h2 float">👋🏻</p>
               </div>
 
-              <p class="mb-0 text-white">
+              <p class="mb-0 text-white cursor-default">
                 Please sign-in to your account and start searching.
               </p>
             </v-card-text>
@@ -93,20 +92,20 @@ const user = ref('student')
                     class="my-auto border border-2"
                     color="green-darken-1"
                     mandatory
-                    tile
+                    density="comfortable"
                   >
                     <v-btn value="student" style="flex: 1;">Student</v-btn>
                     <v-btn value="house_owner" style="flex: 1;">House Owner</v-btn>
                   </v-btn-toggle>
                 </v-col>
-                <!-- Username -->
+                <!-- Email -->
                 <v-col cols="12" >
                   <v-text-field
                     class="px-10"
                     color="green-darken-1"
-                    v-model="form.username"
-                    label="Username or Email"
-                    placeholder="johndoe or johndoe@email.com"
+                    v-model="form.email"
+                    label="Email"
+                    placeholder="johndoe@email.com"
                     variant="outlined"
                   />
                 </v-col>
@@ -141,7 +140,7 @@ const user = ref('student')
                   cols="12"
                   class="text-center text-base pt-10"
                 >
-                  <span class="text-disabled">New on our platform?</span>
+                  <span>New on our platform?</span>
                   <RouterLink
                     style="text-decoration: none;color: mediumseagreen;"
                     class="ms-2 font-weight-bold"
@@ -155,7 +154,7 @@ const user = ref('student')
                   class="d-flex align-center pt-5"
                 >
                   <v-divider />
-                  <span class="mx-4">or</span>
+                  <span class="mx-4 text-overline">or</span>
                   <v-divider />
                 </v-col>
 
@@ -164,33 +163,22 @@ const user = ref('student')
                   cols="12"
                   class="text-center pt-5"
                 >
-                  <div style="display: flex; gap: 8px; justify-content: center;">
-                    <v-btn
-                      @click="signupWithGoogle"
-                      color= "white"
-                      size="x-large"
-                    >
-                      <img
-                        style="pointer-events: none"
-                        src="@/assets/google.png"
-                        alt="Google Icon"
-                        height="32"
-                        width="32"
-                      />
-                    </v-btn>
-                    <v-btn
-                      @click="signupWithFacebook"
-                      color="blue-accent-3"
-                      size="x-large"
-                    >
-                      <v-icon
-                        color="white"
-                        size="xx-large"
-                      >
-                        mdi-facebook
-                      </v-icon>
-                    </v-btn>
-                  </div>
+                  <v-btn
+                    class="text-none font-weight-bold px-7"
+                    @click="signupWithGoogle"
+                    size="large"
+                    rounded="lg"
+
+                  >
+                    <img
+                      style="pointer-events: none; margin-right: 10px"
+                      src="../../assets/auth/google.png"
+                      alt="Google Icon"
+                      height="28"
+                      width="28"
+                    />
+                    Continue with Google
+                  </v-btn>
                 </v-col>
               </v-row>
             </v-form>

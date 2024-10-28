@@ -1,28 +1,61 @@
 <script setup>
-import AppLayout from '@/components/layout/AppLayout.vue'
-
 import { ref, computed } from 'vue'
+import AppLayout from '@/components/layout/AppLayout.vue'
+import { supabase, formActionDefault } from '@/lib/supabaseClient'
+import AlertNotification from '@/components/common/AlertNotification.vue'
 
-const form = ref({
+
+const formDataDefault = {
+  user: 'student',
   firstname: '',
   lastname: '',
-  username: '',
   email: '',
   password: '',
   loading: false,
-})
+}
+const formData = ref({ ...formDataDefault })
+const formAction = ref({ ...formActionDefault })
+const form = ref()
 
-function load () {
-  form.value.loading = true
-  setTimeout(() => (form.value.loading = false), 3000)
+
+const onFormSubmit = async () => {
+
+  formAction.value = { ...formActionDefault }
+  formAction.value.formProcess = true
+
+  const { data, error } = await supabase.auth.signUp(
+    {
+      email: formData.value.email,
+      password: formData.value.password,
+      options: {
+        data: {
+          user: formData.value.user,
+          firstname: formData.value.firstname,
+          lastname: formData.value.lastname,
+        }
+      }
+    }
+  )
+  if (error){
+    console.log(error)
+    formAction.value.formErrorMessage = error.message
+    formAction.value.formStatus = error.status
+  }
+  else if (data){
+    console.log(data)
+    formAction.value.formSuccessMessage = 'Successfully created an account.'
+    form.value?.reset()
+  }
+
+  formAction.value.formProcess = false
 }
 
+
 const visible = ref(false)
-const user = ref('student')
 
 
 const capitalizeFirstLetter = (field) => {
-  form.value[field] = form.value[field].charAt(0).toUpperCase() + form.value[field].slice(1);
+  formData.value[field] = formData.value[field].charAt(0).toUpperCase() + formData.value[field].slice(1);
 }
 
 const firstnameRules =[
@@ -46,10 +79,10 @@ const passwordRules = [
 
 const isFormValid = computed(() => {
   return (
-    firstnameRules.every(rule => rule(form.value.firstname) === true) &&
-    lastnameRules.every(rule => rule(form.value.lastname) === true) &&
-    emailRules.every(rule => rule(form.value.email) === true) &&
-    passwordRules.every(rule => rule(form.value.password) === true)
+    firstnameRules.every(rule => rule(formData.value.firstname) === true) &&
+    lastnameRules.every(rule => rule(formData.value.lastname) === true) &&
+    emailRules.every(rule => rule(formData.value.email) === true) &&
+    passwordRules.every(rule => rule(formData.value.password) === true)
   );
 });
 </script>
@@ -67,7 +100,7 @@ const isFormValid = computed(() => {
 
       <v-row
         style="height: calc(100vh + 12px); overflow-y: auto;"
-        class="mx-0"
+        class="d-flex justify-center align-start mx-0">
       >
         <v-col cols="12" class="d-flex justify-center align-center">
           <v-card
@@ -77,8 +110,8 @@ const isFormValid = computed(() => {
           >
             <img
               style="position: absolute; z-index: -1"
-              src="@/assets/authbg.png"
-              alt="cardbg"
+              src="@/assets/auth/signup.png"
+              alt="background"
               height="100%"
               width="100%"
             >
@@ -102,35 +135,43 @@ const isFormValid = computed(() => {
               </RouterLink>
             </v-card-item>
             <v-card-text class="pt-2 px-10">
-              <div class="d-flex align-end text-white">
+              <div class="d-flex align-end text-white cursor-default">
                 <h1 class="mb-1">
                   Adventure starts here
                 </h1>
                 <h1 class="text-h2 float">🚀</h1>
               </div>
-              <p class="mb-0 text-white">
+              <p class="mb-0 text-white cursor-default">
                 Make your search for boarding houses easy and fast!
               </p>
             </v-card-text>
             <v-form
+              ref="form"
               class="pb-8"
               style="background-color: white; margin-left: 5%; margin-right: 5%; margin-bottom: 5%; border-radius: 20px"
             >
               <v-row no-gutters>
+                <v-col cols="12" class="px-10 mt-4">
+                  <AlertNotification
+                    :form-success-message="formAction.formSuccessMessage"
+                    :form-error-message="formAction.formErrorMessage"
+                  >
+                  </AlertNotification>
+                </v-col>
                 <!-- User Type -->
                 <v-col
                   cols="12"
                   class="d-flex justify-center py-5"
                 >
                   <v-btn-toggle
-                    v-model="user"
+                    v-model="formData.user"
                     class="my-auto border"
                     color="green-darken-1"
                     mandatory
-                    tile
+                    density="comfortable"
                   >
                     <v-btn value="student" style="flex: 1;">Student</v-btn>
-                    <v-btn value="house_owner" style="flex: 1;">House Owner</v-btn>
+                    <v-btn value="owner" style="flex: 1;">House Owner</v-btn>
                   </v-btn-toggle>
                 </v-col>
                 <!-- Name -->
@@ -138,7 +179,7 @@ const isFormValid = computed(() => {
                   <v-text-field
                     class="pl-10 pr-1"
                     color="green-darken-1"
-                    v-model="form.firstname"
+                    v-model="formData.firstname"
                     label="First Name"
                     placeholder="John"
                     variant="outlined"
@@ -150,7 +191,7 @@ const isFormValid = computed(() => {
                   <v-text-field
                     class="pr-10 pl-1"
                     color="green-darken-1"
-                    v-model="form.lastname"
+                    v-model="formData.lastname"
                     label="Last Name"
                     placeholder="Doe"
                     variant="outlined"
@@ -164,7 +205,7 @@ const isFormValid = computed(() => {
                   <v-text-field
                     class="px-10"
                     color="green-darken-1"
-                    v-model="form.email"
+                    v-model="formData.email"
                     label="Email"
                     placeholder="johndoe@email.com"
                     type="email"
@@ -178,7 +219,7 @@ const isFormValid = computed(() => {
                   <v-text-field
                     class="px-10"
                     color="green-darken-1"
-                    v-model="form.password"
+                    v-model="formData.password"
                     label="Password"
                     placeholder="············"
                     variant="outlined"
@@ -190,12 +231,12 @@ const isFormValid = computed(() => {
                 </v-col>
                 <v-col cols="12" class="text-center pt-5">
                   <v-btn
-                    :loading="form.loading"
+                    :loading="formAction.formProcess"
                     color="green-darken-1"
                     width="50%"
                     type="submit"
-                    :disabled="!isFormValid"
-                    @click="load"
+                    :disabled="formAction.formProcess || !isFormValid"
+                    @click="onFormSubmit"
                   >
                     Sign up
                   </v-btn>
@@ -220,7 +261,7 @@ const isFormValid = computed(() => {
                   class="d-flex align-center pt-5"
                 >
                   <v-divider />
-                  <span class="mx-4">or</span>
+                  <span class="mx-4 text-overline">or</span>
                   <v-divider />
                 </v-col>
 
@@ -229,34 +270,22 @@ const isFormValid = computed(() => {
                   cols="12"
                   class="text-center pt-5"
                 >
-                  <div style="display: flex; gap: 8px; justify-content: center;">
-                    <v-btn
-                      @click="signupWithGoogle"
-                      color= "white"
-                      size="x-large"
-                    >
-                      <img
-                        style="pointer-events: none"
-                        src="@/assets/google.png"
-                        alt="Google Icon"
-                        height="32"
-                        width="32"
-                      />
-                    </v-btn>
-                    <v-btn
-                      @click="signupWithFacebook"
-                      color="blue-accent-3"
-                      size="x-large"
-                    >
-                      <v-icon
-                        color="white"
-                        size="xx-large"
-                      >
-                        mdi-facebook
-                      </v-icon>
-                    </v-btn>
-                  </div>
+                  <v-btn
+                    class="text-none font-weight-bold px-7"
+                    @click="signupWithGoogle"
+                    size="large"
+                    rounded="lg"
 
+                  >
+                    <img
+                      style="pointer-events: none; margin-right: 10px"
+                      src="../../assets/auth/google.png"
+                      alt="Google Icon"
+                      height="28"
+                      width="28"
+                    />
+                    Continue with Google
+                  </v-btn>
                 </v-col>
               </v-row>
             </v-form>

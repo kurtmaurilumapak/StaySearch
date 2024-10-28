@@ -1,11 +1,22 @@
 <script setup>
-//import { ref } from 'vue'
+import { ref } from 'vue'
 import Navbar from '@/components/common/Navbar.vue'
 import AppLayout from '@/components/layout/AppLayout.vue'
-import { ref } from 'vue'
+
 
 const rating = ref(4.5)
 const drawer = ref(true);
+const PostContent = ref(false);
+const tags = [
+  'All Boys',
+  'Free Electricity',
+  'Free Water',
+  'Free Wifi',
+]
+
+const OpenDialog = () => {
+  PostContent.value = true;
+}
 </script>
 
 
@@ -42,7 +53,6 @@ const drawer = ref(true);
               <v-btn
                 width="90%"
                 color="green-darken-2"
-                prepend-icon="mdi-plus"
                 @click="$router.push('/owner/create')"
               >
                 create post
@@ -69,7 +79,7 @@ const drawer = ref(true);
               style="background-color: darkseagreen;"
             >
               <v-row>
-                <v-col cols="8" class="d-flex d-md-none align-center">
+                <v-col cols="6" sm="4" class="d-flex d-md-none align-center">
                   <v-btn
                     color="green-darken-2"
                     @click="$router.push('/owner/create')"
@@ -78,7 +88,7 @@ const drawer = ref(true);
                     create post
                   </v-btn>
                 </v-col>
-                <v-col cols="4" md="12" class="d-flex justify-md-end justify-center">
+                <v-col cols="6" sm="8" md="12" class="d-flex justify-end">
                   <v-btn
                     class="ma-2"
                     color="black"
@@ -102,7 +112,7 @@ const drawer = ref(true);
 
             <!-- CONTENTS -->
             <v-card-text
-              style="overflow-y: auto; max-height: 81.5vh;"
+              style="overflow-y: auto; max-height: 100vh;"
             >
               <v-row
               >
@@ -111,7 +121,7 @@ const drawer = ref(true);
                 <v-col cols="12" md="6" lg="4" class="d-flex justify-center align-center">
                   <v-card
                     class="border rounded-lg"
-                    @click="$router.push('/owner/create')"
+                    @click="OpenDialog"
                     width="100%"
                   >
                     <v-card-text>
@@ -435,6 +445,73 @@ const drawer = ref(true);
           </v-card>
         </v-col>
       </v-row>
+      <v-dialog
+        v-model="PostContent"
+        max-width="700"
+      >
+        <v-card>
+          <v-card-title class="d-flex align-center font-weight-bold"
+          >
+            <v-spacer class="px-4"></v-spacer>
+            Your Post
+            <v-spacer></v-spacer>
+            <v-btn
+              class="ma-2"
+              color="black"
+              icon="mdi-close"
+              variant="text"
+              @click="PostContent=false"
+            ></v-btn>
+          </v-card-title>
+          <v-divider></v-divider>
+          <v-card-text>
+            <v-row>
+              <v-col cols="12">
+                <v-carousel
+                >
+                  <div
+                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; z-index: -1"
+                  ></div>
+                  <v-carousel-item
+                    alt="Uploaded Image"
+                    contain
+                    height="100%"
+                    width="100%"
+                  >
+                  </v-carousel-item>
+                </v-carousel>
+              </v-col>
+              <v-col cols="12">
+                <div v-if="tags.length > 0">
+                  <v-chip color="pink" class="mr-1" label>
+                    <v-icon icon="mdi-label" start></v-icon>
+                    Tags:
+                  </v-chip>
+                    <v-chip
+                      label
+                      v-for="tag in tags"
+                      :key="tag"
+                      color="green-darken-2"
+                      class="ma-1"
+                    >
+                      {{ tag }}
+                    </v-chip>
+                </div>
+                <h2>Boarding House Name</h2>
+                <h2>Price</h2>
+              </v-col>
+              <v-col cols="12">
+                <h2>Details</h2>
+              </v-col>
+              <v-divider class="my-10"></v-divider>
+              <v-col cols="12">
+                <h2>REVIEWS</h2>
+              </v-col>
+            </v-row>
+          </v-card-text>
+
+        </v-card>
+      </v-dialog>
     </template>
   </AppLayout>
 </template>

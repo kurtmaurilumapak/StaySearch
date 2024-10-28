@@ -1,5 +1,5 @@
 <script setup>
-import { ref, shallowRef } from 'vue'
+import { ref } from 'vue'
 import AppLayout from '@/components/layout/AppLayout.vue'
 
 const create = ref({
@@ -10,19 +10,9 @@ const create = ref({
   currentIndex: 0,
   leaveCreatePage: false,
   active: 1,
-  availableTags: [
-    'All Boys',
-    'All Girls',
-    'Mix',
-    'Near CSU',
-    'Free Wifi',
-    'Free Water',
-    'Free Electricity',
-  ],
-  previewTags: []
+  type: '',
+  inclusions: []
 })
-
-const tags = shallowRef([])
 
 const handleFiles = (event) => {
   const selectedFiles = event.target.files
@@ -31,24 +21,15 @@ const handleFiles = (event) => {
   })
 }
 const handleDrop = (event) => {
-  event.preventDefault();
-  const files = event.dataTransfer.files;
+  event.preventDefault()
+  const files = event.dataTransfer.files
   Array.from(files).forEach((file) => {
-    create.value.images.push({ file, url: URL.createObjectURL(file) });
-  });
+    create.value.images.push({ file, url: URL.createObjectURL(file) })
+  })
 }
 const clearimg = (index) => {
   create.value.images.splice(index, 1)
 }
-
-const toggleTag = (tag) => {
-  const index = create.value.previewTags.indexOf(tag);
-  if (index > -1) {
-    create.value.previewTags.splice(index, 1); // Remove tag if already selected
-  } else {
-    create.value.previewTags.push(tag); // Add tag if not selected
-  }
-};
 
 
 </script>
@@ -92,7 +73,7 @@ const toggleTag = (tag) => {
                 <v-card-text>Are you sure you want to leave? Your changes will be lost if you leave this page.
                 </v-card-text>
                 <v-card-actions>
-                  <v-btn color="primary" class="font-weight-bold" @click="$router.push('/owner/post')">Leave</v-btn>
+                  <v-btn color="primary" class="font-weight-bold" @click="$router.push('/owner/posts')">Leave</v-btn>
                   <v-btn color="error" class="font-weight-bold" @click="create.leaveCreatePage = false">Cancel</v-btn>
                 </v-card-actions>
               </v-card>
@@ -178,28 +159,38 @@ const toggleTag = (tag) => {
                     auto-grow
                   ></v-textarea>
                 </v-col>
-                <v-col cols="12">
-
-                  <v-chip-group v-model="tags" column multiple>
-                    <v-chip
-                      color="pink"
-                      label
-                    >
-                      <v-icon icon="mdi-label" start></v-icon>
-                      Tags:
-                    </v-chip>
-                    <v-chip
-                      v-for="(tag, index) in create.availableTags"
-                      :key="index"
-                      :text="tag"
-                      label
-                      filter
-                      @click="toggleTag(tag)"
-                    >
-                    </v-chip>
-                  </v-chip-group>
+                <v-col cols="6">
+                  <span>Boarding House Type:</span>
+                  <v-select
+                    class="mt-4"
+                    color="green-darken-1"
+                    v-model="create.type"
+                    label="Select Type"
+                    :items="['All Boys', 'All Girls', 'Mix']"
+                    variant="outlined"
+                  ></v-select>
                 </v-col>
-
+                <v-col cols="6">
+                  <span>Inclusion:</span>
+                  <v-checkbox
+                    color="green-darken-1"
+                    :value="'Free Wifi'"
+                    v-model="create.inclusions"
+                    label="Free WiFi"
+                  ></v-checkbox>
+                  <v-checkbox
+                    color="green-darken-1"
+                    :value="'Free Water'"
+                    v-model="create.inclusions"
+                    label="Free Water"
+                  ></v-checkbox>
+                  <v-checkbox
+                    color="green-darken-1"
+                    :value="'Free Electricity'"
+                    v-model="create.inclusions"
+                    label="Free Electricity"
+                  ></v-checkbox>
+                </v-col>
               </v-row>
             </v-card-text>
             <v-card-actions class="justify-end px-10" style="position: sticky; bottom: 0;">
@@ -283,7 +274,7 @@ const toggleTag = (tag) => {
                         <h2>{{ create.detail || 'Details' }}</h2>
                       </v-col>
                       <v-col cols="12">
-                        <div v-if="tags.length">
+                        <div v-if="create.type || create.inclusions.length">
                           <v-chip
                             color="pink"
                             class="mr-1"
@@ -293,13 +284,20 @@ const toggleTag = (tag) => {
                             Tags:
                           </v-chip>
                           <v-chip
-                            v-for="(tag, index) in create.previewTags"
-                            :key="index"
-                            class="ma-1"
                             color="green-darken-2"
+                            class="ma-1"
                             label
                           >
-                            {{ tag }}
+                            {{ create.type }}
+                          </v-chip>
+                          <v-chip
+                            v-for="(inclusion, index) in create.inclusions"
+                            :key="index"
+                            color="green-darken-2"
+                            class="ma-1"
+                            label
+                          >
+                            {{ inclusion }}
                           </v-chip>
                         </div>
                         <div v-else>

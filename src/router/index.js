@@ -24,9 +24,9 @@ const router = createRouter({
       component: () => import('@/views/system/owner/Dashboard.vue'),
     },
     {
-      path: '/owner/post',
-      name: 'post',
-      component: () => import('@/views/system/owner/Post.vue'),
+      path: '/owner/posts',
+      name: 'posts',
+      component: () => import('@/views/system/owner/Posts.vue'),
     },
     {
       path: '/owner/create',
@@ -34,9 +34,14 @@ const router = createRouter({
       component: () => import('@/views/system/owner/CreatePost.vue'),
     },
     {
-      path: '/owner/messages',
-      name: 'messages',
-      component: () => import('@/views/system/owner/Messages.vue'),
+      path: '/owner/reservations',
+      name: 'reservatios',
+      component: () => import('@/views/system/owner/Reservations.vue'),
+    },
+    {
+      path: '/owner/settings',
+      name: 'owner settings',
+      component: () => import('@/views/system/owner/OwnerSettings.vue'),
     },
     {
       path: '/student/page',
