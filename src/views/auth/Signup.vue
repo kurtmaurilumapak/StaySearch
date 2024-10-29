@@ -6,12 +6,11 @@ import AlertNotification from '@/components/common/AlertNotification.vue'
 
 
 const formDataDefault = {
-  user: 'student',
+  role: 'student',
   firstname: '',
   lastname: '',
   email: '',
   password: '',
-  loading: false,
 }
 const formData = ref({ ...formDataDefault })
 const formAction = ref({ ...formActionDefault })
@@ -29,7 +28,7 @@ const onFormSubmit = async () => {
       password: formData.value.password,
       options: {
         data: {
-          user: formData.value.user,
+          role: formData.value.role,
           firstname: formData.value.firstname,
           lastname: formData.value.lastname,
         }
@@ -164,7 +163,7 @@ const isFormValid = computed(() => {
                   class="d-flex justify-center py-5"
                 >
                   <v-btn-toggle
-                    v-model="formData.user"
+                    v-model="formData.role"
                     class="my-auto border"
                     color="green-darken-1"
                     mandatory
