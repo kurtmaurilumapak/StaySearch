@@ -14,11 +14,11 @@ const drawer = ref(true);
         
         <v-col cols="12" md="2" class="d-none d-md-block">
           <v-row class="pl-5">
-            <v-col cols="12">
+            <v-col cols="12" class="d-flex justify-center">
               <RouterLink
                 style="text-decoration: none;color: inherit;"
                 to="/"
-                class="d-flex align-center justify-center ga-1 my-5"
+                class="d-inline-flex align-center justify-center ga-1 my-5"
               >
                 <img
                   src="@/assets/logo.png"
