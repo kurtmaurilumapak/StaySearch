@@ -11,7 +11,7 @@ const drawer = ref(true);
     <template #content>
       <Navbar v-model="drawer" />
       <v-row>
-        <!-- CREATE POST -->
+        
         <v-col cols="12" md="2" class="d-none d-md-block">
           <v-row class="pl-5">
             <v-col cols="12">
@@ -83,19 +83,20 @@ const drawer = ref(true);
 "
   >
     <v-card-item>
-      <v-card-title class="align-center">
+      <v-card-title class="text-center">
         Number of Posts 
       </v-card-title>
 
      
     </v-card-item>
 
-    <v-card-text class="text-h1">
+    <v-card-text class="text-h1 text-center">
       10
     </v-card-text>
     <v-divider></v-divider>
     <v-card-actions  class="d-flex justify-center">
-      <v-btn fab icons target="_blank"> 
+      <v-btn fab size="large" icons target="_blank" 
+      @click="$router.push('/owner/posts')"> 
               <v-icon>
                 mdi-arrow-right-circle </v-icon>
             </v-btn>
@@ -112,19 +113,19 @@ const drawer = ref(true);
 "
   >
     <v-card-item>
-      <v-card-title>
+      <v-card-title class="text-center">
         Number of Tenants
       </v-card-title>
 
     
     </v-card-item>
 
-    <v-card-text class="text-h1">
+    <v-card-text class="text-h1 text-center">
       43
     </v-card-text>
     <v-divider></v-divider>
     <v-card-actions  class="d-flex justify-center">
-      <v-btn fab icons target="_blank"> 
+      <v-btn fab size="large" icons target="_blank"> 
               <v-icon>
                 mdi-arrow-right-circle </v-icon>
             </v-btn>
@@ -142,22 +143,23 @@ const drawer = ref(true);
 "
   >
     <v-card-item>
-      <v-card-title>
+      <v-card-title class="text-center">
         Reservations
       </v-card-title>
 
       
     </v-card-item>
 
-    <v-card-text class="text-h1">
+    <v-card-text class="text-h1 text-center">
       5
     </v-card-text>
     <v-divider></v-divider>
     <v-card-actions  class="d-flex justify-center">
-      <v-btn fab icons target="_blank"> 
+      <v-btn fab size="large" icons target="_blank"
+      @click="$router.push('/owner/reservations')"> 
               <v-icon>
                 mdi-arrow-right-circle </v-icon>
-            </v-btn>
+            </v-btn>  
     </v-card-actions>
   </v-card>
                   
