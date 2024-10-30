@@ -1,21 +1,59 @@
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import AppLayout from '@/components/layout/AppLayout.vue'
+import { supabase, formActionDefault } from '@/lib/supabaseClient'
+import AlertNotification from '@/components/common/AlertNotification.vue'
 
-const form = ref({
-  user: [],
+const router = useRouter()
+const formDataDefault = {
   email: '',
   password: '',
-  loading: false,
-})
+}
 
-const load = () => {
-  form.value.loading = true
-  setTimeout(() => (form.value.loading = false), 3000)
+const formData = ref({ ...formDataDefault })
+const formAction = ref({ ...formActionDefault })
+const form = ref()
+
+const onLogin = async () => {
+  formAction.value = { ...formActionDefault }
+  formAction.value.formProcess = true
+
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: formData.value.email,
+    password: formData.value.password,
+  })
+
+  if (error){
+    console.log(error)
+    formAction.value.formErrorMessage = 'Wrong email or password.'
+    formAction.value.formStatus = error.status
+    form.value?.reset()
+  }
+  else if (data){
+    console.log(data)
+
+    const role = data.user.user_metadata.role;
+
+    // Redirect based on role
+    if (role === 'student') {
+      // Redirect to student page
+      await router.push('/student/page')
+    } else if (role === 'owner') {
+      // Redirect to owner page
+      await router.push('/owner/dashboard')
+    } else {
+      await supabase.auth.signOut();
+      console.log('Unknown role:', role);
+      formAction.value.formErrorMessage = 'Your role is not authorized. You have been logged out.';
+    }
+
+  }
+
+  formAction.value.formProcess = false
 }
 
 const visible = ref(false)
-const user = ref('student')
 
 </script>
 
@@ -78,32 +116,25 @@ const user = ref('student')
               </p>
             </v-card-text>
             <v-form
+              ref="form"
               style="background-color: white; margin-left: 5%; margin-right: 5%; padding-bottom: 5%; border-radius: 20px"
-              @submit.prevent="() => {}"
+              @submit.prevent="onLogin"
             >
               <v-row no-gutters>
-                <!-- User Type -->
-                <v-col
-                  cols="12"
-                  class="d-flex justify-center py-5"
-                >
-                  <v-btn-toggle
-                    v-model="user"
-                    class="my-auto border border-2"
-                    color="green-darken-1"
-                    mandatory
-                    density="comfortable"
+                <v-col cols="12" class="px-10 mt-4">
+                  <AlertNotification
+                    :form-success-message="formAction.formSuccessMessage"
+                    :form-error-message="formAction.formErrorMessage"
                   >
-                    <v-btn value="student" style="flex: 1;">Student</v-btn>
-                    <v-btn value="house_owner" style="flex: 1;">House Owner</v-btn>
-                  </v-btn-toggle>
+                  </AlertNotification>
                 </v-col>
+
                 <!-- Email -->
-                <v-col cols="12" >
+                <v-col cols="12" class="pt-5">
                   <v-text-field
                     class="px-10"
                     color="green-darken-1"
-                    v-model="form.email"
+                    v-model="formData.email"
                     label="Email"
                     placeholder="johndoe@email.com"
                     variant="outlined"
@@ -114,7 +145,7 @@ const user = ref('student')
                   <v-text-field
                     class="px-10"
                     color="green-darken-1"
-                    v-model="form.password"
+                    v-model="formData.password"
                     label="Password"
                     placeholder="············"
                     variant="outlined"
@@ -125,11 +156,11 @@ const user = ref('student')
                 </v-col>
                 <v-col cols="12" class="text-center pt-5">
                   <v-btn
-                    :loading="form.loading"
+                    :loading="formAction.formProcess"
                     color="green-darken-1"
                     width="50%"
-                    type="submit"
-                    @click="load"
+                    type="button"
+                    @click="onLogin"
                   >
                     Login
                   </v-btn>

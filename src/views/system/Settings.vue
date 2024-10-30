@@ -1,6 +1,25 @@
 <script setup>
 import { ref } from 'vue'
 import AppLayout from '@/components/layout/AppLayout.vue'
+import { supabase } from '@/lib/supabaseClient'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+const userPage = async () => {
+  const { data: { session } } = await supabase.auth.getSession();
+  const userRole = session?.user?.user_metadata?.role;
+
+
+  if (userRole === 'student') {
+    await router.push('/student/page')
+  } else if (userRole === 'owner') {
+    await router.push('/owner/dashboard')
+  } else {
+
+    console.error("No user found");
+  }
+}
 
 
 const tab = ref('profile')
@@ -15,13 +34,13 @@ const tab = ref('profile')
         style="height: 100vh; border-radius: 0px"
       >
         <v-toolbar color="white" >
-          <RouterLink
+          <div
             style="text-decoration: none;color: inherit;"
-            to="/owner/dashboard"
-            class="d-flex align-center ga-1 my-5 ml-5"
+            class="d-flex align-center ga-1 my-5 ml-5 cursor-pointer"
+            @click="userPage"
           >
             <img
-              src="@/assets/logo.png"
+              src="../../assets/logo.png"
               alt="Logo"
               width="30"
               height="30"
@@ -29,7 +48,7 @@ const tab = ref('profile')
             <h2 class="font-weight-bold">
               StaySearch
             </h2>
-          </RouterLink>
+          </div>
         </v-toolbar>
 
         <v-divider></v-divider>

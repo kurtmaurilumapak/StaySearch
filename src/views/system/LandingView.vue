@@ -43,29 +43,30 @@ const openModal = (image) => {
 <template>
   <v-app>
     <!-- Navigation Bar -->
-    <v-app-bar app dark class="navbar"
-               density="comfortable"
-               elevation="10"
-               flat
-               floating
+    <v-app-bar
+      app dark class="navbar"
+      density="comfortable"
+      :elevation="2"
+      flat
+      floating
     >
       <v-row>
         <v-col cols="6">
           <RouterLink
-            style="text-decoration: none;color: inherit; cursor: default;"
+            style="text-decoration: none;color: inherit;"
             to="/"
-            class="d-flex align-center justify-start ga-1 mx-5"
+            class="d-inline-flex align-center ga-1 my-5 ml-5"
           >
             <img
               class="cursor-pointer"
               src="@/assets/logo.png"
               alt="Logo"
-              width="40"
-              height="40"
+              width="30"
+              height="30"
               @click="scrollToSection('home')"
             />
             <h2
-              class="font-weight-bold cursor-pointer"
+              class="font-weight-bold"
               @click="scrollToSection('home')">
               StaySearch
             </h2>

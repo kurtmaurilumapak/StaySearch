@@ -1,6 +1,10 @@
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router';
 import AppLayout from '@/components/layout/AppLayout.vue'
+import { supabase } from '@/lib/supabaseClient'
+
+const router = useRouter()
 
 const search = ref ({
   loaded: false,
@@ -22,6 +26,19 @@ const onClick = () => {
   }, 2000)
 }
 
+const logout = async () => {
+  const { error } = await supabase.auth.signOut()
+
+  if (error) {
+    console.log(error)
+  }
+  else {
+    console.log('logout successful')
+    await router.push('/login')
+
+  }
+}
+
 </script>
 
 
@@ -30,13 +47,14 @@ const onClick = () => {
     <template #content>
       <v-app-bar
         :elevation="2"
+        density="comfortable"
       >
         <v-row class="d-flex align-center">
           <v-col cols="4">
             <RouterLink
               style="text-decoration: none;color: inherit;"
               to="/"
-              class="d-flex align-center ga-1 my-5 ml-5"
+              class="d-inline-flex align-center ga-1 my-5 ml-5"
             >
               <img
                 src="@/assets/logo.png"
@@ -50,21 +68,34 @@ const onClick = () => {
             </RouterLink>
           </v-col>
 
-          <v-col cols="5" md="6" class="d-none d-sm-block pr-10">
-            <v-text-field
-              :loading="search.loading"
-              append-inner-icon="mdi-magnify"
-              density="comfortable"
-              label="Search"
-              variant="solo-filled"
-              hide-details
-              single-line
-              @click:append-inner="onClick"
-              max-width="350"
-            ></v-text-field>
+          <v-col cols="5" md="4" class="d-none d-sm-flex pr-10">
+            <div
+              class="d-inline-flex align-center justify-center border rounded-lg px-3 ga-4"
+              style="width: 100%;"
+            >
+              <v-text-field
+                class="mb-2"
+                :loading="search.loading"
+                append-inner-icon="mdi-magnify"
+                density="compact"
+                label="Search"
+                variant="plain"
+                hide-details
+                single-line
+                @click:append-inner="onClick"
+                max-width="350"
+              ></v-text-field>
+              <v-btn
+                style="background-color: forestgreen; color: white"
+                class="text-none"
+                size="small"
+              >
+                Filter
+              </v-btn>
+            </div>
           </v-col>
 
-          <v-col cols="8" sm="2" class="d-flex align-center justify-end pr-10">
+          <v-col cols="8" sm="3" md="4" class="d-flex align-center justify-end pr-10">
             <v-btn
               class="d-flex d-sm-none"
               color="black"
@@ -92,12 +123,14 @@ const onClick = () => {
               >
                 <v-list-item
                   class="text-center"
+                  @click="$router.push('/settings')"
                 >
                   SETTINGS
                 </v-list-item>
                 <v-list-item
                   class="text-center"
                   style="color: red;"
+                  @click="logout"
                 >
                   LOGOUT
                 </v-list-item>
