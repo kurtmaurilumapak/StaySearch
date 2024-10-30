@@ -1,5 +1,4 @@
 <script setup>
-//import { ref } from 'vue'
 import Navbar from '@/components/common/Navbar.vue'
 import AppLayout from '@/components/layout/AppLayout.vue'
 import { ref } from 'vue'
@@ -11,7 +10,7 @@ const drawer = ref(true);
     <template #content>
       <Navbar v-model="drawer" />
       <v-row>
-        <!-- CREATE POST -->
+        <!-- Sidebar Navigation -->
         <v-col cols="12" md="2" class="d-none d-md-block">
           <v-row class="pl-5">
             <v-col cols="12">
@@ -33,17 +32,10 @@ const drawer = ref(true);
             </v-col>
           </v-row>
         </v-col>
-
-        <!-- CREATED POSTS -->
-        <v-col
-          cols="12"
-          md="10"
-          class="d-flex justify-center align-center"
-        >
-          <v-card
-            :elevation="7"
-            style="border-radius: 0; height: 100vh; width: 100%;"
-          >
+        <!-- Main Content Area -->
+        <v-col cols="12" md="10" class="d-flex justify-center align-center">
+          <v-card :elevation="7"  style="border-radius: 0; height: 100vh; width: 100%;">
+            <!-- Header with Notification & Menu -->
             <v-card-title
               class="py-5"
               style="background-color: darkseagreen;"
@@ -58,7 +50,7 @@ const drawer = ref(true);
                     variant="text"
                   ></v-btn>
                   <v-btn
-                    class="ma-2 d-flex d-lg-none"
+                    class="ma-2 d-flex d-md-flex"
                     color="black"
                     icon="mdi-menu"
                     variant="text"
@@ -71,95 +63,87 @@ const drawer = ref(true);
             <v-divider></v-divider>
             <v-spacer></v-spacer>
 
-            <!-- CONTENTS -->
-            <v-card-text elevation="16" style="overflow-y: auto; max-height: 81.5vh;border: 1px solid black;">
-              <v-row>
-                <v-col cols="12">
-                  <v-row class="justify-center align-center" style="border: 1px solid black; border-radius: 10px;">
-                    <h2 class="text-center">Boarding House</h2>
-                  </v-row>
-                  <v-row>
-                    <v-col cols="6">
-                      <h3>Name:</h3>
-                    </v-col>
-                    <v-col cols="6">
-                      <h3>Date:</h3>
-                    </v-col>
-                    
-                  </v-row>
-                  <v-divider></v-divider>
-                  <v-row>
-                    <v-col cols="6">
-                      <h3>Name:</h3>
-                    </v-col>
-                    <v-col cols="6">
-                      <h3>Date:</h3>
-                    </v-col>
-                    
-                  </v-row>
-                  <v-divider></v-divider>
-                  <v-row>
-                    <v-col cols="6">
-                      <h3>Name:</h3>
-                    </v-col>
-                    <v-col cols="6">
-                      <h3>Date:</h3>
-                    </v-col>
-                    
-                  </v-row>
-                </v-col>
-              </v-row>
-            </v-card-text>
-            <v-card-text elevation="16" style="overflow-y: auto; max-height: 81.5vh;border: 1px solid black;">
-              <v-row>
-                <v-col cols="12">
-                  <v-row class="justify-center align-center" style="border: 1px solid black; border-radius: 10px;">
-                    <h2 class="text-center">Boarding House</h2>
-                  </v-row>
-                  <v-row>
-                    <v-col cols="6">
-                      <h3>Name:</h3>
-                    </v-col>
-                    <v-col cols="6">
-                      <h3>Date</h3>
-                    </v-col>
-                  </v-row>
-                  <v-divider></v-divider>
-                  <v-row>
-                    <v-col cols="6">
-                      <h3>Name:</h3>
-                    </v-col>
-                    <v-col cols="6">
-                      <h3>Date:</h3>
-                    </v-col>
-                    
-                  </v-row>
-                </v-col>
-              </v-row>
-            </v-card-text>
-            <v-card-text elevation="16" style="overflow-y: auto; max-height: 81.5vh;border: 1px solid black;">
-              <v-row>
-                <v-col cols="12">
-                  <v-row class="justify-center align-center" style="border: 1px solid black; border-radius: 10px;">
-                    <h2 class="text-center">Boarding House</h2>
-                  </v-row>
-                  <v-row>
-                    <v-col cols="6">
-                      <h3>Name:</h3>
-                    </v-col>
-                    <v-col cols="6">
-                      <h3>Date</h3>
-                    </v-col>
-                  </v-row>
-                </v-col>
-              </v-row>
-            </v-card-text>
+            <!-- Boarding House Posts -->
+            <v-row class="pa-6" style="overflow-y: auto; max-height: 100vh">
+              <v-col cols="12" md="6" lg="4">
+                <v-card class="mb-5" elevation="12" style="border-radius: 12px; overflow: hidden;">
+                  <v-img src="https://cdn.vuetifyjs.com/images/parallax/material.jpg" height="200px"></v-img>
+                  <v-card-title class="text-h5" style="background-color: #375a8b; color: white;">Boarding House</v-card-title>
+                  <v-card-text style="padding: 20px;">
+                    <v-row>
+                      <v-col cols="6"><h3>Name:</h3></v-col>
+                      <v-col cols="6"><h3>Date:</h3></v-col>
+                    </v-row>
+                    <v-divider></v-divider>
+                    <v-row>
+                      <v-col cols="6"><h3>Name:</h3></v-col>
+                      <v-col cols="6"><h3>Date:</h3></v-col>
+                    </v-row>
+                    <v-divider></v-divider>
+                    <v-row>
+                      <v-col cols="6"><h3>Name:</h3></v-col>
+                      <v-col cols="6"><h3>Date:</h3></v-col>
+                    </v-row>
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-btn color="dark" block>View Details</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-col>
+              <v-col cols="12" md="6" lg="4">
+                <v-card class="mb-5" elevation="12" style="border-radius: 12px; overflow: hidden;">
+                  <v-img src="https://cdn.vuetifyjs.com/images/parallax/material.jpg" height="200px"></v-img>
+                  <v-card-title class="text-h5" style="background-color: #375a8b; color: white;">Boarding House</v-card-title>
+                  <v-card-text style="padding: 20px;">
+                    <v-row>
+                      <v-col cols="6"><h3>Name:</h3></v-col>
+                      <v-col cols="6"><h3>Date:</h3></v-col>
+                    </v-row>
+                    <v-divider></v-divider>
+                    <v-row>
+                      <v-col cols="6"><h3>Name:</h3></v-col>
+                      <v-col cols="6"><h3>Date:</h3></v-col>
+                    </v-row>
+                    <v-divider></v-divider>
+                    <v-row>
+                      <v-col cols="6"><h3>Name:</h3></v-col>
+                      <v-col cols="6"><h3>Date:</h3></v-col>
+                    </v-row>
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-btn color="dark" block>View Details</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-col>
+              <v-col cols="12" md="6" lg="4">
+                <v-card class="mb-5" elevation="12" style="border-radius: 12px; overflow: hidden;">
+                  <v-img src="https://cdn.vuetifyjs.com/images/parallax/material.jpg" height="200px"></v-img>
+                  <v-card-title class="text-h5" style="background-color: #375a8b; color: white;">Boarding House</v-card-title>
+                  <v-card-text style="padding: 20px;">
+                    <v-row>
+                      <v-col cols="6"><h3>Name:</h3></v-col>
+                      <v-col cols="6"><h3>Date:</h3></v-col>
+                    </v-row>
+                    <v-divider></v-divider>
+                    <v-row>
+                      <v-col cols="6"><h3>Name:</h3></v-col>
+                      <v-col cols="6"><h3>Date:</h3></v-col>
+                    </v-row>
+                    <v-divider></v-divider>
+                    <v-row>
+                      <v-col cols="6"><h3>Name:</h3></v-col>
+                      <v-col cols="6"><h3>Date:</h3></v-col>
+                    </v-row>
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-btn color="dark" block>View Details</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-col>
+            </v-row>
           </v-card>
         </v-col>
       </v-row>
     </template>
   </AppLayout>
 </template>
-
-
-
