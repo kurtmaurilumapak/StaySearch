@@ -1,15 +1,30 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import AppLayout from '@/components/layout/AppLayout.vue'
 import { supabase } from '@/lib/supabaseClient'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
+const userDataDefault = {
+  firstname: '',
+  lastname: '',
+  email: '',
+}
+const userData = ref({ ...userDataDefault })
+
+onMounted(async () => {
+  const { data: { session } } = await supabase.auth.getSession()
+  if (session?.user) {
+    userData.value.firstname = session.user.user_metadata.firstname || 'No firstname available'
+    userData.value.lastname = session.user.user_metadata.lastname || 'No lastname available'
+    userData.value.email = session.user.email || 'No email available'
+  }
+})
+
 const userPage = async () => {
   const { data: { session } } = await supabase.auth.getSession();
   const userRole = session?.user?.user_metadata?.role;
-
 
   if (userRole === 'student') {
     await router.push('/student/page')
@@ -20,7 +35,6 @@ const userPage = async () => {
     console.error("No user found");
   }
 }
-
 
 const tab = ref('profile')
 
@@ -76,7 +90,7 @@ const tab = ref('profile')
                     <v-col cols="12">
                       <h3>Name</h3>
                       <div class="d-flex justify-space-between align-center my-5">
-                        <span>Your Name</span>
+                        <span>{{ userData.firstname }} {{ userData.lastname }}</span>
                         <v-btn class="text-none font-weight-bold px-8">
                           Edit
                         </v-btn>
@@ -86,7 +100,7 @@ const tab = ref('profile')
                     <v-col cols="12">
                       <h3>Email address</h3>
                       <div class="d-flex justify-space-between align-center my-5">
-                        <span>Your Email</span>
+                        <span>{{ userData.email }}</span>
                         <v-btn class="text-none font-weight-bold px-8">
                           Edit
                         </v-btn>

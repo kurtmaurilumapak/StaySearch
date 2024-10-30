@@ -68,7 +68,7 @@ const logout = async () => {
             </RouterLink>
           </v-col>
 
-          <v-col cols="5" md="4" class="d-none d-sm-flex pr-10">
+          <v-col cols="5" sm="5" md="4" lg="3" class="d-none d-sm-flex pr-10">
             <div
               class="d-inline-flex align-center justify-center border rounded-lg px-3 ga-4"
               style="width: 100%;"
@@ -95,7 +95,7 @@ const logout = async () => {
             </div>
           </v-col>
 
-          <v-col cols="8" sm="3" md="4" class="d-flex align-center justify-end pr-10">
+          <v-col cols="8" sm="3" md="4" lg="5" class="d-flex align-center justify-end pr-10">
             <v-btn
               class="d-flex d-sm-none"
               color="black"
