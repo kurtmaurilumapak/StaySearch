@@ -71,7 +71,7 @@ router.beforeEach(async (to, from, next) => {
 
   const isAuthenticated = !!session;
 
-  if (isAuthenticated && (to.name === 'login' || to.name === 'signup')) {
+  if (isAuthenticated && (to.name === 'login' || to.name === 'signup' || to.name === 'landing')) {
     if (userRole === 'owner') {
       return next({ name: 'dashboard' });
     } else if (userRole === 'student') {
