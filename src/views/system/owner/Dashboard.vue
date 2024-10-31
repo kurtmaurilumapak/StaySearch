@@ -102,6 +102,7 @@ const drawer = ref(true);
     </v-card-item>
 
     <v-card-text class="text-h1 text-center">
+      <v-icon>mdi-post</v-icon>
       10
     </v-card-text>
     <v-divider></v-divider>
@@ -132,6 +133,7 @@ const drawer = ref(true);
     </v-card-item>
 
     <v-card-text class="text-h1 text-center">
+      <v-icon>mdi-account-group</v-icon>
       43
     </v-card-text>
     <v-divider></v-divider>
@@ -162,6 +164,7 @@ const drawer = ref(true);
     </v-card-item>
 
     <v-card-text class="text-h1 text-center">
+      <v-icon>mdi-calendar-multiselect</v-icon>
       5
     </v-card-text>
     <v-divider></v-divider>
