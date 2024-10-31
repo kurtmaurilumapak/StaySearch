@@ -1,17 +1,22 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
+import { useTheme } from 'vuetify'
 import AppLayout from '@/components/layout/AppLayout.vue'
 import { supabase } from '@/lib/supabaseClient'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
+const theme = useTheme()
 
 const userDataDefault = {
   firstname: '',
   lastname: '',
   email: '',
+  theme: 'light',
 }
 const userData = ref({ ...userDataDefault })
+
+const themeSelect = ref('light')
 
 onMounted(async () => {
   const { data: { session } } = await supabase.auth.getSession()
@@ -19,54 +24,78 @@ onMounted(async () => {
     userData.value.firstname = session.user.user_metadata.firstname || 'No firstname available'
     userData.value.lastname = session.user.user_metadata.lastname || 'No lastname available'
     userData.value.email = session.user.email || 'No email available'
+
+    // Fetch user's theme preference
+    const userTheme = session.user.user_metadata.theme
+    themeSelect.value = userTheme || 'light'
+    theme.global.name.value = themeSelect.value
   }
 })
 
 const userPage = async () => {
-  const { data: { session } } = await supabase.auth.getSession();
-  const userRole = session?.user?.user_metadata?.role;
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    const userRole = session?.user?.user_metadata?.role;
 
-  if (userRole === 'student') {
-    await router.push('/student/page')
-  } else if (userRole === 'owner') {
-    await router.push('/owner/dashboard')
-  } else {
-
-    console.error("No user found");
+    if (userRole === 'student') {
+      await router.push('/student/page');
+    } else if (userRole === 'owner') {
+      await router.push('/owner/dashboard');
+    } else {
+      console.error("No user found");
+    }
+  } catch (error) {
+    console.error("Error fetching user session:", error);
   }
 }
 
-const tab = ref('profile')
 
+watch(themeSelect, async (newTheme) => {
+  theme.global.name.value = newTheme
+
+  try {
+    const { error } = await supabase.auth.updateUser ({
+      data: { theme: newTheme } // Ensure this updates the theme correctly
+    })
+    if (error) {
+      console.error('Error updating theme:', error.message)
+    }
+  } catch (error) {
+    console.error('Error updating user:', error)
+  }
+})
+
+
+const tab = ref('profile')
 </script>
 
 
 <template>
   <AppLayout>
     <template #content>
-      <v-card
-        style="height: 100vh; border-radius: 0px"
+      <v-app-bar
+        density="comfortable"
       >
-        <v-toolbar color="white" >
-          <div
-            style="text-decoration: none;color: inherit;"
-            class="d-flex align-center ga-1 my-5 ml-5 cursor-pointer"
-            @click="userPage"
-          >
-            <img
-              src="../../assets/logo.png"
-              alt="Logo"
-              width="30"
-              height="30"
-            />
-            <h2 class="font-weight-bold">
-              StaySearch
-            </h2>
-          </div>
-        </v-toolbar>
-
-        <v-divider></v-divider>
-
+        <div
+          style="text-decoration: none;color: inherit;"
+          class="d-flex align-center ga-1 my-5 ml-5 cursor-pointer"
+          @click="userPage"
+        >
+          <img
+            src="../../assets/logo.png"
+            alt="Logo"
+            width="30"
+            height="30"
+          />
+          <h2 class="font-weight-bold">
+            StaySearch
+          </h2>
+        </div>
+      </v-app-bar>
+      <v-card
+        :elevation="0"
+        style="border-radius: 0"
+      >
         <div class="d-flex flex-row">
           <v-tabs
             v-model="tab"
@@ -191,9 +220,21 @@ const tab = ref('profile')
             </v-tabs-window-item>
 
             <v-tabs-window-item value="theme">
-              <v-card flat>
+              <v-card flat width="45vw">
                 <v-card-text>
-
+                  <v-row>
+                    <v-col cols="12">
+                      <h2>Theme</h2>
+                      <br>
+                      <h3>Choose how you’d like StaySearch to appear. Select a theme.</h3>
+                    </v-col>
+                    <v-col cols="12" class="d-flex border rounded-lg py-8 px-5 ga-5">
+                      <v-radio-group v-model="themeSelect">
+                        <v-radio label="Light" value="light"></v-radio>
+                        <v-radio label="Dark" value="dark"></v-radio>
+                      </v-radio-group>
+                    </v-col>
+                  </v-row>
                 </v-card-text>
               </v-card>
             </v-tabs-window-item>

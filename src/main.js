@@ -20,6 +20,13 @@ const vuetify = createVuetify({
   icons: {
     defaultSet: 'mdi',
   },
+  theme: {
+    defaultTheme: 'light',
+    themes: {
+      light: {},
+      dark: {},
+    },
+  },
 })
 
 app.directive('mask', mask);

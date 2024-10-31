@@ -1,15 +1,18 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted  } from 'vue'
+import { useTheme } from 'vuetify'
 import { useRouter } from 'vue-router';
 import AppLayout from '@/components/layout/AppLayout.vue'
 import { supabase } from '@/lib/supabaseClient'
 
 const router = useRouter()
+const theme = useTheme()
 
 const search = ref ({
   loaded: false,
   loading: false,
 })
+
 
 const banner = ref(false)
 const showBanner = () =>{
@@ -59,6 +62,15 @@ const openDialog = () => {
   postDialog.value.PostContent = true;
 }
 
+onMounted(async () => {
+  const { data: { session } } = await supabase.auth.getSession()
+  if (session?.user) {
+
+    // Fetch user's theme preference
+    theme.global.name.value = session.user.user_metadata.theme || 'light';
+  }
+})
+
 
 
 //backend
@@ -70,6 +82,7 @@ const logout = async () => {
   }
   else {
     console.log('logout successful')
+    theme.global.name.value = 'light'
     await router.push('/login')
 
   }
@@ -133,8 +146,7 @@ const logout = async () => {
 
           <v-col cols="8" sm="3" md="4" lg="5" class="d-flex align-center justify-end pr-10">
             <v-btn
-              class="d-flex d-sm-none"
-              color="black"
+              class="d-flex d-sm-none mr-5"
               icon="mdi-magnify"
               variant="text"
               @click="showBanner"
@@ -154,7 +166,7 @@ const logout = async () => {
               >
                 <v-list-item
                   class="text-center"
-                  @click="openDialog"
+                  @click="$router.push('/settings')"
                 >
                   SETTINGS
                 </v-list-item>
@@ -445,7 +457,6 @@ const logout = async () => {
               <v-spacer></v-spacer>
               <v-btn
                 class="ma-2"
-                color="black"
                 icon="mdi-close"
                 variant="text"
                 @click="postDialog.PostContent=false"
@@ -550,5 +561,17 @@ const logout = async () => {
   </AppLayout>
 </template>
 
-
+<style>
+.overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  font-size: 1.5rem;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+}
+</style>
 

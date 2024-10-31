@@ -1,9 +1,23 @@
 <script setup>
 import Navbar from '@/components/common/Navbar.vue'
 import AppLayout from '@/components/layout/AppLayout.vue'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useTheme } from 'vuetify'
+import { supabase } from '@/lib/supabaseClient.js'
 
 const drawer = ref(true);
+const theme = useTheme()
+
+
+
+onMounted(async () => {
+  const { data: { session } } = await supabase.auth.getSession()
+  if (session?.user) {
+
+    // Fetch user's theme preference
+    theme.global.name.value = session.user.user_metadata.theme || 'light';
+  }
+})
 </script>
 
 <template>
@@ -66,7 +80,6 @@ const drawer = ref(true);
                 <v-col cols="6" class="d-flex align-center justify-end">
                   <v-btn
                     class="ma-2 d-flex d-lg-none"
-                    color="black"
                     icon="mdi-menu"
                     variant="text"
                     @click="drawer = !drawer"

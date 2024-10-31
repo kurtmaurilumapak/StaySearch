@@ -5,8 +5,10 @@ import dashboardIcon from '@/assets/navbar/dashboard.png';
 import postsIcon from '@/assets/navbar/post.png';
 import reservationsIcon from '@/assets/navbar/reservation.png';
 import { supabase } from '@/lib/supabaseClient'
+import { useTheme } from 'vuetify'
 
 const router = useRouter()
+const theme = useTheme()
 
 const nav = ref({
   navItems: [
@@ -24,6 +26,7 @@ const logout = async () => {
   }
   else {
     console.log('logout successful')
+    theme.global.name.value = 'light'
     await router.push('/login')
 
   }

@@ -1,10 +1,13 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import Navbar from '@/components/common/Navbar.vue'
 import AppLayout from '@/components/layout/AppLayout.vue'
+import { useTheme } from 'vuetify'
+import { supabase } from '@/lib/supabaseClient.js'
 
 
 const drawer = ref(true);
+const theme = useTheme()
 
 const postDialog = ref({
   tags: [
@@ -33,6 +36,17 @@ const openCarousel = (index) => {
 const openDialog = () => {
   postDialog.value.PostContent = true;
 }
+
+onMounted(async () => {
+  const { data: { session } } = await supabase.auth.getSession()
+  if (session?.user) {
+
+    // Fetch user's theme preference
+    theme.global.name.value = session.user.user_metadata.theme || 'light';
+  }
+})
+
+
 </script>
 
 
@@ -106,7 +120,6 @@ const openDialog = () => {
                 <v-col cols="6" sm="8" md="12" class="d-flex justify-end">
                   <v-btn
                     class="ma-2 d-flex d-lg-none"
-                    color="black"
                     icon="mdi-menu"
                     variant="text"
                     @click="drawer = !drawer"
