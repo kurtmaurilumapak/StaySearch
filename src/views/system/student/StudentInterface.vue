@@ -3,8 +3,10 @@ import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router';
 import AppLayout from '@/components/layout/AppLayout.vue'
 import { supabase } from '@/lib/supabaseClient'
+import { useTheme } from 'vuetify'
 
 const router = useRouter()
+const theme = useTheme()
 
 const search = ref ({
   loaded: false,
