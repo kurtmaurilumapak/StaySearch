@@ -37,20 +37,29 @@ const drawer = ref(true);
           <v-card :elevation="7"  style="border-radius: 0; height: 100vh; width: 100%;">
             <!-- Header with Notification & Menu -->
             <v-card-title
-              class="py-5"
-              style="background-color: darkseagreen;"
+              class="py-0"
             >
               <v-row>
-                <v-col cols="8" class="d-flex d-md-none align-center"></v-col>
-                <v-col cols="4" md="12" class="d-flex justify-md-end justify-center">
+                <v-col cols="6">
+                  <RouterLink
+                    style="text-decoration: none;color: inherit;"
+                    to="/"
+                    class="d-md-none d-inline-flex align-center justify-center ga-1 my-5"
+                  >
+                    <img
+                      src="@/assets/logo.png"
+                      alt="Logo"
+                      width="40"
+                      height="40"
+                    />
+                    <h2 style="font-size: clamp(20px, 6vw, 25px)">
+                      StaySearch
+                    </h2>
+                  </RouterLink>
+                </v-col>
+                <v-col cols="6" class="d-flex align-center justify-end">
                   <v-btn
-                    class="ma-2"
-                    color="black"
-                    icon="mdi-bell"
-                    variant="text"
-                  ></v-btn>
-                  <v-btn
-                    class="ma-2 d-flex d-md-flex"
+                    class="ma-2 d-flex d-lg-none"
                     color="black"
                     icon="mdi-menu"
                     variant="text"

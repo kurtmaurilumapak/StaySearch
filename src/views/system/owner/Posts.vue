@@ -86,13 +86,12 @@ const openDialog = () => {
 
           <v-card
             :elevation="7"
-            style="border-radius: 0; height: 100vh"
+            style="border-radius: 0; height: 100vh; overflow-y: auto"
 
           >
 
             <v-card-title
-              class="py-5"
-              style="background-color: darkseagreen;"
+              class="py-0"
             >
               <v-row>
                 <v-col cols="6" sm="4" class="d-flex d-md-none align-center">
@@ -105,12 +104,6 @@ const openDialog = () => {
                   </v-btn>
                 </v-col>
                 <v-col cols="6" sm="8" md="12" class="d-flex justify-end">
-                  <v-btn
-                    class="ma-2"
-                    color="black"
-                    icon="mdi-bell"
-                    variant="text"
-                  ></v-btn>
                   <v-btn
                     class="ma-2 d-flex d-lg-none"
                     color="black"
@@ -127,12 +120,8 @@ const openDialog = () => {
             <v-spacer></v-spacer>
 
             <!-- CONTENTS -->
-            <v-card-text
-              style="overflow-y: auto; max-height: 100vh;"
-            >
-              <v-row
-              >
-
+            <v-card-text>
+              <v-row>
                 <!-- CARD POSTS -->
                 <v-col cols="12" sm="6" lg="4" class="d-flex justify-center align-center">
                   <v-card
@@ -589,7 +578,7 @@ const openDialog = () => {
                     </v-chip>
                   </div>
                 </v-col>
-                <v-divider class="mb-10"></v-divider>
+                <v-divider class="mb-2"></v-divider>
                 <v-col cols="12" class="text-center">
                   <span>REVIEWS</span>
                 </v-col>

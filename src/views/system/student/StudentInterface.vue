@@ -10,6 +10,12 @@ const search = ref ({
   loaded: false,
   loading: false,
 })
+
+const banner = ref(false)
+const showBanner = () =>{
+  banner.value = !banner.value
+}
+
 const sorts = [
   'Newest',
   'Price',
@@ -131,12 +137,7 @@ const logout = async () => {
               color="black"
               icon="mdi-magnify"
               variant="text"
-            ></v-btn>
-            <v-btn
-              class="ma-2"
-              color="black"
-              icon="mdi-bell"
-              variant="text"
+              @click="showBanner"
             ></v-btn>
 
             <v-menu location="bottom">
@@ -169,6 +170,33 @@ const logout = async () => {
           </v-col>
         </v-row>
       </v-app-bar>
+
+      <v-banner
+        v-if="banner"
+        class="d-block d-sm-none"
+      >
+        <div class="d-inline-flex align-center justify-center border rounded-lg w-100 px-3 ga-4">
+          <v-text-field
+            class="mb-2"
+            :loading="search.loading"
+            append-inner-icon="mdi-magnify"
+            density="compact"
+            label="Search"
+            variant="plain"
+            hide-details
+            single-line
+            @click:append-inner="onClick"
+            max-width="350"
+          ></v-text-field>
+          <v-btn
+            style="background-color: forestgreen; color: white"
+            class="text-none"
+            size="small"
+          >
+            Filter
+          </v-btn>
+        </div>
+      </v-banner>
 
 
       <v-row class="mt-4 mx-0 mx-md-5 pb-5">
@@ -495,7 +523,7 @@ const logout = async () => {
                     </v-chip>
                   </div>
                 </v-col>
-                <v-divider class="mb-10"></v-divider>
+                <v-divider class="mb-2"></v-divider>
                 <v-col cols="12" class="text-center">
                   <span>REVIEWS</span>
                 </v-col>
