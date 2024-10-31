@@ -507,13 +507,13 @@ const logout = async () => {
 
       <v-dialog v-model="postDialog.carouselOpen" max-width="600">
         <v-carousel v-if="postDialog.carouselOpen" hide-delimiters v-model="postDialog.carouselIndex">
-          <v-carousel-item v-for="(img, index) in postDialog.images" :key="index">
-            <v-img
-              style="border-radius: 20px"
-              :src="img"
-              cover
-            >
-            </v-img>
+          <v-carousel-item
+            v-for="(img, index) in postDialog.images"
+            :key="index"
+            :src="img"
+            aspect-ratio="1"
+            cover
+          >
           </v-carousel-item>
         </v-carousel>
       </v-dialog>
