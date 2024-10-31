@@ -1,21 +1,37 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import Navbar from '@/components/common/Navbar.vue'
 import AppLayout from '@/components/layout/AppLayout.vue'
 
 
-const rating = ref(4.5)
 const drawer = ref(true);
-const PostContent = ref(false);
-const tags = [
-  'All Boys',
-  'Free Electricity',
-  'Free Water',
-  'Free Wifi',
-]
 
-const OpenDialog = () => {
-  PostContent.value = true;
+const postDialog = ref({
+  tags: [
+    'All Boys',
+    'Free Electricity',
+    'Free Water',
+    'Free Wifi',
+  ],
+  PostContent: false,
+  images: [
+    'https://images.pexels.com/photos/28665515/pexels-photo-28665515/free-photo-of-hamburg-urban-train-station-architectural-view.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
+    'https://images.pexels.com/photos/7994278/pexels-photo-7994278.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
+    'https://images.pexels.com/photos/2940506/pexels-photo-2940506.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
+    'https://images.pexels.com/photos/28959278/pexels-photo-28959278/free-photo-of-a-flock-of-seagulls-soaring-in-clear-blue-sky.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
+    'https://images.pexels.com/photos/10414211/pexels-photo-10414211.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
+  ],
+  carouselOpen: false,
+  carouselIndex: 0,
+
+})
+const extraImagesCount = computed(() => postDialog.value.images.length - 3)
+const openCarousel = (index) => {
+  postDialog.value.carouselIndex = index
+  postDialog.value.carouselOpen = true
+}
+const openDialog = () => {
+  postDialog.value.PostContent = true;
 }
 </script>
 
@@ -118,323 +134,351 @@ const OpenDialog = () => {
               >
 
                 <!-- CARD POSTS -->
-                <v-col cols="12" md="6" lg="4" class="d-flex justify-center align-center">
+                <v-col cols="12" sm="6" lg="4" class="d-flex justify-center align-center">
                   <v-card
-                    class="border rounded-lg"
-                    @click="OpenDialog"
+                    :elevation="7"
+                    class="rounded-xl"
+                    @click="openDialog"
                     width="100%"
+
                   >
                     <v-card-text>
                       <v-row>
-                        <v-col cols="5">
-                          <v-img
-                            class="bg-white rounded-lg"
-                            src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                            max-width="100%"
-                            height="180"
-                            cover
-                          ></v-img>
-                        </v-col>
-                        <v-col cols="7">
+                        <v-col cols="12">
                           <v-row>
-                            <v-col cols="12">
-                              <div class="d-flex align-center">
-                                <span>{{ rating }}</span>
-                                <v-rating
-                                  v-model="rating"
-                                  half-increments
-                                  readonly
-                                  :length="5"
-                                  :size="26"
-                                  color="green-accent-4"
-                                />
-                              </div>
-                              <h1 class="text-h6">House Name</h1>
-                              <h2 class="text-subtitle-1">Address</h2>
+                            <v-col cols="8">
+                              <v-img
+                                class="bg-white rounded-xl"
+                                src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                                max-width="100%"
+                                height="170"
+                                aspect-ratio="1"
+                                cover
+                              ></v-img>
                             </v-col>
-                            <v-col cols="12">
-                              <span class="text-body-2">Tags</span>
-                            </v-col>
-                            <v-col cols="12" class="d-flex justify-end">
-                              <h2 class="text-h6">Price/month</h2>
+                            <v-col cols="4">
+                              <v-img
+                                class="bg-white rounded-xl"
+                                src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                                max-width="100%"
+                                height="170"
+                                aspect-ratio="1"
+                                cover
+                              ></v-img>
                             </v-col>
                           </v-row>
+                          <v-col cols="12">
+                            <v-row>
+                              <v-col cols="12" class="d-inline-flex justify-space-between">
+                                <h1 class="text-h6">House Name</h1>
+                                <h2 class="text-subtitle-1"><v-icon>mdi-map-marker</v-icon>Address</h2>
+                              </v-col>
+                              <v-col cols="12" class="d-inline-flex justify-space-between">
+                                <h2 class="text-h6"><v-icon color="green" class="mr-5">mdi-tag</v-icon>Price/month</h2>
+                                <span class="text-body-2">Tags</span>
+                              </v-col>
+                            </v-row>
+                          </v-col>
                         </v-col>
                       </v-row>
                     </v-card-text>
                   </v-card>
                 </v-col>
-                <v-col cols="12" md="6" lg="4" class="d-flex justify-center align-center">
+                <v-col cols="12" sm="6" lg="4" class="d-flex justify-center align-center">
                   <v-card
-                    class="border rounded-lg"
-                    @click="$router.push('/owner/create')"
+                    :elevation="7"
+                    class="rounded-xl"
+                    @click="openDialog"
                     width="100%"
+
                   >
                     <v-card-text>
                       <v-row>
-                        <v-col cols="5">
-                          <v-img
-                            class="bg-white rounded-lg"
-                            src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                            max-width="100%"
-                            height="180"
-                            cover
-                          ></v-img>
-                        </v-col>
-                        <v-col cols="7">
+                        <v-col cols="12">
                           <v-row>
-                            <v-col cols="12">
-                              <div class="d-flex align-center">
-                                <span>{{ rating }}</span>
-                                <v-rating
-                                  v-model="rating"
-                                  half-increments
-                                  readonly
-                                  :length="5"
-                                  :size="26"
-                                  color="green-accent-4"
-                                />
-                              </div>
-                              <h1 class="text-h6">House Name</h1>
-                              <h2 class="text-subtitle-1">Address</h2>
+                            <v-col cols="8">
+                              <v-img
+                                class="bg-white rounded-xl"
+                                src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                                max-width="100%"
+                                height="170"
+                                aspect-ratio="1"
+                                cover
+                              ></v-img>
                             </v-col>
-                            <v-col cols="12">
-                              <span class="text-body-2">Tags</span>
-                            </v-col>
-                            <v-col cols="12" class="d-flex justify-end">
-                              <h2 class="text-h6">Price/month</h2>
+                            <v-col cols="4">
+                              <v-img
+                                class="bg-white rounded-xl"
+                                src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                                max-width="100%"
+                                aspect-ratio="1"
+                                height="170"
+                                cover
+                              ></v-img>
                             </v-col>
                           </v-row>
+                          <v-col cols="12">
+                            <v-row>
+                              <v-col cols="12" class="d-inline-flex justify-space-between">
+                                <h1 class="text-h6">House Name</h1>
+                                <h2 class="text-subtitle-1"><v-icon>mdi-map-marker</v-icon>Address</h2>
+                              </v-col>
+                              <v-col cols="12" class="d-inline-flex justify-space-between">
+                                <h2 class="text-h6"><v-icon color="green" class="mr-5">mdi-tag</v-icon>Price/month</h2>
+                                <span class="text-body-2">Tags</span>
+                              </v-col>
+                            </v-row>
+                          </v-col>
                         </v-col>
                       </v-row>
                     </v-card-text>
                   </v-card>
                 </v-col>
-                <v-col cols="12" md="6" lg="4" class="d-flex justify-center align-center">
+                <v-col cols="12" sm="6" lg="4" class="d-flex justify-center align-center">
                   <v-card
-                    class="border rounded-lg"
-                    @click="$router.push('/owner/create')"
+                    :elevation="7"
+                    class="rounded-xl"
+                    @click="openDialog"
                     width="100%"
+
                   >
                     <v-card-text>
                       <v-row>
-                        <v-col cols="5">
-                          <v-img
-                            class="bg-white rounded-lg"
-                            src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                            max-width="100%"
-                            height="180"
-                            cover
-                          ></v-img>
-                        </v-col>
-                        <v-col cols="7">
+                        <v-col cols="12">
                           <v-row>
-                            <v-col cols="12">
-                              <div class="d-flex align-center">
-                                <span>{{ rating }}</span>
-                                <v-rating
-                                  v-model="rating"
-                                  half-increments
-                                  readonly
-                                  :length="5"
-                                  :size="26"
-                                  color="green-accent-4"
-                                />
-                              </div>
-                              <h1 class="text-h6">House Name</h1>
-                              <h2 class="text-subtitle-1">Address</h2>
+                            <v-col cols="8">
+                              <v-img
+                                class="bg-white rounded-xl"
+                                src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                                max-width="100%"
+                                height="170"
+                                aspect-ratio="1"
+                                cover
+                              ></v-img>
                             </v-col>
-                            <v-col cols="12">
-                              <span class="text-body-2">Tags</span>
-                            </v-col>
-                            <v-col cols="12" class="d-flex justify-end">
-                              <h2 class="text-h6">Price/month</h2>
+                            <v-col cols="4">
+                              <v-img
+                                class="bg-white rounded-xl"
+                                src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                                max-width="100%"
+                                height="170"
+                                aspect-ratio="1"
+                                cover
+                              ></v-img>
                             </v-col>
                           </v-row>
+                          <v-col cols="12">
+                            <v-row>
+                              <v-col cols="12" class="d-inline-flex justify-space-between">
+                                <h1 class="text-h6">House Name</h1>
+                                <h2 class="text-subtitle-1"><v-icon>mdi-map-marker</v-icon>Address</h2>
+                              </v-col>
+                              <v-col cols="12" class="d-inline-flex justify-space-between">
+                                <h2 class="text-h6"><v-icon color="green" class="mr-5">mdi-tag</v-icon>Price/month</h2>
+                                <span class="text-body-2">Tags</span>
+                              </v-col>
+                            </v-row>
+                          </v-col>
                         </v-col>
                       </v-row>
                     </v-card-text>
                   </v-card>
                 </v-col>
-                <v-col cols="12" md="6" lg="4" class="d-flex justify-center align-center">
+                <v-col cols="12" sm="6" lg="4" class="d-flex justify-center align-center">
                   <v-card
-                    class="border rounded-lg"
-                    @click="$router.push('/owner/create')"
+                    :elevation="7"
+                    class="rounded-xl"
+                    @click="openDialog"
                     width="100%"
+
                   >
                     <v-card-text>
                       <v-row>
-                        <v-col cols="5">
-                          <v-img
-                            class="bg-white rounded-lg"
-                            src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                            max-width="100%"
-                            height="180"
-                            cover
-                          ></v-img>
-                        </v-col>
-                        <v-col cols="7">
+                        <v-col cols="12">
                           <v-row>
-                            <v-col cols="12">
-                              <div class="d-flex align-center">
-                                <span>{{ rating }}</span>
-                                <v-rating
-                                  v-model="rating"
-                                  half-increments
-                                  readonly
-                                  :length="5"
-                                  :size="26"
-                                  color="green-accent-4"
-                                />
-                              </div>
-                              <h1 class="text-h6">House Name</h1>
-                              <h2 class="text-subtitle-1">Address</h2>
+                            <v-col cols="8">
+                              <v-img
+                                class="bg-white rounded-xl"
+                                src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                                max-width="100%"
+                                height="170"
+                                aspect-ratio="1"
+                                cover
+                              ></v-img>
                             </v-col>
-                            <v-col cols="12">
-                              <span class="text-body-2">Tags</span>
-                            </v-col>
-                            <v-col cols="12" class="d-flex justify-end">
-                              <h2 class="text-h6">Price/month</h2>
+                            <v-col cols="4">
+                              <v-img
+                                class="bg-white rounded-xl"
+                                src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                                max-width="100%"
+                                height="170"
+                                aspect-ratio="1"
+                                cover
+                              ></v-img>
                             </v-col>
                           </v-row>
+                          <v-col cols="12">
+                            <v-row>
+                              <v-col cols="12" class="d-inline-flex justify-space-between">
+                                <h1 class="text-h6">House Name</h1>
+                                <h2 class="text-subtitle-1"><v-icon>mdi-map-marker</v-icon>Address</h2>
+                              </v-col>
+                              <v-col cols="12" class="d-inline-flex justify-space-between">
+                                <h2 class="text-h6"><v-icon color="green" class="mr-5">mdi-tag</v-icon>Price/month</h2>
+                                <span class="text-body-2">Tags</span>
+                              </v-col>
+                            </v-row>
+                          </v-col>
                         </v-col>
                       </v-row>
                     </v-card-text>
                   </v-card>
                 </v-col>
-                <v-col cols="12" md="6" lg="4" class="d-flex justify-center align-center">
+                <v-col cols="12" sm="6" lg="4" class="d-flex justify-center align-center">
                   <v-card
-                    class="border rounded-lg"
-                    @click="$router.push('/owner/create')"
+                    :elevation="7"
+                    class="rounded-xl"
+                    @click="openDialog"
                     width="100%"
+
                   >
                     <v-card-text>
                       <v-row>
-                        <v-col cols="5">
-                          <v-img
-                            class="bg-white rounded-lg"
-                            src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                            max-width="100%"
-                            height="180"
-                            cover
-                          ></v-img>
-                        </v-col>
-                        <v-col cols="7">
+                        <v-col cols="12">
                           <v-row>
-                            <v-col cols="12">
-                              <div class="d-flex align-center">
-                                <span>{{ rating }}</span>
-                                <v-rating
-                                  v-model="rating"
-                                  half-increments
-                                  readonly
-                                  :length="5"
-                                  :size="26"
-                                  color="green-accent-4"
-                                />
-                              </div>
-                              <h1 class="text-h6">House Name</h1>
-                              <h2 class="text-subtitle-1">Address</h2>
+                            <v-col cols="8">
+                              <v-img
+                                class="bg-white rounded-xl"
+                                src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                                max-width="100%"
+                                height="170"
+                                aspect-ratio="1"
+                                cover
+                              ></v-img>
                             </v-col>
-                            <v-col cols="12">
-                              <span class="text-body-2">Tags</span>
-                            </v-col>
-                            <v-col cols="12" class="d-flex justify-end">
-                              <h2 class="text-h6">Price/month</h2>
+                            <v-col cols="4">
+                              <v-img
+                                class="bg-white rounded-xl"
+                                src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                                max-width="100%"
+                                height="170"
+                                aspect-ratio="1"
+                                cover
+                              ></v-img>
                             </v-col>
                           </v-row>
+                          <v-col cols="12">
+                            <v-row>
+                              <v-col cols="12" class="d-inline-flex justify-space-between">
+                                <h1 class="text-h6">House Name</h1>
+                                <h2 class="text-subtitle-1"><v-icon>mdi-map-marker</v-icon>Address</h2>
+                              </v-col>
+                              <v-col cols="12" class="d-inline-flex justify-space-between">
+                                <h2 class="text-h6"><v-icon color="green" class="mr-5">mdi-tag</v-icon>Price/month</h2>
+                                <span class="text-body-2">Tags</span>
+                              </v-col>
+                            </v-row>
+                          </v-col>
                         </v-col>
                       </v-row>
                     </v-card-text>
                   </v-card>
                 </v-col>
-                <v-col cols="12" md="6" lg="4" class="d-flex justify-center align-center">
+                <v-col cols="12" sm="6" lg="4" class="d-flex justify-center align-center">
                   <v-card
-                    class="border rounded-lg"
-                    @click="$router.push('/owner/create')"
+                    :elevation="7"
+                    class="rounded-xl"
+                    @click="openDialog"
                     width="100%"
+
                   >
                     <v-card-text>
                       <v-row>
-                        <v-col cols="5">
-                          <v-img
-                            class="bg-white rounded-lg"
-                            src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                            max-width="100%"
-                            height="180"
-                            cover
-                          ></v-img>
-                        </v-col>
-                        <v-col cols="7">
+                        <v-col cols="12">
                           <v-row>
-                            <v-col cols="12">
-                              <div class="d-flex align-center">
-                                <span>{{ rating }}</span>
-                                <v-rating
-                                  v-model="rating"
-                                  half-increments
-                                  readonly
-                                  :length="5"
-                                  :size="26"
-                                  color="green-accent-4"
-                                />
-                              </div>
-                              <h1 class="text-h6">House Name</h1>
-                              <h2 class="text-subtitle-1">Address</h2>
+                            <v-col cols="8">
+                              <v-img
+                                class="bg-white rounded-xl"
+                                src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                                max-width="100%"
+                                height="170"
+                                aspect-ratio="1"
+                                cover
+                              ></v-img>
                             </v-col>
-                            <v-col cols="12">
-                              <span class="text-body-2">Tags</span>
-                            </v-col>
-                            <v-col cols="12" class="d-flex justify-end">
-                              <h2 class="text-h6">Price/month</h2>
+                            <v-col cols="4">
+                              <v-img
+                                class="bg-white rounded-xl"
+                                src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                                max-width="100%"
+                                height="170"
+                                aspect-ratio="1"
+                                cover
+                              ></v-img>
                             </v-col>
                           </v-row>
+                          <v-col cols="12">
+                            <v-row>
+                              <v-col cols="12" class="d-inline-flex justify-space-between">
+                                <h1 class="text-h6">House Name</h1>
+                                <h2 class="text-subtitle-1"><v-icon>mdi-map-marker</v-icon>Address</h2>
+                              </v-col>
+                              <v-col cols="12" class="d-inline-flex justify-space-between">
+                                <h2 class="text-h6"><v-icon color="green" class="mr-5">mdi-tag</v-icon>Price/month</h2>
+                                <span class="text-body-2">Tags</span>
+                              </v-col>
+                            </v-row>
+                          </v-col>
                         </v-col>
                       </v-row>
                     </v-card-text>
                   </v-card>
                 </v-col>
-                <v-col cols="12" md="6" lg="4" class="d-flex justify-center align-center">
+                <v-col cols="12" sm="6" lg="4" class="d-flex justify-center align-center">
                   <v-card
-                    class="border rounded-lg"
-                    @click="$router.push('/owner/create')"
+                    :elevation="7"
+                    class="rounded-xl"
+                    @click="openDialog"
                     width="100%"
+
                   >
                     <v-card-text>
                       <v-row>
-                        <v-col cols="5">
-                          <v-img
-                            class="bg-white rounded-lg"
-                            src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                            max-width="100%"
-                            height="180"
-                            cover
-                          ></v-img>
-                        </v-col>
-                        <v-col cols="7">
+                        <v-col cols="12">
                           <v-row>
-                            <v-col cols="12">
-                              <div class="d-flex align-center">
-                                <span>{{ rating }}</span>
-                                <v-rating
-                                  v-model="rating"
-                                  half-increments
-                                  readonly
-                                  :length="5"
-                                  :size="26"
-                                  color="green-accent-4"
-                                />
-                              </div>
-                              <h1 class="text-h6">House Name</h1>
-                              <h2 class="text-subtitle-1">Address</h2>
+                            <v-col cols="8">
+                              <v-img
+                                class="bg-white rounded-xl"
+                                src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                                max-width="100%"
+                                height="170"
+                                aspect-ratio="1"
+                                cover
+                              ></v-img>
                             </v-col>
-                            <v-col cols="12">
-                              <span class="text-body-2">Tags</span>
-                            </v-col>
-                            <v-col cols="12" class="d-flex justify-end">
-                              <h2 class="text-h6">Price/month</h2>
+                            <v-col cols="4">
+                              <v-img
+                                class="bg-white rounded-xl"
+                                src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                                max-width="100%"
+                                height="170"
+                                aspect-ratio="1"
+                                cover
+                              ></v-img>
                             </v-col>
                           </v-row>
+                          <v-col cols="12">
+                            <v-row>
+                              <v-col cols="12" class="d-inline-flex justify-space-between">
+                                <h1 class="text-h6">House Name</h1>
+                                <h2 class="text-subtitle-1"><v-icon>mdi-map-marker</v-icon>Address</h2>
+                              </v-col>
+                              <v-col cols="12" class="d-inline-flex justify-space-between">
+                                <h2 class="text-h6"><v-icon color="green" class="mr-5">mdi-tag</v-icon>Price/month</h2>
+                                <span class="text-body-2">Tags</span>
+                              </v-col>
+                            </v-row>
+                          </v-col>
                         </v-col>
                       </v-row>
                     </v-card-text>
@@ -445,76 +489,142 @@ const OpenDialog = () => {
           </v-card>
         </v-col>
       </v-row>
+
       <v-dialog
-        v-model="PostContent"
+        v-model="postDialog.PostContent"
         max-width="700"
       >
-        <v-card>
-          <v-card-title class="d-flex align-center font-weight-bold"
-          >
-            <v-spacer class="px-4"></v-spacer>
-            Your Post
-            <v-spacer></v-spacer>
-            <v-btn
-              class="ma-2"
-              color="black"
-              icon="mdi-close"
-              variant="text"
-              @click="PostContent=false"
-            ></v-btn>
-          </v-card-title>
-          <v-divider></v-divider>
-          <v-card-text>
-            <v-row>
-              <v-col cols="12">
-                <v-carousel
-                >
-                  <div
-                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; z-index: -1"
-                  ></div>
-                  <v-carousel-item
-                    alt="Uploaded Image"
-                    contain
-                    height="100%"
-                    width="100%"
-                  >
-                  </v-carousel-item>
-                </v-carousel>
-              </v-col>
-              <v-col cols="12">
-                <div v-if="tags.length > 0">
-                  <v-chip color="pink" class="mr-1" label>
-                    <v-icon icon="mdi-label" start></v-icon>
-                    Tags:
-                  </v-chip>
+        <v-card style="overflow: hidden; border-radius: 20px">
+          <div class="overflow-y-auto">
+            <v-card-title class="d-flex align-center justify-center font-weight-bold"
+            >
+              <v-spacer class="px-4"></v-spacer>
+              <h4>Your Post</h4>
+              <v-spacer></v-spacer>
+              <v-btn
+                class="ma-2"
+                color="black"
+                icon="mdi-close"
+                variant="text"
+                @click="postDialog.PostContent=false"
+              ></v-btn>
+            </v-card-title>
+            <v-divider></v-divider>
+            <v-card-text>
+              <v-row>
+                <v-col cols="12" class="text-center">
+                  <h2>Boarding House Name</h2>
+                </v-col>
+                <v-col cols="12">
+                  <v-row>
+                    <v-col cols="8">
+                      <v-img
+                        style="border-radius: 20px; cursor: pointer;"
+                        :src="postDialog.images[0]"
+                        @click="openCarousel(0)"
+                        aspect-ratio="1"
+                        cover
+                      >
+                      </v-img>
+                    </v-col>
+                    <v-col cols="4">
+                      <v-row>
+                        <v-col cols="12">
+                          <v-img
+                            style="border-radius: 20px; cursor: pointer;"
+                            :src="postDialog.images[1]"
+                            @click="openCarousel(1)"
+                            aspect-ratio="1"
+                            cover
+                          >
+                          </v-img>
+                        </v-col>
+                        <v-col cols="12">
+                          <v-img
+                            style="border-radius: 20px; cursor: pointer;"
+                            :src="postDialog.images[2]"
+                            @click="openCarousel(2)"
+                            aspect-ratio="1"
+                            cover
+                          >
+                            <div v-if="extraImagesCount > 0" class="overlay">
+                              <span style="font-size: clamp(5px, 3vw, 25px)">{{ extraImagesCount }}+ more</span>
+                            </div>
+                          </v-img>
+                        </v-col>
+                      </v-row>
+                    </v-col>
+                  </v-row>
+                </v-col>
+                <v-col cols="12" class="d-block">
+                  <div class="d-flex justify-space-between">
+                    <h2 class="text-subtitle-1"><v-icon>mdi-map-marker</v-icon>Address</h2>
+                    <v-btn
+                      style="background-color: forestgreen; color: white;"
+                      class="text-none"
+                    >
+                      Book now!
+                    </v-btn>
+                  </div>
+                  <br>
+                  <h2 class="text-h6"><v-icon color="green" class="mr-5">mdi-tag</v-icon>Price/month</h2>
+                </v-col>
+                <v-col cols="12">
+                  <h2 class="text-h6">Details</h2>
+                </v-col>
+                <v-col cols="12">
+                  <div v-if="postDialog.tags.length > 0">
+                    <v-chip color="pink" class="mr-1" label>
+                      <v-icon icon="mdi-label" start></v-icon>
+                      Tags:
+                    </v-chip>
                     <v-chip
                       label
-                      v-for="tag in tags"
+                      v-for="tag in postDialog.tags"
                       :key="tag"
                       color="green-darken-2"
                       class="ma-1"
                     >
                       {{ tag }}
                     </v-chip>
-                </div>
-                <h2>Boarding House Name</h2>
-                <h2>Price</h2>
-              </v-col>
-              <v-col cols="12">
-                <h2>Details</h2>
-              </v-col>
-              <v-divider class="my-10"></v-divider>
-              <v-col cols="12">
-                <h2>REVIEWS</h2>
-              </v-col>
-            </v-row>
-          </v-card-text>
-
+                  </div>
+                </v-col>
+                <v-divider class="mb-10"></v-divider>
+                <v-col cols="12" class="text-center">
+                  <span>REVIEWS</span>
+                </v-col>
+              </v-row>
+            </v-card-text>
+          </div>
         </v-card>
+      </v-dialog>
+
+      <v-dialog v-model="postDialog.carouselOpen" max-width="600">
+        <v-carousel v-if="postDialog.carouselOpen" hide-delimiters v-model="postDialog.carouselIndex">
+          <v-carousel-item v-for="(img, index) in postDialog.images" :key="index">
+            <v-img
+              style="border-radius: 20px"
+              :src="img"
+              cover
+            >
+            </v-img>
+          </v-carousel-item>
+        </v-carousel>
       </v-dialog>
     </template>
   </AppLayout>
 </template>
 
-
-
+<style>
+.overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  font-size: 1.5rem;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+}
+</style>
