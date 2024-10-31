@@ -1,5 +1,18 @@
 <script setup>
+import { useTheme } from 'vuetify'
+import { onMounted } from 'vue'
+import { supabase } from '@/lib/supabaseClient.js'
 
+const theme = useTheme()
+
+onMounted(async () => {
+  const { data: { session } } = await supabase.auth.getSession()
+  if (session?.user) {
+
+    // Fetch user's theme preference
+    theme.global.name.value = session.user.user_metadata.theme || 'light';
+  }
+})
 </script>
 
 <template>

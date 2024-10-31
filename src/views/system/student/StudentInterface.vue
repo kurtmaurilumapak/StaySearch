@@ -1,12 +1,10 @@
 <script setup>
-import { computed, ref, onMounted  } from 'vue'
-import { useTheme } from 'vuetify'
+import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router';
 import AppLayout from '@/components/layout/AppLayout.vue'
 import { supabase } from '@/lib/supabaseClient'
 
 const router = useRouter()
-const theme = useTheme()
 
 const search = ref ({
   loaded: false,
@@ -61,16 +59,6 @@ const openCarousel = (index) => {
 const openDialog = () => {
   postDialog.value.PostContent = true;
 }
-
-onMounted(async () => {
-  const { data: { session } } = await supabase.auth.getSession()
-  if (session?.user) {
-
-    // Fetch user's theme preference
-    theme.global.name.value = session.user.user_metadata.theme || 'light';
-  }
-})
-
 
 
 //backend
