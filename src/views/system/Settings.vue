@@ -1,72 +1,101 @@
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 import { useTheme } from 'vuetify'
 import AppLayout from '@/components/layout/AppLayout.vue'
-import { supabase } from '@/lib/supabaseClient'
 import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/userStore';
 
 const router = useRouter()
 const theme = useTheme()
+const userStore = useUserStore()
 
-const userDataDefault = {
-  firstname: '',
-  lastname: '',
-  email: '',
-  theme: 'light',
-}
-const userData = ref({ ...userDataDefault })
+const userUpdate = ref({
+  editingName: false,
+  editingEmail: false,
+  editedFirstname: '',
+  editedLastname: '',
+  editedEmail: '',
+  nameSnackbar: false,
+  emailSnackbar: false,
+})
 
-const themeSelect = ref('light')
 
 onMounted(async () => {
-  const { data: { session } } = await supabase.auth.getSession()
-  if (session?.user) {
-    userData.value.firstname = session.user.user_metadata.firstname || 'No firstname available'
-    userData.value.lastname = session.user.user_metadata.lastname || 'No lastname available'
-    userData.value.email = session.user.email || 'No email available'
-
-    // Fetch user's theme preference
-    const userTheme = session.user.user_metadata.theme
-    themeSelect.value = userTheme || 'light'
-    theme.global.name.value = themeSelect.value
-  }
+  await userStore.fetchUserData()
+  console.log(userStore.userData)
+  theme.global.name.value = userStore.userData.theme
 })
 
-const userPage = async () => {
-  try {
-    const { data: { session } } = await supabase.auth.getSession();
-    const userRole = session?.user?.user_metadata?.role;
+watch(() => userStore.userData.theme, async (newTheme) => {
+  theme.global.name.value = newTheme;
+  await userStore.updateTheme(newTheme)
+});
 
-    if (userRole === 'student') {
-      await router.push('/student/page');
-    } else if (userRole === 'owner') {
-      await router.push('/owner/dashboard');
-    } else {
-      console.error("No user found");
-    }
-  } catch (error) {
-    console.error("Error fetching user session:", error);
+const userPage = async () => {
+  await userStore.fetchUserData()
+  const userRole = userStore.userData.role
+  if (userRole === 'student') {
+    await router.push('/student/page')
+  } else if (userRole === 'owner') {
+    await router.push('/owner/dashboard')
+  } else {
+    console.error("No user found")
   }
 }
 
+const openNameEditDialog = () => {
+  userUpdate.value.editedFirstname = userStore.userData.firstname
+  userUpdate.value.editedLastname = userStore.userData.lastname
+  userUpdate.value.editingName = true
+};
 
-watch(themeSelect, async (newTheme) => {
-  theme.global.name.value = newTheme
+const openEmailEditDialog = () => {
+  userUpdate.value.editedEmail = userStore.userData.email
+  userUpdate.value.editingEmail = true
+};
 
-  try {
-    const { error } = await supabase.auth.updateUser ({
-      data: { theme: newTheme } // Ensure this updates the theme correctly
-    })
-    if (error) {
-      console.error('Error updating theme:', error.message)
+const handleUpdateUser = async () => {
+  userStore.userData.firstname = userUpdate.value.editedFirstname || userStore.userData.firstname
+  userStore.userData.lastname = userUpdate.value.editedLastname || userStore.userData.lastname
+  userStore.userData.email = userUpdate.value.editedEmail
+
+  userStore.formAction.formProcess = true
+  const updateSuccessful = await userStore.updateUser();
+  userStore.formAction.formProcess = false
+
+  if (updateSuccessful) {
+    if (userUpdate.value.editingName) {
+      userUpdate.value.nameSnackbar = true;
     }
-  } catch (error) {
-    console.error('Error updating user:', error)
+    if (userUpdate.value.editingEmail) {
+      userUpdate.value.emailSnackbar = true;
+    }
   }
-})
-
+  userUpdate.value.editingName = false
+  userUpdate.value.editingEmail = false
+}
 
 const tab = ref('profile')
+
+const firstnameRules = [
+  v => !!v || 'First name is required',
+]
+const lastnameRules = [
+  v => !!v || 'Last name is required',
+]
+const emailRules = [
+  v => !!v || 'Email is required',
+  v => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(v) || 'Invalid email format',
+]
+
+const isNameValid = computed(() => {
+  return firstnameRules.every(rule => rule(userUpdate.value.editedFirstname) === true) && lastnameRules.every(rule => rule(userUpdate.value.editedLastname) === true)
+
+});
+
+const isEmailValid = computed(() => {
+  return emailRules.every(rule => rule(userUpdate.value.editedEmail) === true);
+});
 </script>
 
 
@@ -120,8 +149,8 @@ const tab = ref('profile')
                     <v-col cols="12">
                       <h3>Name</h3>
                       <div class="d-flex justify-space-between align-center my-5">
-                        <span>{{ userData.firstname }} {{ userData.lastname }}</span>
-                        <v-btn class="text-none font-weight-bold px-8">
+                        <span>{{ userStore.userData.firstname }} {{ userStore.userData.lastname }}</span>
+                        <v-btn variant="outlined" class="text-none font-weight-bold px-8" @click="openNameEditDialog">
                           Edit
                         </v-btn>
                       </div>
@@ -130,8 +159,8 @@ const tab = ref('profile')
                     <v-col cols="12">
                       <h3>Email address</h3>
                       <div class="d-flex justify-space-between align-center my-5">
-                        <span>{{ userData.email }}</span>
-                        <v-btn class="text-none font-weight-bold px-8">
+                        <span>{{ userStore.userData.email }}</span>
+                        <v-btn variant="outlined" class="text-none font-weight-bold px-8" @click="openEmailEditDialog">
                           Edit
                         </v-btn>
                       </div>
@@ -149,7 +178,6 @@ const tab = ref('profile')
                     <v-col cols="12">
                       <h2>Login & Security</h2>
                       <br>
-                      <h3>Login</h3>
                     </v-col>
                     <v-col cols="12" >
                       <v-row class="d-flex border rounded-lg py-8 px-5 ga-5">
@@ -165,58 +193,12 @@ const tab = ref('profile')
                           </div>
                         </v-col>
                         <v-col cols="12" sm="2" class="d-flex flex-sm-column ga-2">
-                          <v-btn class="text-none font-weight-bold">
+                          <v-btn variant="outlined" class="text-none font-weight-bold">
                             Change
                           </v-btn>
                           <br>
-                          <v-btn class="text-none font-weight-bold">
+                          <v-btn variant="outlined" class="text-none font-weight-bold">
                             Reset
-                          </v-btn>
-                        </v-col>
-                      </v-row>
-                    </v-col>
-                    <v-col cols="12">
-                      <br>
-                      <h3>Security</h3>
-                    </v-col>
-                    <v-col cols="12" >
-                      <v-row class="d-flex border rounded-lg py-8 px-5 ga-5" >
-                        <v-col cols="2" class="d-flex justify-center">
-                          <v-icon class="border rounded-lg py-8 px-8" size="xx-large">
-                            mdi-security
-                          </v-icon>
-                        </v-col>
-                        <v-col cols="8">
-                          <h3>Sign out from all devices</h3>
-                          <div class="mt-5">
-                            <p>Logged in on a shared device but forgot to sign out? End all sessions by signing out from all devices.</p>
-                          </div>
-                        </v-col>
-                        <v-col cols="2" class="d-none d-sm-block"></v-col>
-                        <v-col>
-                          <v-btn class="text-none font-weight-bold px-8">
-                            Sign out from all device
-                          </v-btn>
-                        </v-col>
-                      </v-row>
-                    </v-col>
-                    <v-col cols="12">
-                      <v-row class="d-flex border rounded-lg py-8 px-5 mt-0 ga-5">
-                        <v-col cols="2" class="d-flex justify-center">
-                          <v-icon class="border rounded-lg py-8 px-8" size="xx-large">
-                            mdi-delete
-                          </v-icon>
-                        </v-col>
-                        <v-col cols="9">
-                          <h3>Delete your account</h3>
-                          <div class="mt-5">
-                            <p>By deleting your account, you’ll no longer be able to access any of your designs or log in to StaySearch. Your StaySearch account was created at time month day, year.</p>
-                          </div>
-                        </v-col>
-                        <v-col cols="2" class="d-none d-sm-block"></v-col>
-                        <v-col>
-                          <v-btn class="text-none font-weight-bold px-8">
-                            Delete account
                           </v-btn>
                         </v-col>
                       </v-row>
@@ -236,7 +218,7 @@ const tab = ref('profile')
                       <h3>Choose how you’d like StaySearch to appear. Select a theme.</h3>
                     </v-col>
                     <v-col cols="12" class="d-flex border rounded-lg py-8 px-5 ga-5">
-                      <v-radio-group v-model="themeSelect">
+                      <v-radio-group v-model="userStore.userData.theme">
                         <v-radio label="Light" value="light"></v-radio>
                         <v-radio label="Dark" value="dark"></v-radio>
                       </v-radio-group>
@@ -248,6 +230,110 @@ const tab = ref('profile')
           </v-tabs-window>
         </div>
       </v-card>
+
+      <v-dialog v-model="userUpdate.editingName" max-width="500px">
+          <v-card>
+            <v-card-title>
+              <span class="headline">Edit User Information</span>
+            </v-card-title>
+            <v-card-text>
+              <v-text-field
+                v-model="userUpdate.editedFirstname"
+                :rules="firstnameRules"
+                label="First Name"
+                variant="outlined"
+              ></v-text-field>
+              <v-text-field
+                v-model="userUpdate.editedLastname"
+                :rules="lastnameRules"
+                label="Last Name"
+                variant="outlined"
+              ></v-text-field>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer />
+              <v-btn
+                color="primary"
+                :disabled="userStore.formAction.formProcess || !isNameValid"
+                @click="handleUpdateUser"
+              >
+                Save
+              </v-btn>
+              <v-btn @click="userUpdate.editingName = false">Cancel</v-btn>
+            </v-card-actions>
+          </v-card>
+      </v-dialog>
+
+      <v-dialog v-model="userUpdate.editingEmail" max-width="500px">
+        <v-card>
+          <v-card-title>
+            <span class="headline">Edit User Information</span>
+          </v-card-title>
+          <v-card-text>
+            <v-text-field
+              v-model="userUpdate.editedEmail"
+              :rules="emailRules"
+              label="Email"
+              variant="outlined"
+            ></v-text-field>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer />
+            <v-btn
+              color="primary"
+              @click="handleUpdateUser"
+              :disabled="userStore.formAction.formProcess || !isEmailValid"
+            >
+              Save
+            </v-btn>
+            <v-btn @click="userUpdate.editingEmail = false">Cancel</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <v-dialog v-model="userUpdate.editingEmail" max-width="500px">
+        <v-card>
+          <v-card-title>
+            <span class="headline">Edit User Information</span>
+          </v-card-title>
+          <v-card-text>
+            <v-text-field
+              v-model="userUpdate.editedEmail"
+              :rules="emailRules"
+              label="Email"
+              variant="outlined"
+            ></v-text-field>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer />
+            <v-btn
+              color="primary"
+              @click="handleUpdateUser"
+              :disabled="userStore.formAction.formProcess || !isEmailValid"
+            >
+              Save
+            </v-btn>
+            <v-btn @click="userUpdate.editingEmail = false">Cancel</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
+      <v-snackbar
+        v-model="userUpdate.nameSnackbar"
+        :timeout="3000"
+        color="green-darken-4"
+        elevation="24"
+      >
+        <strong>Name updated successfully!</strong>.
+      </v-snackbar>
+      <v-snackbar
+        v-model="userUpdate.emailSnackbar"
+        :timeout="3000"
+        color="green-darken-4"
+        elevation="24"
+      >
+        <strong>Email confirmation has been sent!</strong>.
+      </v-snackbar>
+
     </template>
   </AppLayout>
 </template>

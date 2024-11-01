@@ -1,35 +1,35 @@
 <script setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import AppLayout from '@/components/layout/AppLayout.vue';
-import { useAuthStore } from '@/stores/authStore';
-import AlertNotification from '@/components/common/AlertNotification.vue';
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import AppLayout from '@/components/layout/AppLayout.vue'
+import { useAuthStore } from '@/stores/authStore'
+import AlertNotification from '@/components/common/AlertNotification.vue'
 
-const router = useRouter();
-const authStore = useAuthStore();
+const router = useRouter()
+const authStore = useAuthStore()
 
-const visible = ref(false);
+const visible = ref(false)
 
 const onLogin = async () => {
-  authStore.formAction.formErrorMessage = '';
-  authStore.formAction.formSuccessMessage = '';
+  authStore.formAction.formErrorMessage = ''
+  authStore.formAction.formSuccessMessage = ''
 
-  const { data, error } = await authStore.signIn();
+  const { data, error } = await authStore.signIn()
 
   if (!error) {
-    const role = data.user.user_metadata.role;
+    const role = data.user.user_metadata.role
 
     if (role === 'student') {
-      await router.push('/student/page');
+      await router.push('/student/page')
     } else if (role === 'owner') {
-      await router.push('/owner/dashboard');
+      await router.push('/owner/dashboard')
     }
     authStore.resetForm();
   } else {
-    authStore.formAction.formErrorMessage = error.message;
+    authStore.formAction.formErrorMessage = error.message
   }
-  authStore.formAction.formProcess = false;
-};
+  authStore.formAction.formProcess = false
+}
 </script>
 
 
