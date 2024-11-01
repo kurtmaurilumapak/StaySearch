@@ -6,6 +6,7 @@ const create = ref({
   images: [],
   price: '',
   name: '',
+  address: '',
   detail: '',
   currentIndex: 0,
   leaveCreatePage: false,
@@ -115,9 +116,7 @@ const clearimg = (index) => {
                       <v-row>
                         <v-col cols="4" class="d-flex justify-center align-center" v-for="(file, index) in create.images" :key="index">
                           <v-img
-                            style="border: black solid 1px;"
                             :src="file.url"
-                            width="100"
                             max-width="100"
                             max-height="100"
                           >
@@ -137,6 +136,14 @@ const clearimg = (index) => {
                     v-model="create.name"
                     color="green-darken-1"
                     label="House Name"
+                    variant="outlined"
+                  />
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="create.address"
+                    color="green-darken-1"
+                    label="Address"
                     variant="outlined"
                   />
                 </v-col>
@@ -208,7 +215,7 @@ const clearimg = (index) => {
         <!-- PREVIEW -->
         <v-col cols="12" md="8" lg="9" class="d-flex justify-center align-center">
           <v-container
-            max-width="900"
+            max-width="700"
             class="border"
             style="border-radius: 10px"
           >
@@ -221,27 +228,47 @@ const clearimg = (index) => {
             >
               <v-card-text style="overflow-y: auto; max-height: 81.5vh;">
                 <v-row>
-                  <v-col>
+                  <v-col cols="12" class="text-center">
+                    <h1>{{ create.name || 'House Name' }}</h1>
+                  </v-col>
+                  <v-col cols="12">
                     <div v-if="create.images.length" class="d-flex flex-wrap mt-4">
-                      <v-carousel
-                        v-model="create.currentIndex"
-                      >
-                        <div
-                          v-if="create.images.length"
-                          :style="{ backgroundImage: `url(${create.images[create.currentIndex].url})`, filter: 'blur(13px)' }"
-                          style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; z-index: -1"
-                        ></div>
-                        <v-carousel-item
-                          v-for="(image, index) in create.images"
-                          :key="index"
-                          :src="image.url"
-                          alt="Uploaded Image"
-                          contain
-                          height="100%"
-                          width="100%"
-                        >
-                        </v-carousel-item>
-                      </v-carousel>
+                      <v-row>
+                        <v-col cols="8">
+                          <v-img
+                            style="border-radius: 20px; cursor: pointer;"
+                            :src="create.images[0]?.url"
+                            aspect-ratio="1"
+                            cover
+                          >
+                          </v-img>
+                        </v-col>
+                        <v-col cols="4">
+                          <v-row>
+                            <v-col cols="12">
+                              <v-img
+                                style="border-radius: 20px; cursor: pointer;"
+                                :src="create.images[1]?.url"
+                                aspect-ratio="1"
+                                cover
+                              >
+                              </v-img>
+                            </v-col>
+                            <v-col cols="12">
+                              <v-img
+                                style="border-radius: 20px; cursor: pointer;"
+                                :src="create.images[2]?.url"
+                                aspect-ratio="1"
+                                cover
+                              >
+                                <div v-if="create.images.length > 3" class="overlay">
+                                  <span style="font-size: clamp(5px, 3vw, 25px)">{{ create.images.length - 3 }}+ more</span>
+                                </div>
+                              </v-img>
+                            </v-col>
+                          </v-row>
+                        </v-col>
+                      </v-row>
                     </div>
                     <div v-else class="d-flex flex-wrap mt-4 text-center">
                       <v-img
@@ -261,57 +288,53 @@ const clearimg = (index) => {
                       </v-img>
                     </div>
                   </v-col>
-                  <v-col>
-                    <v-row>
-                      <v-col cols="12" class="mt-4">
-                        <h1>{{ create.name || 'House Name' }}</h1>
-                        <h2>
-                          <v-icon v-if="create.price" left style="font-size: 20px;">mdi-currency-php</v-icon>
-                          {{ create.price || 'Price' }}
-                        </h2>
-                      </v-col>
-                      <v-col cols="12">
-                        <h2>{{ create.detail || 'Details' }}</h2>
-                      </v-col>
-                      <v-col cols="12">
-                        <div v-if="create.type || create.inclusions.length">
-                          <v-chip
-                            color="pink"
-                            class="mr-1"
-                            label
-                          >
-                            <v-icon icon="mdi-label" start></v-icon>
-                            Tags:
-                          </v-chip>
-                          <v-chip
-                            color="green-darken-2"
-                            class="ma-1"
-                            label
-                          >
-                            {{ create.type }}
-                          </v-chip>
-                          <v-chip
-                            v-for="(inclusion, index) in create.inclusions"
-                            :key="index"
-                            color="green-darken-2"
-                            class="ma-1"
-                            label
-                          >
-                            {{ inclusion }}
-                          </v-chip>
-                        </div>
-                        <div v-else>
-                          <v-chip
-                            color="pink"
-                            label
-                          >
-                            <v-icon icon="mdi-label" start></v-icon>
-                            Tags:
-                          </v-chip>
-                          <v-chip class="ma-1" color="grey" label>No Tags Added</v-chip>
-                        </div>
-                      </v-col>
-                    </v-row>
+                  <v-col cols="12" class="d-block">
+                    <div class="d-flex justify-space-between">
+                      <h2 class="text-subtitle-1"><v-icon>mdi-map-marker</v-icon>{{ create.address || 'Address' }}</h2>
+                    </div>
+                    <br>
+                    <h2 class="text-h6"><v-icon color="green" class="mr-5">mdi-tag</v-icon>{{ create.price || 'Price/month' }}</h2>
+                  </v-col>
+                  <v-col cols="12">
+                    <h2 class="text-h6">{{ create.detail || 'Details' }}</h2>
+                  </v-col>
+                  <v-col cols="12">
+                    <div v-if="create.type || create.inclusions.length">
+                      <v-chip
+                        color="pink"
+                        class="mr-1"
+                        label
+                      >
+                        <v-icon icon="mdi-label" start></v-icon>
+                        Tags:
+                      </v-chip>
+                      <v-chip
+                        color="green-darken-2"
+                        class="ma-1"
+                        label
+                      >
+                        {{ create.type }}
+                      </v-chip>
+                      <v-chip
+                        v-for="(inclusion, index) in create.inclusions"
+                        :key="index"
+                        color="green-darken-2"
+                        class="ma-1"
+                        label
+                      >
+                        {{ inclusion }}
+                      </v-chip>
+                    </div>
+                    <div v-else>
+                      <v-chip
+                        color="pink"
+                        label
+                      >
+                        <v-icon icon="mdi-label" start></v-icon>
+                        Tags:
+                      </v-chip>
+                      <v-chip class="ma-1" color="grey" label>No Tags Added</v-chip>
+                    </div>
                   </v-col>
                 </v-row>
               </v-card-text>
@@ -323,4 +346,16 @@ const clearimg = (index) => {
   </AppLayout>
 </template>
 
-
+<style>
+.overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  font-size: 1.5rem;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+}
+</style>

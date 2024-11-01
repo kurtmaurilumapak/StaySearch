@@ -1,60 +1,35 @@
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import AppLayout from '@/components/layout/AppLayout.vue'
-import { supabase, formActionDefault } from '@/lib/supabaseClient'
-import AlertNotification from '@/components/common/AlertNotification.vue'
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import AppLayout from '@/components/layout/AppLayout.vue';
+import { useAuthStore } from '@/stores/authStore';
+import AlertNotification from '@/components/common/AlertNotification.vue';
 
-const router = useRouter()
-const formDataDefault = {
-  email: '',
-  password: '',
-}
+const router = useRouter();
+const authStore = useAuthStore();
 
-const formData = ref({ ...formDataDefault })
-const formAction = ref({ ...formActionDefault })
-const form = ref()
+const visible = ref(false);
 
 const onLogin = async () => {
-  formAction.value = { ...formActionDefault }
-  formAction.value.formProcess = true
+  authStore.formAction.formErrorMessage = '';
+  authStore.formAction.formSuccessMessage = '';
 
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email: formData.value.email,
-    password: formData.value.password,
-  })
+  const { data, error } = await authStore.signIn();
 
-  if (error){
-    console.log(error)
-    formAction.value.formErrorMessage = 'Wrong email or password.'
-    formAction.value.formStatus = error.status
-    form.value?.reset()
-  }
-  else if (data){
-    console.log(data)
-
+  if (!error) {
     const role = data.user.user_metadata.role;
 
-    // Redirect based on role
     if (role === 'student') {
-      // Redirect to student page
-      await router.push('/student/page')
+      await router.push('/student/page');
     } else if (role === 'owner') {
-      // Redirect to owner page
-      await router.push('/owner/dashboard')
-    } else {
-      await supabase.auth.signOut();
-      console.log('Unknown role:', role);
-      formAction.value.formErrorMessage = 'Your role is not authorized. You have been logged out.';
+      await router.push('/owner/dashboard');
     }
-
+    authStore.resetForm();
+  } else {
+    authStore.formAction.formErrorMessage = error.message;
   }
-
-  formAction.value.formProcess = false
-}
-
-const visible = ref(false)
-
+  authStore.formAction.formProcess = false;
+};
 </script>
 
 
@@ -123,8 +98,8 @@ const visible = ref(false)
               <v-row no-gutters>
                 <v-col cols="12" class="px-10 mt-4">
                   <AlertNotification
-                    :form-success-message="formAction.formSuccessMessage"
-                    :form-error-message="formAction.formErrorMessage"
+                    :form-success-message="authStore.formAction.formSuccessMessage"
+                    :form-error-message="authStore.formAction.formErrorMessage"
                   >
                   </AlertNotification>
                 </v-col>
@@ -134,7 +109,7 @@ const visible = ref(false)
                   <v-text-field
                     class="px-10"
                     color="green-darken-1"
-                    v-model="formData.email"
+                    v-model="authStore.formData.email"
                     label="Email"
                     placeholder="johndoe@email.com"
                     variant="outlined"
@@ -145,7 +120,7 @@ const visible = ref(false)
                   <v-text-field
                     class="px-10"
                     color="green-darken-1"
-                    v-model="formData.password"
+                    v-model="authStore.formData.password"
                     label="Password"
                     placeholder="············"
                     variant="outlined"
@@ -156,7 +131,7 @@ const visible = ref(false)
                 </v-col>
                 <v-col cols="12" class="text-center pt-5">
                   <v-btn
-                    :loading="formAction.formProcess"
+                    :loading="authStore.formAction.formProcess"
                     color="green-darken-1"
                     width="50%"
                     type="button"

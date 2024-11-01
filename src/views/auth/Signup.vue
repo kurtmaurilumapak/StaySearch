@@ -1,66 +1,18 @@
 <script setup>
 import { ref, computed } from 'vue'
 import AppLayout from '@/components/layout/AppLayout.vue'
-import { supabase, formActionDefault } from '@/lib/supabaseClient'
+import { useAuthStore } from '@/stores/authStore'
 import AlertNotification from '@/components/common/AlertNotification.vue'
+import { useRouter } from 'vue-router'
 
-
-const formDataDefault = {
-  role: 'student',
-  firstname: '',
-  lastname: '',
-  email: '',
-  password: '',
-}
-const formData = ref({ ...formDataDefault })
-const formAction = ref({ ...formActionDefault })
-const form = ref()
-
-
-const onFormSubmit = async () => {
-
-  formAction.value = { ...formActionDefault }
-  formAction.value.formProcess = true
-
-  const { data, error } = await supabase.auth.signUp(
-    {
-      email: formData.value.email,
-      password: formData.value.password,
-      options: {
-        data: {
-          role: formData.value.role,
-          firstname: formData.value.firstname,
-          lastname: formData.value.lastname,
-        }
-      }
-    }
-  )
-  if (error){
-    console.log(error)
-    formAction.value.formErrorMessage = error.message
-    formAction.value.formStatus = error.status
-  }
-  else if (data){
-    console.log(data)
-    formAction.value.formSuccessMessage = 'Successfully created an account.'
-    form.value?.reset()
-  }
-
-  formAction.value.formProcess = false
-}
-
-
+const authStore = useAuthStore()
 const visible = ref(false)
+const router = useRouter()
 
-
-const capitalizeFirstLetter = (field) => {
-  formData.value[field] = formData.value[field].charAt(0).toUpperCase() + formData.value[field].slice(1);
-}
-
-const firstnameRules =[
+const firstnameRules = [
   v => !!v || 'First name is required',
 ]
-const lastnameRules =[
+const lastnameRules = [
   v => !!v || 'Last name is required',
 ]
 const emailRules = [
@@ -78,14 +30,35 @@ const passwordRules = [
 
 const isFormValid = computed(() => {
   return (
-    firstnameRules.every(rule => rule(formData.value.firstname) === true) &&
-    lastnameRules.every(rule => rule(formData.value.lastname) === true) &&
-    emailRules.every(rule => rule(formData.value.email) === true) &&
-    passwordRules.every(rule => rule(formData.value.password) === true)
-  );
-});
-</script>
+    firstnameRules.every(rule => rule(authStore.formData.firstname) === true) &&
+    lastnameRules.every(rule => rule(authStore.formData.lastname) === true) &&
+    emailRules.every(rule => rule(authStore.formData.email) === true) &&
+    passwordRules.every(rule => rule(authStore.formData.password) === true)
+  )
+})
 
+const capitalizeFirstLetter = (field) => {
+  if (authStore.formData[field]) {
+    authStore.formData[field] = authStore.formData[field].charAt(0).toUpperCase() + authStore.formData[field].slice(1).toLowerCase()
+  }
+}
+
+const onFormSubmit = async () => {
+  authStore.formAction.formErrorMessage = '';
+  authStore.formAction.formSuccessMessage = '';
+
+  await authStore.signUp();
+  if (!authStore.formAction.formErrorMessage) {
+    if (authStore.formData.role === 'student') {
+      await router.push('/student/page')
+    }
+    else if (authStore.formData.role === 'owner') {
+      await router.push('/owner/dashboard')
+    }
+    authStore.resetForm();
+  }
+}
+</script>
 
 <template>
   <AppLayout>
@@ -152,8 +125,8 @@ const isFormValid = computed(() => {
               <v-row no-gutters>
                 <v-col cols="12" class="px-10 mt-4">
                   <AlertNotification
-                    :form-success-message="formAction.formSuccessMessage"
-                    :form-error-message="formAction.formErrorMessage"
+                    :form-success-message="authStore.formAction.formSuccessMessage"
+                    :form-error-message="authStore.formAction.formErrorMessage"
                   >
                   </AlertNotification>
                 </v-col>
@@ -163,7 +136,7 @@ const isFormValid = computed(() => {
                   class="d-flex justify-center py-5"
                 >
                   <v-btn-toggle
-                    v-model="formData.role"
+                    v-model="authStore.formData.role"
                     class="my-auto border"
                     color="green-darken-1"
                     mandatory
@@ -178,7 +151,7 @@ const isFormValid = computed(() => {
                   <v-text-field
                     class="pl-10 pr-1"
                     color="green-darken-1"
-                    v-model="formData.firstname"
+                    v-model="authStore.formData.firstname"
                     label="First Name"
                     placeholder="John"
                     variant="outlined"
@@ -190,7 +163,7 @@ const isFormValid = computed(() => {
                   <v-text-field
                     class="pr-10 pl-1"
                     color="green-darken-1"
-                    v-model="formData.lastname"
+                    v-model="authStore.formData.lastname"
                     label="Last Name"
                     placeholder="Doe"
                     variant="outlined"
@@ -204,7 +177,7 @@ const isFormValid = computed(() => {
                   <v-text-field
                     class="px-10"
                     color="green-darken-1"
-                    v-model="formData.email"
+                    v-model="authStore.formData.email"
                     label="Email"
                     placeholder="johndoe@email.com"
                     type="email"
@@ -218,7 +191,7 @@ const isFormValid = computed(() => {
                   <v-text-field
                     class="px-10"
                     color="green-darken-1"
-                    v-model="formData.password"
+                    v-model="authStore.formData.password"
                     label="Password"
                     placeholder="············"
                     variant="outlined"
@@ -230,11 +203,11 @@ const isFormValid = computed(() => {
                 </v-col>
                 <v-col cols="12" class="text-center pt-5">
                   <v-btn
-                    :loading="formAction.formProcess"
+                    :loading="authStore.formAction.formProcess"
                     color="green-darken-1"
                     width="50%"
                     type="submit"
-                    :disabled="formAction.formProcess || !isFormValid"
+                    :disabled="authStore.formAction.formProcess || !isFormValid"
                     @click="onFormSubmit"
                   >
                     Sign up
