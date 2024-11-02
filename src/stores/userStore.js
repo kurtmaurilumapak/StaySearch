@@ -1,5 +1,5 @@
-import { defineStore } from 'pinia';
-import { supabase, formActionDefault } from '@/lib/supabaseClient';
+import { defineStore } from 'pinia'
+import { supabase, formActionDefault } from '@/lib/supabaseClient'
 
 const userDataDefault = {
   id: '',
@@ -7,7 +7,6 @@ const userDataDefault = {
   firstname: '',
   lastname: '',
   email: '',
-  password: '',
   role: '',
 };
 
@@ -92,6 +91,7 @@ export const useUserStore = defineStore('userData', {
         return false
       }
     },
+
 
   },
 })

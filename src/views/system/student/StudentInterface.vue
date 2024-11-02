@@ -1,12 +1,20 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted  } from 'vue'
 import { useRouter } from 'vue-router';
 import AppLayout from '@/components/layout/AppLayout.vue'
-import { supabase } from '@/lib/supabaseClient'
+import { usePostStore } from '@/stores/postStore'
+import { useAuthStore } from '@/stores/authStore'
 import { useTheme } from 'vuetify'
 
 const router = useRouter()
 const theme = useTheme()
+const useAuth = useAuthStore()
+const usePost = usePostStore()
+
+onMounted(() => {
+  usePost.fetchPosts();
+  console.log(usePost.postsData.boardingHouses);
+});
 
 const search = ref ({
   loaded: false,
@@ -63,19 +71,10 @@ const openDialog = () => {
 }
 
 
-//backend
 const logout = async () => {
-  const { error } = await supabase.auth.signOut()
-
-  if (error) {
-    console.log(error)
-  }
-  else {
-    console.log('logout successful')
-    theme.global.name.value = 'light'
-    await router.push('/login')
-
-  }
+  await useAuth.signOut()
+  theme.global.name.value = 'light'
+  await router.push('/login')
 }
 
 </script>
@@ -216,199 +215,12 @@ const logout = async () => {
             ></v-chip>
           </v-chip-group>
         </v-col>
-        <v-col cols="12" sm="6" md="4" lg="3" class="d-flex justify-center align-center">
-          <v-card
-            :elevation="7"
-            class="rounded-xl"
-            @click="openDialog"
-            width="100%"
 
-          >
-            <v-card-text>
-              <v-row>
-                <v-col cols="12">
-                  <v-row>
-                    <v-col cols="8">
-                      <v-img
-                        class="bg-white rounded-xl"
-                        src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                        max-width="100%"
-                        height="170"
-                        cover
-                      ></v-img>
-                    </v-col>
-                    <v-col cols="4">
-                      <v-img
-                        class="bg-white rounded-xl"
-                        src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                        max-width="100%"
-                        height="170"
-                        cover
-                      ></v-img>
-                    </v-col>
-                  </v-row>
-                  <v-col cols="12">
-                    <v-row>
-                      <v-col cols="12" class="d-inline-flex justify-space-between">
-                        <h1 class="text-h6">House Name</h1>
-                        <h2 class="text-subtitle-1"><v-icon>mdi-map-marker</v-icon>Address</h2>
-                      </v-col>
-                      <v-col cols="12" class="d-inline-flex justify-space-between">
-                        <h2 class="text-h6"><v-icon color="green" class="mr-5">mdi-tag</v-icon>Price/month</h2>
-                        <span class="text-body-2">Tags</span>
-                      </v-col>
-                    </v-row>
-                  </v-col>
-                </v-col>
-              </v-row>
-            </v-card-text>
-          </v-card>
-        </v-col>
-        <v-col cols="12" sm="6" md="4" lg="3" class="d-flex justify-center align-center">
-          <v-card
-            :elevation="7"
-            class="rounded-xl"
-            @click="openDialog"
-            width="100%"
-
-          >
-            <v-card-text>
-              <v-row>
-                <v-col cols="12">
-                  <v-row>
-                    <v-col cols="8">
-                      <v-img
-                        class="bg-white rounded-xl"
-                        src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                        max-width="100%"
-                        height="170"
-                        cover
-                      ></v-img>
-                    </v-col>
-                    <v-col cols="4">
-                      <v-img
-                        class="bg-white rounded-xl"
-                        src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                        max-width="100%"
-                        height="170"
-                        cover
-                      ></v-img>
-                    </v-col>
-                  </v-row>
-                  <v-col cols="12">
-                    <v-row>
-                      <v-col cols="12" class="d-inline-flex justify-space-between">
-                        <h1 class="text-h6">House Name</h1>
-                        <h2 class="text-subtitle-1"><v-icon>mdi-map-marker</v-icon>Address</h2>
-                      </v-col>
-                      <v-col cols="12" class="d-inline-flex justify-space-between">
-                        <h2 class="text-h6"><v-icon color="green" class="mr-5">mdi-tag</v-icon>Price/month</h2>
-                        <span class="text-body-2">Tags</span>
-                      </v-col>
-                    </v-row>
-                  </v-col>
-                </v-col>
-              </v-row>
-            </v-card-text>
-          </v-card>
-        </v-col>
-        <v-col cols="12" sm="6" md="4" lg="3" class="d-flex justify-center align-center">
-          <v-card
-            :elevation="7"
-            class="rounded-xl"
-            @click="openDialog"
-            width="100%"
-
-          >
-            <v-card-text>
-              <v-row>
-                <v-col cols="12">
-                  <v-row>
-                    <v-col cols="8">
-                      <v-img
-                        class="bg-white rounded-xl"
-                        src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                        max-width="100%"
-                        height="170"
-                        cover
-                      ></v-img>
-                    </v-col>
-                    <v-col cols="4">
-                      <v-img
-                        class="bg-white rounded-xl"
-                        src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                        max-width="100%"
-                        height="170"
-                        cover
-                      ></v-img>
-                    </v-col>
-                  </v-row>
-                  <v-col cols="12">
-                    <v-row>
-                      <v-col cols="12" class="d-inline-flex justify-space-between">
-                        <h1 class="text-h6">House Name</h1>
-                        <h2 class="text-subtitle-1"><v-icon>mdi-map-marker</v-icon>Address</h2>
-                      </v-col>
-                      <v-col cols="12" class="d-inline-flex justify-space-between">
-                        <h2 class="text-h6"><v-icon color="green" class="mr-5">mdi-tag</v-icon>Price/month</h2>
-                        <span class="text-body-2">Tags</span>
-                      </v-col>
-                    </v-row>
-                  </v-col>
-                </v-col>
-              </v-row>
-            </v-card-text>
-          </v-card>
-        </v-col>
-        <v-col cols="12" sm="6" md="4" lg="3" class="d-flex justify-center align-center">
-          <v-card
-            :elevation="7"
-            class="rounded-xl"
-            @click="openDialog"
-            width="100%"
-
-          >
-            <v-card-text>
-              <v-row>
-                <v-col cols="12">
-                  <v-row>
-                    <v-col cols="8">
-                      <v-img
-                        class="bg-white rounded-xl"
-                        src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                        max-width="100%"
-                        height="170"
-                        cover
-                      ></v-img>
-                    </v-col>
-                    <v-col cols="4">
-                      <v-img
-                        class="bg-white rounded-xl"
-                        src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                        max-width="100%"
-                        height="170"
-                        cover
-                      ></v-img>
-                    </v-col>
-                  </v-row>
-                  <v-col cols="12">
-                    <v-row>
-                      <v-col cols="12" class="d-inline-flex justify-space-between">
-                        <h1 class="text-h6">House Name</h1>
-                        <h2 class="text-subtitle-1"><v-icon>mdi-map-marker</v-icon>Address</h2>
-                      </v-col>
-                      <v-col cols="12" class="d-inline-flex justify-space-between">
-                        <h2 class="text-h6"><v-icon color="green" class="mr-5">mdi-tag</v-icon>Price/month</h2>
-                        <span class="text-body-2">Tags</span>
-                      </v-col>
-                    </v-row>
-                  </v-col>
-                </v-col>
-              </v-row>
-            </v-card-text>
-          </v-card>
-        </v-col>
-        <v-col cols="12" sm="6" md="4" lg="3" class="d-flex justify-center align-center">
+        <v-col
+          cols="12" sm="6" md="4" lg="3"
+          class="d-flex justify-center align-center"
+          v-if="usePost.formAction.formProcess"
+        >
           <v-card
             class="border rounded-xl py-5"
             width="100%"
@@ -427,6 +239,58 @@ const logout = async () => {
                     type="article"
                     max-width="100%"
                   ></v-skeleton-loader>
+                </v-col>
+              </v-row>
+            </v-card-text>
+          </v-card>
+        </v-col>
+
+        <v-col
+          v-for="house in usePost.postsData.boardingHouses"
+          :key="house.id"
+          cols="12" sm="6" md="4" lg="3"
+          class="d-flex justify-center align-center">
+          <v-card
+            :elevation="7"
+            class="rounded-xl"
+            @click="openDialog"
+            width="100%"
+          >
+            <v-card-text>
+              <v-row>
+                <v-col cols="12">
+                  <v-row>
+                    <v-col cols="8">
+                      <v-img
+                        class="bg-white rounded-xl"
+                        :src="house.boarding_house_images[0]?.image_url"
+                        max-width="100%"
+                        height="170"
+                        cover
+                      ></v-img>
+                    </v-col>
+                    <v-col cols="4">
+                      <v-img
+                        class="bg-white rounded-xl"
+                        :src="house.boarding_house_images[1]?.image_url"
+                        max-width="100%"
+                        height="170"
+                        cover
+                      ></v-img>
+                    </v-col>
+                  </v-row>
+                  <v-col cols="12">
+                    <v-row>
+                      <v-col cols="12" class="d-inline-flex justify-space-between">
+                        <h1 class="text-h6">{{ house.name }}</h1>
+                        <h2 class="text-subtitle-1"><v-icon>mdi-map-marker</v-icon>{{ house.address }}</h2>
+                      </v-col>
+                      <v-col cols="12" class="d-inline-flex justify-space-between">
+                        <h2 class="text-h6"><v-icon color="green" class="mr-5">mdi-tag</v-icon>{{ house.price }}/month</h2>
+                        <span class="text-body-2">Tags</span>
+                      </v-col>
+                    </v-row>
+                  </v-col>
                 </v-col>
               </v-row>
             </v-card-text>

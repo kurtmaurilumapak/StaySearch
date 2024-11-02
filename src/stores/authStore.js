@@ -36,10 +36,11 @@ export const useAuthStore = defineStore('auth', {
       if (error) {
         this.formAction.formErrorMessage = error.message;
       } else if (data){
-        console.log(data)
+        console.log('Successfully created an account.')
         this.formAction.formSuccessMessage = 'Successfully created an account.'
+        this.formAction.formProcess = false
       }
-      this.formAction.formProcess = false
+
     },
 
     // LOGIN
@@ -56,9 +57,23 @@ export const useAuthStore = defineStore('auth', {
 
       } else {
         console.log('successfully logged in.')
+        this.formAction.formProcess = false
       }
-      this.formAction.formProcess = false
       return { data, error }
+    },
+
+    // SIGN OUT
+    async signOut() {
+      this.formAction.formProcess = true
+      const { error } = await supabase.auth.signOut()
+
+      if (error) {
+        console.log(error)
+
+      } else {
+        console.log('Successfully logged out.')
+        this.formAction.formProcess = false
+      }
     },
 
     // FORM RESET

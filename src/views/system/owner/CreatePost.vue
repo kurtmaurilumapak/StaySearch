@@ -1,19 +1,29 @@
 <script setup>
 import { ref } from 'vue'
 import AppLayout from '@/components/layout/AppLayout.vue'
+import { usePostStore } from '@/stores/postStore'
+import { useRouter } from 'vue-router'
+
+const postStore = usePostStore()
+const router = useRouter()
+const form = ref()
 
 const create = ref({
   images: [],
   price: '',
   name: '',
   address: '',
-  detail: '',
+  description: '',
   currentIndex: 0,
   leaveCreatePage: false,
   active: 1,
-  type: '',
-  inclusions: []
+  type: [],
+  inclusion: []
 })
+
+const isBoardingHouseTypeChecked  = (checkedValue) => {
+  return create.value.type.length > 0 && !create.value.type.includes(checkedValue);
+}
 
 const handleFiles = (event) => {
   const selectedFiles = event.target.files
@@ -32,6 +42,32 @@ const clearimg = (index) => {
   create.value.images.splice(index, 1)
 }
 
+
+const submitPost = async () => {
+  console.log('Submit Post called');
+  const cleanedPrice = String(create.value.price || '').replace(/,/g, '');
+
+  try {
+    await postStore.createPost(
+
+      {
+        price: cleanedPrice,
+        name: create.value.name,
+        address: create.value.address,
+        description: create.value.description,
+      },
+      create.value.images,
+      create.value.type,
+      create.value.inclusion
+    )
+    // Reset the form after submission
+    form.value?.reset()
+
+    await router.push('/owner/posts')
+  } catch (error) {
+    console.error(error)
+  }
+}
 
 </script>
 
@@ -83,127 +119,144 @@ const clearimg = (index) => {
             <v-card-text
               style="height: calc(100vh - 120px); overflow-y: auto; padding: 20px;"
             >
-              <v-row>
-                <v-col cols="12">
-                  <v-btn
-                    color="green-darken-2"
-                    @click="$refs.fileInput.$el.querySelector('input').click()"
-                  >
-                    Add photos
-                  </v-btn>
-                  <v-file-input
-                    ref="fileInput"
-                    v-model="create.file"
-                    accept=".jpg, .jpeg, .png"
-                    prepend-icon=false
-                    multiple
-                    hide-input
-                    @change="handleFiles"
-                  >
-                  </v-file-input>
-                  <span class="text-disabled pl-2">or drag and drop here</span>
-                  <v-card
-                    class="overflow-y-auto"
-                    height="200"
-                    width="auto"
-                    :elevation="0"
-                    style="border: green dashed 2px; border-radius: 10px"
-                    color="grey-lighten-3"
-                    @dragover.prevent
-                    @drop.prevent="handleDrop"
-                  >
-                    <v-card-text class="d-flex ga-2">
-                      <v-row>
-                        <v-col cols="4" class="d-flex justify-center align-center" v-for="(file, index) in create.images" :key="index">
-                          <v-img
-                            :src="file.url"
-                            max-width="100"
-                            max-height="100"
-                          >
-                            <v-icon
-                              style="position: absolute; top: 0; right: 0; background-color: ghostwhite"
-                              @click.stop="clearimg(index); $refs.fileInput.$el.querySelector('input').value = ''"
-                            >mdi-close
-                            </v-icon>
-                          </v-img>
-                        </v-col>
-                      </v-row>
-                    </v-card-text>
-                  </v-card>
-                </v-col>
-                <v-col cols="12">
-                  <v-text-field
-                    v-model="create.name"
-                    color="green-darken-1"
-                    label="House Name"
-                    variant="outlined"
-                  />
-                </v-col>
-                <v-col cols="12">
-                  <v-text-field
-                    v-model="create.address"
-                    color="green-darken-1"
-                    label="Address"
-                    variant="outlined"
-                  />
-                </v-col>
-                <v-col cols="12">
-                  <v-text-field
-                    v-model="create.price"
-                    color="green-darken-1"
-                    variant="outlined"
-                    label="Price"
-                    prepend-inner-icon="mdi-currency-php"
-                    v-mask="'#,###'"
-                  />
-                </v-col>
-                <v-col cols="12">
-                  <v-textarea
-                    v-model="create.detail"
-                    color="green-darken-1"
-                    label="Description"
-                    variant="outlined"
-                    auto-grow
-                  ></v-textarea>
-                </v-col>
-                <v-col cols="6">
-                  <span>Boarding House Type:</span>
-                  <v-select
-                    class="mt-4"
-                    color="green-darken-1"
-                    v-model="create.type"
-                    label="Select Type"
-                    :items="['All Boys', 'All Girls', 'Mix']"
-                    variant="outlined"
-                  ></v-select>
-                </v-col>
-                <v-col cols="6">
-                  <span>Inclusion:</span>
-                  <v-checkbox
-                    color="green-darken-1"
-                    :value="'Free Wifi'"
-                    v-model="create.inclusions"
-                    label="Free WiFi"
-                  ></v-checkbox>
-                  <v-checkbox
-                    color="green-darken-1"
-                    :value="'Free Water'"
-                    v-model="create.inclusions"
-                    label="Free Water"
-                  ></v-checkbox>
-                  <v-checkbox
-                    color="green-darken-1"
-                    :value="'Free Electricity'"
-                    v-model="create.inclusions"
-                    label="Free Electricity"
-                  ></v-checkbox>
-                </v-col>
-              </v-row>
+              <v-form ref="form">
+                <v-row>
+                  <v-col cols="12">
+                    <v-btn
+                      color="green-darken-2"
+                      @click="$refs.fileInput.$el.querySelector('input').click()"
+                    >
+                      Add photos
+                    </v-btn>
+                    <v-file-input
+                      ref="fileInput"
+                      accept=".jpg, .jpeg, .png"
+                      prepend-icon=false
+                      multiple
+                      hide-input
+                      @change="handleFiles"
+                    >
+                    </v-file-input>
+                    <span class="text-disabled pl-2">or drag and drop here</span>
+                    <v-card
+                      class="overflow-y-auto"
+                      height="200"
+                      width="auto"
+                      :elevation="0"
+                      style="border: green dashed 2px; border-radius: 10px"
+                      color="grey-lighten-3"
+                      @dragover.prevent
+                      @drop.prevent="handleDrop"
+                    >
+                      <v-card-text class="d-flex ga-2">
+                        <v-row>
+                          <v-col cols="4" class="d-flex justify-center align-center" v-for="(file, index) in create.images" :key="index">
+                            <v-img
+                              :src="file.url"
+                              max-width="100"
+                              max-height="100"
+                            >
+                              <v-icon
+                                style="position: absolute; top: 0; right: 0; background-color: ghostwhite"
+                                @click.stop="clearimg(index); $refs.fileInput.$el.querySelector('input').value = ''"
+                              >mdi-close
+                              </v-icon>
+                            </v-img>
+                          </v-col>
+                        </v-row>
+                      </v-card-text>
+                    </v-card>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-text-field
+                      v-model="create.name"
+                      color="green-darken-1"
+                      label="House Name"
+                      variant="outlined"
+                    />
+                  </v-col>
+                  <v-col cols="12">
+                    <v-text-field
+                      v-model="create.address"
+                      color="green-darken-1"
+                      label="Address"
+                      variant="outlined"
+                    />
+                  </v-col>
+                  <v-col cols="12">
+                    <v-text-field
+                      v-model="create.price"
+                      color="green-darken-1"
+                      variant="outlined"
+                      label="Price"
+                      prepend-inner-icon="mdi-currency-php"
+                      v-mask="'#,###'"
+
+                    />
+                  </v-col>
+                  <v-col cols="12">
+                    <v-textarea
+                      v-model="create.description"
+                      color="green-darken-1"
+                      label="Description"
+                      variant="outlined"
+                      auto-grow
+                    ></v-textarea>
+                  </v-col>
+                  <v-col cols="6">
+                    <span>Boarding House Type:</span>
+                    <v-checkbox
+                      color="green-darken-1"
+                      :value="'All Boys'"
+                      v-model="create.type"
+                      :disabled="isBoardingHouseTypeChecked ('All Boys')"
+                      label="All Boys"
+                    ></v-checkbox>
+                    <v-checkbox
+                      color="green-darken-1"
+                      :value="'All Girls'"
+                      v-model="create.type"
+                      :disabled="isBoardingHouseTypeChecked ('All Girls')"
+                      label="All Girls"
+                    ></v-checkbox>
+                    <v-checkbox
+                      color="green-darken-1"
+                      :value="'Mix'"
+                      v-model="create.type"
+                      :disabled="isBoardingHouseTypeChecked ('Mix')"
+                      label="Mix"
+                    ></v-checkbox>
+                  </v-col>
+                  <v-col cols="6">
+                    <span>Inclusion:</span>
+                    <v-checkbox
+                      color="green-darken-1"
+                      :value="'Free Wifi'"
+                      v-model="create.inclusion"
+                      label="Free WiFi"
+                    ></v-checkbox>
+                    <v-checkbox
+                      color="green-darken-1"
+                      :value="'Free Water'"
+                      v-model="create.inclusion"
+                      label="Free Water"
+                    ></v-checkbox>
+                    <v-checkbox
+                      color="green-darken-1"
+                      :value="'Free Electricity'"
+                      v-model="create.inclusion"
+                      label="Free Electricity"
+                    ></v-checkbox>
+                  </v-col>
+                </v-row>
+              </v-form>
             </v-card-text>
             <v-card-actions class="justify-end px-10" style="position: sticky; bottom: 0;">
               <v-btn
+                :loading="postStore.formAction.formProcess"
                 type="submit"
                 style="background-color: green; color: white; font-weight: bold"
+                @click="submitPost"
                 block
               >
                 Post
@@ -293,13 +346,13 @@ const clearimg = (index) => {
                       <h2 class="text-subtitle-1"><v-icon>mdi-map-marker</v-icon>{{ create.address || 'Address' }}</h2>
                     </div>
                     <br>
-                    <h2 class="text-h6"><v-icon color="green" class="mr-5">mdi-tag</v-icon>{{ create.price || 'Price/month' }}</h2>
+                    <h2 class="text-h6"><v-icon color="green" class="mr-5">mdi-tag</v-icon>{{ create.price || 'Price/month' }}/month</h2>
                   </v-col>
                   <v-col cols="12">
-                    <h2 class="text-h6">{{ create.detail || 'Details' }}</h2>
+                    <h2 class="text-h6">{{ create.description || 'Details' }}</h2>
                   </v-col>
                   <v-col cols="12">
-                    <div v-if="create.type || create.inclusions.length">
+                    <div v-if=" create.type.length || create.inclusion.length">
                       <v-chip
                         color="pink"
                         class="mr-1"
@@ -316,7 +369,7 @@ const clearimg = (index) => {
                         {{ create.type }}
                       </v-chip>
                       <v-chip
-                        v-for="(inclusion, index) in create.inclusions"
+                        v-for="(inclusion, index) in create.tags"
                         :key="index"
                         color="green-darken-2"
                         class="ma-1"

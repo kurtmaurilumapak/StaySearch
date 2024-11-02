@@ -147,7 +147,7 @@ const isEmailValid = computed(() => {
                       <h3>Name</h3>
                       <div class="d-flex justify-space-between align-center my-5">
                         <span>{{ userStore.userData.firstname }} {{ userStore.userData.lastname }}</span>
-                        <v-btn variant="outlined" class="text-none font-weight-bold px-8" @click="openEditDialog">
+                        <v-btn variant="outlined" class="text-none font-weight-bold px-8" @click="openEditDialog('name')">
                           Edit
                         </v-btn>
                       </div>
@@ -157,7 +157,7 @@ const isEmailValid = computed(() => {
                       <h3>Email address</h3>
                       <div class="d-flex justify-space-between align-center my-5">
                         <span>{{ userStore.userData.email }}</span>
-                        <v-btn variant="outlined" class="text-none font-weight-bold px-8" @click="openEditDialog">
+                        <v-btn variant="outlined" class="text-none font-weight-bold px-8" @click="openEditDialog('email')">
                           Edit
                         </v-btn>
                       </div>
