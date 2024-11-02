@@ -7,6 +7,7 @@ const userDataDefault = {
   firstname: '',
   lastname: '',
   email: '',
+  password: '',
   role: '',
 };
 
@@ -71,6 +72,23 @@ export const useUserStore = defineStore('userData', {
 
       } catch (error) {
         console.error('Error during user update:', error)
+        return false
+      }
+    },
+
+    async updatePassword(newPassword) {
+      try {
+        const { error } = await supabase.auth.updateUser({ password: newPassword })
+
+        if (error) {
+          console.error('Error updating password:', error)
+          return false
+        }
+
+        console.log('Password updated successfully')
+        return true
+      } catch (error) {
+        console.error('Error during password update:', error)
         return false
       }
     },

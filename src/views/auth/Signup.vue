@@ -9,31 +9,30 @@ const authStore = useAuthStore()
 const visible = ref(false)
 const router = useRouter()
 
-const firstnameRules = [
-  v => !!v || 'First name is required',
-]
-const lastnameRules = [
-  v => !!v || 'Last name is required',
-]
-const emailRules = [
-  v => !!v || 'Email is required',
-  v => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(v) || 'Invalid email format',
-]
-const passwordRules = [
-  v => !!v || 'Password is required',
-  v => v.length >= 8 || 'Password must be at least 8 characters long',
-  v => /[a-z]/.test(v) || 'Password must contain at least one lowercase letter',
-  v => /[A-Z]/.test(v) || 'Password must contain at least one uppercase letter',
-  v => /[0-9]/.test(v) || 'Password must contain at least one number',
-  v => /[^\w\s]/.test(v) || 'Password must contain at least one special character',
-]
+
+const validationRules = {
+  firstnameRules: [v => !!v || 'First name is required'],
+  lastnameRules: [v => !!v || 'Last name is required'],
+  emailRules: [
+    v => !!v || 'Email is required',
+    v => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(v) || 'Invalid email format',
+  ],
+  passwordRules: [
+    v => !!v || 'Password is required',
+    v => v.length >= 8 || 'Password must be at least 8 characters long',
+    v => /[a-z]/.test(v) || 'Password must contain at least one lowercase letter',
+    v => /[A-Z]/.test(v) || 'Password must contain at least one uppercase letter',
+    v => /[0-9]/.test(v) || 'Password must contain at least one number',
+    v => /[^\w\s]/.test(v) || 'Password must contain at least one special character',
+  ]
+}
 
 const isFormValid = computed(() => {
   return (
-    firstnameRules.every(rule => rule(authStore.formData.firstname) === true) &&
-    lastnameRules.every(rule => rule(authStore.formData.lastname) === true) &&
-    emailRules.every(rule => rule(authStore.formData.email) === true) &&
-    passwordRules.every(rule => rule(authStore.formData.password) === true)
+    validationRules.firstnameRules.every(rule => rule(authStore.formData.firstname) === true) &&
+    validationRules.lastnameRules.every(rule => rule(authStore.formData.lastname) === true) &&
+    validationRules.emailRules.every(rule => rule(authStore.formData.email) === true) &&
+    validationRules.passwordRules.every(rule => rule(authStore.formData.password) === true)
   )
 })
 
@@ -155,7 +154,7 @@ const onFormSubmit = async () => {
                     label="First Name"
                     placeholder="John"
                     variant="outlined"
-                    :rules="firstnameRules"
+                    :rules="validationRules.firstnameRules"
                     @input="capitalizeFirstLetter('firstname')"
                   />
                 </v-col>
@@ -167,7 +166,7 @@ const onFormSubmit = async () => {
                     label="Last Name"
                     placeholder="Doe"
                     variant="outlined"
-                    :rules="lastnameRules"
+                    :rules="validationRules.lastnameRules"
                     @input="capitalizeFirstLetter('lastname')"
                   />
                 </v-col>
@@ -182,7 +181,7 @@ const onFormSubmit = async () => {
                     placeholder="johndoe@email.com"
                     type="email"
                     variant="outlined"
-                    :rules="emailRules"
+                    :rules="validationRules.emailRules"
                   />
                 </v-col>
 
@@ -198,7 +197,7 @@ const onFormSubmit = async () => {
                     :append-inner-icon="visible ? 'mdi-eye' : 'mdi-eye-off'"
                     :type="visible ? 'text' : 'password'"
                     @click:append-inner="visible = !visible"
-                    :rules="passwordRules"
+                    :rules="validationRules.passwordRules"
                   />
                 </v-col>
                 <v-col cols="12" class="text-center pt-5">

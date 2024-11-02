@@ -22,7 +22,6 @@ const userUpdate = ref({
 
 onMounted(async () => {
   await userStore.fetchUserData()
-  console.log(userStore.userData)
   theme.global.name.value = userStore.userData.theme
 })
 
@@ -43,16 +42,16 @@ const userPage = async () => {
   }
 }
 
-const openNameEditDialog = () => {
-  userUpdate.value.editedFirstname = userStore.userData.firstname
-  userUpdate.value.editedLastname = userStore.userData.lastname
-  userUpdate.value.editingName = true
-};
-
-const openEmailEditDialog = () => {
-  userUpdate.value.editedEmail = userStore.userData.email
-  userUpdate.value.editingEmail = true
-};
+const openEditDialog = (field) => {
+  if (field === 'name') {
+    userUpdate.value.editedFirstname = userStore.userData.firstname
+    userUpdate.value.editedLastname = userStore.userData.lastname
+    userUpdate.value.editingName = true
+  } else if (field === 'email') {
+    userUpdate.value.editedEmail = userStore.userData.email
+    userUpdate.value.editingEmail = true
+  }
+}
 
 const handleUpdateUser = async () => {
   userStore.userData.firstname = userUpdate.value.editedFirstname || userStore.userData.firstname
@@ -77,24 +76,22 @@ const handleUpdateUser = async () => {
 
 const tab = ref('profile')
 
-const firstnameRules = [
-  v => !!v || 'First name is required',
-]
-const lastnameRules = [
-  v => !!v || 'Last name is required',
-]
-const emailRules = [
-  v => !!v || 'Email is required',
-  v => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(v) || 'Invalid email format',
-]
+const validationRules = {
+  firstnameRules: [v => !!v || 'First name is required'],
+  lastnameRules: [v => !!v || 'Last name is required'],
+  emailRules: [
+    v => !!v || 'Email is required',
+    v => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(v) || 'Invalid email format',
+  ],
+}
 
 const isNameValid = computed(() => {
-  return firstnameRules.every(rule => rule(userUpdate.value.editedFirstname) === true) && lastnameRules.every(rule => rule(userUpdate.value.editedLastname) === true)
+  return validationRules.firstnameRules.every(rule => rule(userUpdate.value.editedFirstname) === true) && validationRules.lastnameRules.every(rule => rule(userUpdate.value.editedLastname) === true)
 
 });
 
 const isEmailValid = computed(() => {
-  return emailRules.every(rule => rule(userUpdate.value.editedEmail) === true);
+  return validationRules.emailRules.every(rule => rule(userUpdate.value.editedEmail) === true);
 });
 </script>
 
@@ -150,7 +147,7 @@ const isEmailValid = computed(() => {
                       <h3>Name</h3>
                       <div class="d-flex justify-space-between align-center my-5">
                         <span>{{ userStore.userData.firstname }} {{ userStore.userData.lastname }}</span>
-                        <v-btn variant="outlined" class="text-none font-weight-bold px-8" @click="openNameEditDialog">
+                        <v-btn variant="outlined" class="text-none font-weight-bold px-8" @click="openEditDialog">
                           Edit
                         </v-btn>
                       </div>
@@ -160,7 +157,7 @@ const isEmailValid = computed(() => {
                       <h3>Email address</h3>
                       <div class="d-flex justify-space-between align-center my-5">
                         <span>{{ userStore.userData.email }}</span>
-                        <v-btn variant="outlined" class="text-none font-weight-bold px-8" @click="openEmailEditDialog">
+                        <v-btn variant="outlined" class="text-none font-weight-bold px-8" @click="openEditDialog">
                           Edit
                         </v-btn>
                       </div>
@@ -232,106 +229,39 @@ const isEmailValid = computed(() => {
       </v-card>
 
       <v-dialog v-model="userUpdate.editingName" max-width="500px">
-          <v-card>
-            <v-card-title>
-              <span class="headline">Edit User Information</span>
-            </v-card-title>
-            <v-card-text>
-              <v-text-field
-                v-model="userUpdate.editedFirstname"
-                :rules="firstnameRules"
-                label="First Name"
-                variant="outlined"
-              ></v-text-field>
-              <v-text-field
-                v-model="userUpdate.editedLastname"
-                :rules="lastnameRules"
-                label="Last Name"
-                variant="outlined"
-              ></v-text-field>
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer />
-              <v-btn
-                color="primary"
-                :disabled="userStore.formAction.formProcess || !isNameValid"
-                @click="handleUpdateUser"
-              >
-                Save
-              </v-btn>
-              <v-btn @click="userUpdate.editingName = false">Cancel</v-btn>
-            </v-card-actions>
-          </v-card>
+        <v-card>
+          <v-card-title><span class="headline">Edit User Information</span></v-card-title>
+          <v-card-text>
+            <v-text-field v-model="userUpdate.editedFirstname" :rules="validationRules.firstname" label="First Name" variant="outlined"></v-text-field>
+            <v-text-field v-model="userUpdate.editedLastname" :rules="validationRules.lastname" label="Last Name" variant="outlined"></v-text-field>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer />
+            <v-btn color="primary" :disabled="userStore.formAction.formProcess || !isNameValid" @click="handleUpdateUser">Save</v-btn>
+            <v-btn @click="userUpdate.editingName = false">Cancel</v-btn>
+          </v-card-actions>
+        </v-card>
       </v-dialog>
 
       <v-dialog v-model="userUpdate.editingEmail" max-width="500px">
         <v-card>
-          <v-card-title>
-            <span class="headline">Edit User Information</span>
-          </v-card-title>
+          <v-card-title><span class="headline">Edit User Information</span></v-card-title>
           <v-card-text>
-            <v-text-field
-              v-model="userUpdate.editedEmail"
-              :rules="emailRules"
-              label="Email"
-              variant="outlined"
-            ></v-text-field>
+            <v-text-field v-model="userUpdate.editedEmail" :rules="validationRules.email" label="Email" variant="outlined"></v-text-field>
           </v-card-text>
           <v-card-actions>
             <v-spacer />
-            <v-btn
-              color="primary"
-              @click="handleUpdateUser"
-              :disabled="userStore.formAction.formProcess || !isEmailValid"
-            >
-              Save
-            </v-btn>
-            <v-btn @click="userUpdate.editingEmail = false">Cancel</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-      <v-dialog v-model="userUpdate.editingEmail" max-width="500px">
-        <v-card>
-          <v-card-title>
-            <span class="headline">Edit User Information</span>
-          </v-card-title>
-          <v-card-text>
-            <v-text-field
-              v-model="userUpdate.editedEmail"
-              :rules="emailRules"
-              label="Email"
-              variant="outlined"
-            ></v-text-field>
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer />
-            <v-btn
-              color="primary"
-              @click="handleUpdateUser"
-              :disabled="userStore.formAction.formProcess || !isEmailValid"
-            >
-              Save
-            </v-btn>
+            <v-btn color="primary" :disabled="userStore.formAction.formProcess || !isEmailValid" @click="handleUpdateUser">Save</v-btn>
             <v-btn @click="userUpdate.editingEmail = false">Cancel</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
 
-      <v-snackbar
-        v-model="userUpdate.nameSnackbar"
-        :timeout="3000"
-        color="green-darken-4"
-        elevation="24"
-      >
-        <strong>Name updated successfully!</strong>.
+      <v-snackbar v-model="userUpdate.nameSnackbar" :timeout="3000" color="green-darken-4" elevation="24">
+        <strong>Name updated successfully!</strong>
       </v-snackbar>
-      <v-snackbar
-        v-model="userUpdate.emailSnackbar"
-        :timeout="3000"
-        color="green-darken-4"
-        elevation="24"
-      >
-        <strong>Email confirmation has been sent!</strong>.
+      <v-snackbar v-model="userUpdate.emailSnackbar" :timeout="3000" color="green-darken-4" elevation="24">
+        <strong>Email confirmation has been sent!</strong>
       </v-snackbar>
 
     </template>
