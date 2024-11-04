@@ -549,12 +549,7 @@ const openDialog = () => {
                 <v-col cols="12" class="d-block">
                   <div class="d-flex justify-space-between">
                     <h2 class="text-subtitle-1"><v-icon>mdi-map-marker</v-icon>Address</h2>
-                    <v-btn
-                      style="background-color: forestgreen; color: white;"
-                      class="text-none"
-                    >
-                      Book now!
-                    </v-btn>
+                    
                   </div>
                   <br>
                   <h2 class="text-h6"><v-icon color="green" class="mr-5">mdi-tag</v-icon>Price/month</h2>
