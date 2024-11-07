@@ -31,28 +31,31 @@ export const usePostStore = defineStore('post', {
       }
 
       const imageUrls = []
+
       for (let i = 0; i < images.length; i++) {
         const { file } = images[i]
+        const uniqueFileName = `image${i + 1}_${file.name}`
 
-        const uniqueFileName = `image${i + 1}_${file.name}`;
-
-        const { data, error } = await supabase.storage
+        // Upload image
+        const { data: uploadData, error: uploadError } = await supabase.storage
           .from('user_images')
           .upload(`owners/${ this.id }/${ createdPost.id }/${uniqueFileName}`, file)
 
-        if (error) {
-          throw error
+        if (uploadError) {
+          console.error('Image Upload Error:', uploadError.message);
+          throw uploadError
         }
 
-        const { publicURL } = supabase.storage
+        // Retrieve public URL
+        const { data: publicUrlData, error: urlError } = supabase.storage
           .from('user_images')
-          .getPublicUrl(data.path)
+          .getPublicUrl(uploadData.path)
 
-        if (!publicURL) {
-          console.error('Public URL generation failed:', data.path);
-          throw new Error("Failed to get public URL for image: " + data.path);
+        if (urlError || !publicUrlData?.publicUrl) {
+          console.error('Error getting public URL:', urlError?.message || 'No public URL found');
+        } else {
+          imageUrls.push(publicUrlData.publicUrl)
         }
-        imageUrls.push(publicURL);
       }
 
       const postImages = imageUrls.map(image_url => ({
@@ -75,7 +78,7 @@ export const usePostStore = defineStore('post', {
       const { data: typeIds, error: typeError } = await supabase
         .from('tags')
         .select('id')
-        .in('name', selectedTypes)
+        .eq('name', selectedTypes)
 
 
       if (typeError) {
@@ -120,6 +123,28 @@ export const usePostStore = defineStore('post', {
 
       this.formAction.formProcess = false
       return createdPost
+    },
+
+    async ownerPost() {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (session?.user) {
+        this.id = session.user.id || ''
+
+        const { data: posts, error: postError } = await supabase
+          .from('boarding_houses')
+          .select(
+            '*, boarding_house_images(image_url), boarding_house_tags(tag_id, tags(name))')
+          .eq('user_id', this.id)
+
+
+        if (postError) {
+          throw postError
+        }
+
+        this.posts = posts
+      } else {
+        throw new Error('User  not authenticated')
+      }
     }
   }
 })

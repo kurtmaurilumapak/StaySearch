@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, watch, computed, onMounted, onBeforeUnmount  } from 'vue'
 import AppLayout from '@/components/layout/AppLayout.vue'
 import { usePostStore } from '@/stores/postStore'
 import { useRouter } from 'vue-router'
@@ -16,15 +16,26 @@ const create = ref({
   description: '',
   currentIndex: 0,
   leaveCreatePage: false,
+  showMapDialog: false,
   active: 1,
-  type: [],
-  inclusion: []
+  type: '',
+  inclusion: [],
+  latitude: null,
+  longitude: null,
 })
 
-const isBoardingHouseTypeChecked  = (checkedValue) => {
-  return create.value.type.length > 0 && !create.value.type.includes(checkedValue);
-}
+// FORMAT THE INPUTTED PRICE TO CURRENCY
+const formatPrice = (value) => {
+  if (!value) return '';
+  const numberValue = Number(value.replace(/,/g, ''));
+  return isNaN(numberValue) ? '' : numberValue.toLocaleString('en-US');
+};
 
+watch(() => create.value.price, (newValue) => {
+  create.value.price = formatPrice(newValue);
+});
+
+// HANDLES THE IMAGE
 const handleFiles = (event) => {
   const selectedFiles = event.target.files
   Array.from(selectedFiles).forEach((file) => {
@@ -42,7 +53,43 @@ const clearimg = (index) => {
   create.value.images.splice(index, 1)
 }
 
+// FORM VALIDATION
+const isFormValid = computed(() => {
 
+  const cleanedPrice = String(create.value.price || '').replace(/,/g, '')
+  const numericPrice = Number(cleanedPrice)
+
+  return (
+    !isNaN(numericPrice) &&
+    cleanedPrice.trim() !== '' &&
+    Number(cleanedPrice) > 0 &&
+    create.value.name.trim() !== '' &&
+    create.value.address.trim() !== '' &&
+    create.value.description.trim() !== '' &&
+    create.value.type.trim() !== '' &&
+    create.value.inclusion.length > 0
+  );
+});
+
+// HANDLES THE PAGE REFRESH
+const handleBeforeUnload = (event) => {
+  if (create.value.name || create.value.address || create.value.price || create.value.description || create.value.images.length || create.value.type || create.value.inclusion.length) {
+    const confirmationMessage = "You have unsaved changes. Are you sure you want to leave?";
+    event.returnValue = confirmationMessage
+    return confirmationMessage
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('beforeunload', handleBeforeUnload);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('beforeunload', handleBeforeUnload);
+});
+
+
+// HANDLES THE FORM SUBMIT
 const submitPost = async () => {
   console.log('Submit Post called');
   const cleanedPrice = String(create.value.price || '').replace(/,/g, '');
@@ -168,6 +215,16 @@ const submitPost = async () => {
                     </v-card>
                   </v-col>
                   <v-col cols="12">
+                    <v-btn
+                      color="green-darken-1"
+                      variant="outlined"
+                      @click="openMapDialog"
+                      block
+                    >
+                      pin location
+                    </v-btn>
+                  </v-col>
+                  <v-col cols="12">
                     <v-text-field
                       v-model="create.name"
                       color="green-darken-1"
@@ -190,8 +247,9 @@ const submitPost = async () => {
                       variant="outlined"
                       label="Price"
                       prepend-inner-icon="mdi-currency-php"
-                      v-mask="'#,###'"
-
+                      @input="create.price = formatPrice($event.target.value)"
+                      type="text"
+                      maxlength="6"
                     />
                   </v-col>
                   <v-col cols="12">
@@ -204,28 +262,13 @@ const submitPost = async () => {
                     ></v-textarea>
                   </v-col>
                   <v-col cols="6">
-                    <span>Boarding House Type:</span>
-                    <v-checkbox
-                      color="green-darken-1"
-                      :value="'All Boys'"
+                    <v-select
                       v-model="create.type"
-                      :disabled="isBoardingHouseTypeChecked ('All Boys')"
-                      label="All Boys"
-                    ></v-checkbox>
-                    <v-checkbox
+                      :items="['All Boys', 'All Girls', 'Mix']"
+                      label="Boarding House Type"
                       color="green-darken-1"
-                      :value="'All Girls'"
-                      v-model="create.type"
-                      :disabled="isBoardingHouseTypeChecked ('All Girls')"
-                      label="All Girls"
-                    ></v-checkbox>
-                    <v-checkbox
-                      color="green-darken-1"
-                      :value="'Mix'"
-                      v-model="create.type"
-                      :disabled="isBoardingHouseTypeChecked ('Mix')"
-                      label="Mix"
-                    ></v-checkbox>
+                      variant="outlined"
+                    />
                   </v-col>
                   <v-col cols="6">
                     <span>Inclusion:</span>
@@ -255,6 +298,7 @@ const submitPost = async () => {
               <v-btn
                 :loading="postStore.formAction.formProcess"
                 type="submit"
+                :disabled="!isFormValid"
                 style="background-color: green; color: white; font-weight: bold"
                 @click="submitPost"
                 block
@@ -346,13 +390,13 @@ const submitPost = async () => {
                       <h2 class="text-subtitle-1"><v-icon>mdi-map-marker</v-icon>{{ create.address || 'Address' }}</h2>
                     </div>
                     <br>
-                    <h2 class="text-h6"><v-icon color="green" class="mr-5">mdi-tag</v-icon>{{ create.price || 'Price/month' }}/month</h2>
+                    <h2 class="text-h6"><v-icon color="green" class="mr-5">mdi-tag</v-icon>{{ create.price || 'Price' }}/month</h2>
                   </v-col>
                   <v-col cols="12">
                     <h2 class="text-h6">{{ create.description || 'Details' }}</h2>
                   </v-col>
                   <v-col cols="12">
-                    <div v-if=" create.type.length || create.inclusion.length">
+                    <div v-if=" create.type || create.inclusion">
                       <v-chip
                         color="pink"
                         class="mr-1"
@@ -369,7 +413,7 @@ const submitPost = async () => {
                         {{ create.type }}
                       </v-chip>
                       <v-chip
-                        v-for="(inclusion, index) in create.tags"
+                        v-for="(inclusion, index) in create.inclusion"
                         :key="index"
                         color="green-darken-2"
                         class="ma-1"

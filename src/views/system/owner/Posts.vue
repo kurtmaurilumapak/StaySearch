@@ -1,39 +1,49 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted  } from 'vue'
 import Navbar from '@/components/common/Navbar.vue'
 import AppLayout from '@/components/layout/AppLayout.vue'
+import { usePostStore } from '@/stores/postStore.js'
 
-const drawer = ref(true);
 
+const drawer = ref(true)
+const postStore = usePostStore()
 
 const postDialog = ref({
-  tags: [
-    'All Boys',
-    'Free Electricity',
-    'Free Water',
-    'Free Wifi',
-  ],
+  tags: [],
   PostContent: false,
-  images: [
-    'https://images.pexels.com/photos/28665515/pexels-photo-28665515/free-photo-of-hamburg-urban-train-station-architectural-view.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
-    'https://images.pexels.com/photos/7994278/pexels-photo-7994278.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
-    'https://images.pexels.com/photos/2940506/pexels-photo-2940506.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
-    'https://images.pexels.com/photos/28959278/pexels-photo-28959278/free-photo-of-a-flock-of-seagulls-soaring-in-clear-blue-sky.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
-    'https://images.pexels.com/photos/10414211/pexels-photo-10414211.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
-  ],
+  images: [],
   carouselOpen: false,
   carouselIndex: 0,
 
 })
+
+
 const extraImagesCount = computed(() => postDialog.value.images.length - 3)
 const openCarousel = (index) => {
   postDialog.value.carouselIndex = index
   postDialog.value.carouselOpen = true
 }
-const openDialog = () => {
-  postDialog.value.PostContent = true;
-}
 
+const openDialog = (post) => {
+  postDialog.value.PostContent = true
+  postDialog.value.tags = post.boarding_house_tags?.map(tag => tag.tags.name)
+  postDialog.value.images = post.boarding_house_images.map(image => image.image_url)
+  postDialog.value.address = post.address
+  postDialog.value.price = post.price
+  postDialog.value.name = post.name
+  postDialog.value.description = post.description
+};
+
+const posts = ref([]);
+onMounted(async () => {
+  try {
+    await postStore.ownerPost(); // Fetch posts of the logged-in user
+    posts.value = postStore.posts; // Assign fetched posts to local variable
+
+  } catch (error) {
+    console.error('Error fetching posts:', error);
+  }
+});
 
 </script>
 
@@ -88,7 +98,7 @@ const openDialog = () => {
 
           <v-card
             :elevation="7"
-            style="border-radius: 0; height: 100vh; overflow-y: auto"
+            style="border-radius: 0; height: 100vh; width: 100%; overflow-y: auto"
 
           >
 
@@ -124,12 +134,13 @@ const openDialog = () => {
             <v-card-text>
               <v-row>
                 <!-- CARD POSTS -->
-                <v-col cols="12" sm="6" lg="4" class="d-flex justify-center align-center">
+                <v-col  v-for="post in posts" :key="post.id" cols="12" sm="6" lg="4" class="d-flex justify-center align-center">
                   <v-card
                     :elevation="7"
                     class="rounded-xl"
-                    @click="openDialog"
+                    @click="openDialog(post)"
                     width="100%"
+                    color="grey-lighten-3"
 
                   >
                     <v-card-text>
@@ -139,7 +150,7 @@ const openDialog = () => {
                             <v-col cols="8">
                               <v-img
                                 class="bg-white rounded-xl"
-                                src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                                :src="post.boarding_house_images?.[0]?.image_url"
                                 max-width="100%"
                                 height="170"
                                 aspect-ratio="1"
@@ -149,326 +160,35 @@ const openDialog = () => {
                             <v-col cols="4">
                               <v-img
                                 class="bg-white rounded-xl"
-                                src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                                :src="post.boarding_house_images?.[1]?.image_url"
                                 max-width="100%"
                                 height="170"
                                 aspect-ratio="1"
                                 cover
                               ></v-img>
+                            </v-col>
+                            <v-col cols="12">
+                              <v-row>
+                                <v-col cols="12" class="d-inline-flex justify-space-between">
+                                  <h1 class="text-h6 truncate">{{ post.name }}</h1>
+                                  <h2 class="text-subtitle-1 truncate"><v-icon>mdi-map-marker</v-icon>{{ post.address }}</h2>
+                                </v-col>
+                                <v-col cols="12" class="d-inline-flex justify-space-between">
+                                  <h2 class="text-h6"><v-icon color="green" class="mr-md-5">mdi-tag</v-icon>₱{{ post.price }}.00/month</h2>
+                                  <div class="d-flex flex-wrap">
+                                    <v-chip
+                                      v-if="post.boarding_house_tags.length > 0"
+                                      class="mr-1 mb-1"
+                                      color="green-darken-2"
+                                      text-color="white"
+                                    >
+                                      {{ post.boarding_house_tags[0].tags.name }} ...
+                                    </v-chip>
+                                  </div>
+                                </v-col>
+                              </v-row>
                             </v-col>
                           </v-row>
-                          <v-col cols="12">
-                            <v-row>
-                              <v-col cols="12" class="d-inline-flex justify-space-between">
-                                <h1 class="text-h6">House Name</h1>
-                                <h2 class="text-subtitle-1"><v-icon>mdi-map-marker</v-icon>Address</h2>
-                              </v-col>
-                              <v-col cols="12" class="d-inline-flex justify-space-between">
-                                <h2 class="text-h6"><v-icon color="green" class="mr-5">mdi-tag</v-icon>Price/month</h2>
-                                <span class="text-body-2">Tags</span>
-                              </v-col>
-                            </v-row>
-                          </v-col>
-                        </v-col>
-                      </v-row>
-                    </v-card-text>
-                  </v-card>
-                </v-col>
-                <v-col cols="12" sm="6" lg="4" class="d-flex justify-center align-center">
-                  <v-card
-                    :elevation="7"
-                    class="rounded-xl"
-                    @click="openDialog"
-                    width="100%"
-
-                  >
-                    <v-card-text>
-                      <v-row>
-                        <v-col cols="12">
-                          <v-row>
-                            <v-col cols="8">
-                              <v-img
-                                class="bg-white rounded-xl"
-                                src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                                max-width="100%"
-                                height="170"
-                                aspect-ratio="1"
-                                cover
-                              ></v-img>
-                            </v-col>
-                            <v-col cols="4">
-                              <v-img
-                                class="bg-white rounded-xl"
-                                src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                                max-width="100%"
-                                aspect-ratio="1"
-                                height="170"
-                                cover
-                              ></v-img>
-                            </v-col>
-                          </v-row>
-                          <v-col cols="12">
-                            <v-row>
-                              <v-col cols="12" class="d-inline-flex justify-space-between">
-                                <h1 class="text-h6">House Name</h1>
-                                <h2 class="text-subtitle-1"><v-icon>mdi-map-marker</v-icon>Address</h2>
-                              </v-col>
-                              <v-col cols="12" class="d-inline-flex justify-space-between">
-                                <h2 class="text-h6"><v-icon color="green" class="mr-5">mdi-tag</v-icon>Price/month</h2>
-                                <span class="text-body-2">Tags</span>
-                              </v-col>
-                            </v-row>
-                          </v-col>
-                        </v-col>
-                      </v-row>
-                    </v-card-text>
-                  </v-card>
-                </v-col>
-                <v-col cols="12" sm="6" lg="4" class="d-flex justify-center align-center">
-                  <v-card
-                    :elevation="7"
-                    class="rounded-xl"
-                    @click="openDialog"
-                    width="100%"
-
-                  >
-                    <v-card-text>
-                      <v-row>
-                        <v-col cols="12">
-                          <v-row>
-                            <v-col cols="8">
-                              <v-img
-                                class="bg-white rounded-xl"
-                                src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                                max-width="100%"
-                                height="170"
-                                aspect-ratio="1"
-                                cover
-                              ></v-img>
-                            </v-col>
-                            <v-col cols="4">
-                              <v-img
-                                class="bg-white rounded-xl"
-                                src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                                max-width="100%"
-                                height="170"
-                                aspect-ratio="1"
-                                cover
-                              ></v-img>
-                            </v-col>
-                          </v-row>
-                          <v-col cols="12">
-                            <v-row>
-                              <v-col cols="12" class="d-inline-flex justify-space-between">
-                                <h1 class="text-h6">House Name</h1>
-                                <h2 class="text-subtitle-1"><v-icon>mdi-map-marker</v-icon>Address</h2>
-                              </v-col>
-                              <v-col cols="12" class="d-inline-flex justify-space-between">
-                                <h2 class="text-h6"><v-icon color="green" class="mr-5">mdi-tag</v-icon>Price/month</h2>
-                                <span class="text-body-2">Tags</span>
-                              </v-col>
-                            </v-row>
-                          </v-col>
-                        </v-col>
-                      </v-row>
-                    </v-card-text>
-                  </v-card>
-                </v-col>
-                <v-col cols="12" sm="6" lg="4" class="d-flex justify-center align-center">
-                  <v-card
-                    :elevation="7"
-                    class="rounded-xl"
-                    @click="openDialog"
-                    width="100%"
-
-                  >
-                    <v-card-text>
-                      <v-row>
-                        <v-col cols="12">
-                          <v-row>
-                            <v-col cols="8">
-                              <v-img
-                                class="bg-white rounded-xl"
-                                src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                                max-width="100%"
-                                height="170"
-                                aspect-ratio="1"
-                                cover
-                              ></v-img>
-                            </v-col>
-                            <v-col cols="4">
-                              <v-img
-                                class="bg-white rounded-xl"
-                                src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                                max-width="100%"
-                                height="170"
-                                aspect-ratio="1"
-                                cover
-                              ></v-img>
-                            </v-col>
-                          </v-row>
-                          <v-col cols="12">
-                            <v-row>
-                              <v-col cols="12" class="d-inline-flex justify-space-between">
-                                <h1 class="text-h6">House Name</h1>
-                                <h2 class="text-subtitle-1"><v-icon>mdi-map-marker</v-icon>Address</h2>
-                              </v-col>
-                              <v-col cols="12" class="d-inline-flex justify-space-between">
-                                <h2 class="text-h6"><v-icon color="green" class="mr-5">mdi-tag</v-icon>Price/month</h2>
-                                <span class="text-body-2">Tags</span>
-                              </v-col>
-                            </v-row>
-                          </v-col>
-                        </v-col>
-                      </v-row>
-                    </v-card-text>
-                  </v-card>
-                </v-col>
-                <v-col cols="12" sm="6" lg="4" class="d-flex justify-center align-center">
-                  <v-card
-                    :elevation="7"
-                    class="rounded-xl"
-                    @click="openDialog"
-                    width="100%"
-
-                  >
-                    <v-card-text>
-                      <v-row>
-                        <v-col cols="12">
-                          <v-row>
-                            <v-col cols="8">
-                              <v-img
-                                class="bg-white rounded-xl"
-                                src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                                max-width="100%"
-                                height="170"
-                                aspect-ratio="1"
-                                cover
-                              ></v-img>
-                            </v-col>
-                            <v-col cols="4">
-                              <v-img
-                                class="bg-white rounded-xl"
-                                src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                                max-width="100%"
-                                height="170"
-                                aspect-ratio="1"
-                                cover
-                              ></v-img>
-                            </v-col>
-                          </v-row>
-                          <v-col cols="12">
-                            <v-row>
-                              <v-col cols="12" class="d-inline-flex justify-space-between">
-                                <h1 class="text-h6">House Name</h1>
-                                <h2 class="text-subtitle-1"><v-icon>mdi-map-marker</v-icon>Address</h2>
-                              </v-col>
-                              <v-col cols="12" class="d-inline-flex justify-space-between">
-                                <h2 class="text-h6"><v-icon color="green" class="mr-5">mdi-tag</v-icon>Price/month</h2>
-                                <span class="text-body-2">Tags</span>
-                              </v-col>
-                            </v-row>
-                          </v-col>
-                        </v-col>
-                      </v-row>
-                    </v-card-text>
-                  </v-card>
-                </v-col>
-                <v-col cols="12" sm="6" lg="4" class="d-flex justify-center align-center">
-                  <v-card
-                    :elevation="7"
-                    class="rounded-xl"
-                    @click="openDialog"
-                    width="100%"
-
-                  >
-                    <v-card-text>
-                      <v-row>
-                        <v-col cols="12">
-                          <v-row>
-                            <v-col cols="8">
-                              <v-img
-                                class="bg-white rounded-xl"
-                                src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                                max-width="100%"
-                                height="170"
-                                aspect-ratio="1"
-                                cover
-                              ></v-img>
-                            </v-col>
-                            <v-col cols="4">
-                              <v-img
-                                class="bg-white rounded-xl"
-                                src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                                max-width="100%"
-                                height="170"
-                                aspect-ratio="1"
-                                cover
-                              ></v-img>
-                            </v-col>
-                          </v-row>
-                          <v-col cols="12">
-                            <v-row>
-                              <v-col cols="12" class="d-inline-flex justify-space-between">
-                                <h1 class="text-h6">House Name</h1>
-                                <h2 class="text-subtitle-1"><v-icon>mdi-map-marker</v-icon>Address</h2>
-                              </v-col>
-                              <v-col cols="12" class="d-inline-flex justify-space-between">
-                                <h2 class="text-h6"><v-icon color="green" class="mr-5">mdi-tag</v-icon>Price/month</h2>
-                                <span class="text-body-2">Tags</span>
-                              </v-col>
-                            </v-row>
-                          </v-col>
-                        </v-col>
-                      </v-row>
-                    </v-card-text>
-                  </v-card>
-                </v-col>
-                <v-col cols="12" sm="6" lg="4" class="d-flex justify-center align-center">
-                  <v-card
-                    :elevation="7"
-                    class="rounded-xl"
-                    @click="openDialog"
-                    width="100%"
-
-                  >
-                    <v-card-text>
-                      <v-row>
-                        <v-col cols="12">
-                          <v-row>
-                            <v-col cols="8">
-                              <v-img
-                                class="bg-white rounded-xl"
-                                src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                                max-width="100%"
-                                height="170"
-                                aspect-ratio="1"
-                                cover
-                              ></v-img>
-                            </v-col>
-                            <v-col cols="4">
-                              <v-img
-                                class="bg-white rounded-xl"
-                                src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                                max-width="100%"
-                                height="170"
-                                aspect-ratio="1"
-                                cover
-                              ></v-img>
-                            </v-col>
-                          </v-row>
-                          <v-col cols="12">
-                            <v-row>
-                              <v-col cols="12" class="d-inline-flex justify-space-between">
-                                <h1 class="text-h6">House Name</h1>
-                                <h2 class="text-subtitle-1"><v-icon>mdi-map-marker</v-icon>Address</h2>
-                              </v-col>
-                              <v-col cols="12" class="d-inline-flex justify-space-between">
-                                <h2 class="text-h6"><v-icon color="green" class="mr-5">mdi-tag</v-icon>Price/month</h2>
-                                <span class="text-body-2">Tags</span>
-                              </v-col>
-                            </v-row>
-                          </v-col>
                         </v-col>
                       </v-row>
                     </v-card-text>
@@ -493,7 +213,6 @@ const openDialog = () => {
               <v-spacer></v-spacer>
               <v-btn
                 class="ma-2"
-                color="black"
                 icon="mdi-close"
                 variant="text"
                 @click="postDialog.PostContent=false"
@@ -503,7 +222,7 @@ const openDialog = () => {
             <v-card-text>
               <v-row>
                 <v-col cols="12" class="text-center">
-                  <h2>Boarding House Name</h2>
+                  <h2>{{ postDialog.name }}</h2>
                 </v-col>
                 <v-col cols="12">
                   <v-row>
@@ -546,33 +265,30 @@ const openDialog = () => {
                     </v-col>
                   </v-row>
                 </v-col>
-                <v-col cols="12" class="d-block">
-                  <div class="d-flex justify-space-between">
-                    <h2 class="text-subtitle-1"><v-icon>mdi-map-marker</v-icon>Address</h2>
-                    
-                  </div>
-                  <br>
-                  <h2 class="text-h6"><v-icon color="green" class="mr-5">mdi-tag</v-icon>Price/month</h2>
-                </v-col>
-                <v-col cols="12">
-                  <h2 class="text-h6">Details</h2>
-                </v-col>
                 <v-col cols="12">
                   <div v-if="postDialog.tags.length > 0">
-                    <v-chip color="pink" class="mr-1" label>
-                      <v-icon icon="mdi-label" start></v-icon>
-                      Tags:
-                    </v-chip>
-                    <v-chip
-                      label
-                      v-for="tag in postDialog.tags"
-                      :key="tag"
-                      color="green-darken-2"
-                      class="ma-1"
-                    >
-                      {{ tag }}
-                    </v-chip>
+                    <div class="d-flex flex-wrap">
+                      <v-chip
+                        v-for="(tag, index) in postDialog.tags"
+                        :key="index"
+                        color="green-darken-2"
+                        class="ma-1"
+                      >
+                        {{ tag }}
+                      </v-chip>
+                    </div>
                   </div>
+                </v-col>
+                <v-col cols="12" class="d-block">
+                  <div class="d-flex justify-space-between">
+                    <h2 class="text-subtitle-1"><v-icon>mdi-map-marker</v-icon>{{ postDialog.address }}</h2>
+
+                  </div>
+                  <br>
+                  <h2 class="text-h6"><v-icon color="green" class="mr-5">mdi-tag</v-icon>₱{{ postDialog.price }}.00/month</h2>
+                </v-col>
+                <v-col cols="12">
+                  <h2 class="text-h6">{{ postDialog.description }}</h2>
                 </v-col>
                 <v-divider class="mb-2"></v-divider>
                 <v-col cols="12" class="text-center">
@@ -600,7 +316,7 @@ const openDialog = () => {
   </AppLayout>
 </template>
 
-<style>
+<style scoped>
 .overlay {
   display: flex;
   align-items: center;
@@ -611,5 +327,12 @@ const openDialog = () => {
   height: 100%;
   width: 100%;
   position: absolute;
+}
+.truncate {
+  display: block;
+  max-width: 180px; /* Adjust this width as needed */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>
