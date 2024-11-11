@@ -17,6 +17,7 @@ const comment = ref('')
 const sheet = ref(false)
 const filterValue = ['All Boys', 'All Girls', 'Mix', 'Free Electricity', 'Free Water', 'Free Wifi']
 const filter = ref(null)
+const priceRange = ref(null)
 const showResult = ref(false)
 const searchQuery = ref('')
 
@@ -64,15 +65,29 @@ onMounted(async () => {
 });
 
 const filteredPosts = computed(() => {
-  if (!searchQuery.value || !showResult.value) {
+  if (showResult.value) {
+    return postStore.posts.filter(post => {
+    const matchesSearchQuery = !searchQuery.value || post.name.toLowerCase().includes(searchQuery.value.toLowerCase());
+    
+    const matchesPriceRange = !priceRange.value || (
+      (priceRange.value === '₱0 - ₱500' && post.price >= 0 && post.price <= 500) ||
+      (priceRange.value === '₱501 - ₱1000' && post.price > 500 && post.price <= 1000) ||
+      (priceRange.value === '₱1001 - ₱1500' && post.price > 1000 && post.price <= 1500) ||
+      (priceRange.value === '₱1501+' && post.price > 1500)
+    );
+    
+    const matchesFilters = filter.value.length === 0 || filter.value.every(f => post.boarding_house_tags.some(tag => tag.tags.name === f));
+
+    return matchesSearchQuery && matchesPriceRange && matchesFilters;
+  });
+  }
+  else if(!showResult.value || !searchQuery.value) {
     if(!searchQuery.value){
       showResult.value = false
     }
     return postStore.posts
   }
-  return postStore.posts.filter(post =>
-    post.name.toLowerCase().includes(searchQuery.value.toLowerCase())
-  )
+  
 })
 
 const performSearch = () => {
@@ -229,6 +244,7 @@ const logout = async () => {
                 placeholder="Price range"
                 style="border: #69F0AE solid 1px;border-radius: 8px ;background-color: white; height: 75%; padding-left: 10px"
                 density="compact"
+                v-model="priceRange"
                 :items="['₱0 - ₱500', '₱501 - ₱1000', '₱1001 - ₱1500', '₱1501+']"
                 variant="plain"
               ></v-select>
