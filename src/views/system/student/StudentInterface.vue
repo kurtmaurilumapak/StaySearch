@@ -17,7 +17,7 @@ const comment = ref('')
 const sheet = ref(false)
 const filterValue = ['All Boys', 'All Girls', 'Mix', 'Free Electricity', 'Free Water', 'Free Wifi']
 const filter = ref(null)
-
+const showResult = ref(false)
 const searchQuery = ref('')
 
 const postDialog = ref({
@@ -64,13 +64,20 @@ onMounted(async () => {
 });
 
 const filteredPosts = computed(() => {
-  if (!searchQuery.value) {
+  if (!searchQuery.value || !showResult.value) {
+    if(!searchQuery.value){
+      showResult.value = false
+    }
     return postStore.posts
   }
   return postStore.posts.filter(post =>
     post.name.toLowerCase().includes(searchQuery.value.toLowerCase())
   )
 })
+
+const performSearch = () => {
+  showResult.value = true
+}
 const addReview = async () => {
   try {
     const newReview = await postStore.addReview(
@@ -102,8 +109,6 @@ const averageRating = computed(() => {
   }
   return 0
 })
-
-
 
 
 const logout = async () => {
@@ -180,7 +185,7 @@ const logout = async () => {
             <v-col cols="12" class="px-6">
               <h1 class="text-h4 text-green-darken-4 font-weight-bold">Find Your Perfect Boarding House</h1>
             </v-col>
-            <v-col cols="12" lg="8" class="px-6 px-md-8 d-flex justify-center align-center ga-2">
+            <v-col cols="12" md="8" class="px-6 px-md-8 d-flex justify-center align-center ga-2">
               <div
                 class="d-inline-flex align-center justify-start rounded-lg px-3 ga-4 bg-white"
                 style="width: 100%; border: #69F0AE solid 1px; "
@@ -203,36 +208,22 @@ const logout = async () => {
                 >
                   mdi-magnify
                 </v-icon>
-                <v-icon
-                  class="d-flex d-lg-none"
-                  color="green"
-                  size="x-large"
-                >
-                  mdi-view-headline
-                </v-icon>
+                
               </div>
               <div class="d-none d-sm-flex ">
                 <v-btn
                   prepend-icon="mdi-magnify"
                   class="text-none bg-green py-5 d-flex align-center rounded-lg"
+                  @click="performSearch"
                 >
                   Search
                 </v-btn>
               </div>
             </v-col>
-            <v-col v-for="post in filteredPosts"
-                :key="post.id"
-                cols="12" sm="6" lg="4"
-                class="d-flex justify-center align-center">
-                <v-card
-                :elevation="0"
-                style="border: #69F0AE solid 1px; border-radius: 17px"
-                width="95%"
-                >
-               
-                 </v-card>
-                </v-col>
+            
             <v-col cols="2" class="px-7 d-none d-lg-flex justify-center align-center">
+            </v-col>
+            <v-col cols="2" class="px-7 d-none d-md-flex justify-center align-center">
               <v-select
                 clearable
                 placeholder="Price range"
@@ -242,7 +233,7 @@ const logout = async () => {
                 variant="plain"
               ></v-select>
             </v-col>
-            <v-col cols="2" class="px-7 d-none d-lg-flex justify-center align-center">
+            <v-col cols="2" class="px-7 d-none d-md-flex justify-center align-center">
               <v-select
                 v-model="filter"
                 style="border: #69F0AE solid 1px; border-radius: 8px; background-color: white; height: 75%; padding-left: 10px"
@@ -271,7 +262,8 @@ const logout = async () => {
 
 
         <v-col
-          v-for="post in postStore.posts"
+          
+          v-for="post in filteredPosts"
           :key="post.id"
           cols="12" sm="6" lg="4"
           class="d-flex justify-center align-center">

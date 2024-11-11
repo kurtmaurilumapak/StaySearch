@@ -126,17 +126,15 @@ const submitPost = async () => {
       <v-row style="height: calc(100vh + 11px); position: absolute; top: 0; left: 0; right: 0;" class="overflow-hidden">
         <!-- POSTING MENU -->
         <v-col cols="12" md="4" lg="3">
-          <v-card style="height: 100vh; width: 100%; z-index: 1"
-          >
-            <v-card-title class="d-flex align-center py-3">
+          <v-card style="height: 100vh; width: 100%; z-index: 1; border-radius: 0;">
+            <v-card-title class="d-flex align-center py-3 bg-green">
               <v-btn
-                fab icon
+                icon="mdi-arrow-left"
+                variant="text"
                 @click="create.leaveCreatePage = true"
-              >
-                <v-icon>mdi-arrow-left</v-icon>
-              </v-btn>
+              ></v-btn>
                 <v-spacer> </v-spacer>
-                <span class="font-weight-bold">Create Post</span>
+                <span class="font-weight-bold pr-10">Create Post</span>
                 <v-spacer> </v-spacer>
             </v-card-title>
             <v-dialog v-model="create.leaveCreatePage" max-width="600">
@@ -170,10 +168,12 @@ const submitPost = async () => {
                 <v-row>
                   <v-col cols="12">
                     <v-btn
+                      class="text-none"
                       color="green-darken-2"
                       @click="$refs.fileInput.$el.querySelector('input').click()"
                     >
-                      Add photos
+                      <v-icon>mdi-upload</v-icon>
+                      Uplaod Images
                     </v-btn>
                     <v-file-input
                       ref="fileInput"
@@ -204,7 +204,7 @@ const submitPost = async () => {
                               max-height="100"
                             >
                               <v-icon
-                                style="position: absolute; top: 0; right: 0; background-color: ghostwhite"
+                                style="position: absolute; top: 0; right: 0; background-color: red; color: white"
                                 @click.stop="clearimg(index); $refs.fileInput.$el.querySelector('input').value = ''"
                               >mdi-close
                               </v-icon>
@@ -296,6 +296,7 @@ const submitPost = async () => {
             </v-card-text>
             <v-card-actions class="justify-end px-10" style="position: sticky; bottom: 0;">
               <v-btn
+                class="text-none"
                 :loading="postStore.formAction.formProcess"
                 type="submit"
                 :disabled="!isFormValid"
@@ -303,7 +304,7 @@ const submitPost = async () => {
                 @click="submitPost"
                 block
               >
-                Post
+                Create Listing
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -385,16 +386,6 @@ const submitPost = async () => {
                       </v-img>
                     </div>
                   </v-col>
-                  <v-col cols="12" class="d-block">
-                    <div class="d-flex justify-space-between">
-                      <h2 class="text-subtitle-1"><v-icon>mdi-map-marker</v-icon>{{ create.address || 'Address' }}</h2>
-                    </div>
-                    <br>
-                    <h2 class="text-h6"><v-icon color="green" class="mr-5">mdi-tag</v-icon>{{ create.price || 'Price' }}/month</h2>
-                  </v-col>
-                  <v-col cols="12">
-                    <h2 class="text-h6">{{ create.description || 'Details' }}</h2>
-                  </v-col>
                   <v-col cols="12">
                     <div v-if=" create.type || create.inclusion">
                       <v-chip
@@ -432,6 +423,16 @@ const submitPost = async () => {
                       </v-chip>
                       <v-chip class="ma-1" color="grey" label>No Tags Added</v-chip>
                     </div>
+                  </v-col>
+                  <v-col cols="12" class="d-block">
+                    <div class="d-flex justify-space-between">
+                      <h2 class="text-subtitle-1"><v-icon>mdi-map-marker</v-icon>{{ create.address || 'Address' }}</h2>
+                    </div>
+                    <br>
+                    <h2 class="text-h6"><v-icon color="green" class="mr-5">mdi-tag</v-icon>{{ create.price || 'Price' }}/month</h2>
+                  </v-col>
+                  <v-col cols="12">
+                    <h2 class="text-h6">{{ create.description || 'Details' }}</h2>
                   </v-col>
                 </v-row>
               </v-card-text>
