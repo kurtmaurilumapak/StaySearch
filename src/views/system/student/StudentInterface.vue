@@ -125,9 +125,12 @@ const logout = async () => {
 
 
 <template>
-  <AppLayout>
+  <AppLayout
+    class="bg-green-lighten-5"
+  >
     <template #content>
       <v-app-bar
+        color="green"
         :elevation="2"
         density="comfortable"
       >
@@ -151,30 +154,7 @@ const logout = async () => {
           </v-col>
 
           <v-col cols="6" sm="6" lg="4" class="d-none d-sm-flex justify-center align-center">
-            <div
-              class="d-inline-flex align-center justify-center border rounded-lg px-3 ga-4"
-              style="width: 70%;"
-            >
-              <v-text-field
-                class="mb-2"
-                :loading="search.loading"
-                append-inner-icon="mdi-magnify"
-                density="compact"
-                label="Search"
-                variant="plain"
-                hide-details
-                single-line
-                @click:append-inner="onClick"
-                max-width="350"
-              ></v-text-field>
-              <v-btn
-                style="background-color: forestgreen; color: white"
-                class="text-none"
-                size="small"
-              >
-                Filter
-              </v-btn>
-            </div>
+
           </v-col>
 
           <v-col cols="8" sm="3" lg="4" class="d-flex align-center justify-end pr-10">
@@ -246,77 +226,135 @@ const logout = async () => {
         </v-banner>
       </v-app-bar>
 
-      <v-row class="mt-4 mx-0 mx-md-5 pb-5">
+      <v-row class="mt-4 mx-0 mx-md-16 pb-5 pt-10">
         <v-col cols="12">
-          <h1 class="text-h4 pb-5">Boarding Houses in -your search-</h1>
-          <span class="text-disabled">Sort by:</span>
-          <v-chip-group
-            selected-class="text-success"
-            multiple
-          >
-            <v-chip
-              v-for="tag in sorts"
-              :key="tag"
-              :text="tag"
-            ></v-chip>
-          </v-chip-group>
+          <v-row>
+            <v-col cols="12" class="px-6">
+              <h1 class="text-h4 text-green-darken-4 font-weight-bold">Find Your Perfect Boarding House</h1>
+            </v-col>
+            <v-col cols="12" md="10" lg="6" class="px-6 d-flex justify-center align-center">
+              <div
+                class="d-inline-flex align-center justify-start rounded-lg px-3 ga-4 bg-white"
+                style="width: 100%; border: #69F0AE solid 1px; "
+              >
+                <v-text-field
+                  class="mb-2 w-100"
+                  :loading="search.loading"
+                  density="compact"
+                  label="Search"
+                  variant="plain"
+                  hide-details
+                  single-line
+                ></v-text-field>
+                <v-icon
+                  class="d-flex d-md-none"
+                  color="green"
+                  size="x-large"
+                >
+                  mdi-magnify
+                </v-icon>
+                <v-icon
+                  class="d-flex d-lg-none"
+                  color="green"
+                  size="x-large"
+                >
+                  mdi-view-headline
+                </v-icon>
+              </div>
+            </v-col>
+            <v-col cols="2" class="px-5 d-none d-lg-flex justify-center align-center">
+              <v-select
+                clearable
+                placeholder="Price range"
+                style="border: #69F0AE solid 1px;border-radius: 8px ;background-color: white; height: 75%; padding-left: 10px"
+                density="compact"
+                :items="['₱0 - ₱500', '₱501 - ₱1000', '₱1001 - ₱1500', '₱1501+']"
+                variant="plain"
+              ></v-select>
+            </v-col>
+            <v-col cols="2" class="px-5 d-none d-lg-flex justify-center align-center">
+              <v-select
+                style="border: #69F0AE solid 1px; border-radius: 8px; background-color: white; height: 75%; padding-left: 10px"
+                clearable
+                chips
+                placeholder="Filter by"
+                multiple
+                density="compact"
+                :items="['All Boys', 'All Girls', 'Mix', 'Free Electricity', 'Free Water', 'Free Wifi']"
+                variant="plain"
+              ></v-select>
+            </v-col>
+            <v-col cols="2" class="px-5 d-none d-md-flex justify-center align-center">
+              <v-btn
+                prepend-icon="mdi-magnify"
+                class="text-none bg-green py-5 d-flex align-center rounded-lg"
+              >
+                Search
+              </v-btn>
+            </v-col>
+          </v-row>
         </v-col>
+
 
         <v-col
           v-for="post in postStore.posts"
           :key="post.id"
-          cols="12" sm="6" md="4" lg="3"
+          cols="12" sm="6" lg="4"
           class="d-flex justify-center align-center">
           <v-card
-            :elevation="7"
-            class="rounded-xl"
-            @click="openDialog(post)"
-            width="100%"
-            color="grey-lighten-3"
+            :elevation="0"
+            style="border: #69F0AE solid 1px; border-radius: 17px"
+            width="95%"
           >
-            <v-card-text>
+            <v-card-title
+              class="py-6"
+            >
+              <p class="px-4 text-h5 font-weight-bold text-green-darken-3">{{ post.name }}</p>
+              <p class="px-4 text-subtitle-2 text-grey truncate">{{ post.address }}</p>
+
+            </v-card-title>
+            <v-card-text class="d-flex flex-column px-7">
               <v-row>
-                <v-col cols="12">
-                  <v-row>
-                    <v-col cols="8">
-                      <v-img
-                        class="bg-white card-image"
-                        :src="post.boarding_house_images?.[0]?.image_url"
-                        cover
-                      ></v-img>
-                    </v-col>
-                    <v-col cols="4">
-                      <v-img
-                        class="bg-white card-image"
-                        :src="post.boarding_house_images?.[1]?.image_url"
-                        cover
-                      ></v-img>
-                    </v-col>
-                  </v-row>
-                  <v-col cols="12">
-                    <v-row>
-                      <v-col cols="12" class="d-inline-flex justify-space-between">
-                        <h1 class="text-h6 truncate">{{ post.name }}</h1>
-                        <h2 class="text-subtitle-1 truncate"><v-icon>mdi-map-marker</v-icon>{{ post.address }}</h2>
-                      </v-col>
-                      <v-col cols="12" class="d-inline-flex justify-space-between">
-                        <h2 class="text-h6"><v-icon color="green" class="mr-5">mdi-tag</v-icon>₱{{ post.price }}.00/month</h2>
-                        <div class="d-flex flex-wrap">
-                          <v-chip
-                            v-if="post.boarding_house_tags.length > 0"
-                            class="mr-1 mb-1"
-                            color="green-darken-2"
-                            text-color="white"
-                          >
-                            {{ post.boarding_house_tags[0].tags.name }} ...
-                          </v-chip>
-                        </div>
-                      </v-col>
-                    </v-row>
-                  </v-col>
+                <v-col cols="12" md="8">
+                  <v-img
+                    class="bg-grey rounded-lg mb-5"
+                    :src="post.boarding_house_images?.[0]?.image_url"
+                    width="100%"
+                    height="200"
+                    cover
+                  ></v-img>
+                </v-col>
+                <v-col cols="4" class="d-none d-md-block">
+                  <v-img
+                    class="bg-grey rounded-lg mb-5"
+                    :src="post.boarding_house_images?.[1]?.image_url"
+                    width="100%"
+                    height="200"
+                    cover
+                  ></v-img>
                 </v-col>
               </v-row>
+              <p class="text-h5 font-weight-bold text-green mb-2 px-1">₱{{ post.price }}.00/month</p>
+              <div class="d-flex flex-wrap">
+                <v-chip
+                  v-if="post.boarding_house_tags.length > 0"
+                  class="mr-1 mb-1 px-3"
+                  color="green"
+                >
+                  {{ post.boarding_house_tags[0].tags.name }} ...
+                </v-chip>
+              </div>
             </v-card-text>
+            <v-card-actions class="px-7 pb-7">
+              <v-btn
+                size="large"
+                class="rounded-lg font-weight-bold bg-green text-body-2"
+                block
+                @click="openDialog(post)"
+              >
+                View Details
+              </v-btn>
+            </v-card-actions>
           </v-card>
         </v-col>
         <v-col cols="12" class="d-flex justify-center align-center">
@@ -556,17 +594,6 @@ const logout = async () => {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.card-image {
-  border-radius: 16px;
-  height: 160px;
-}
-
-@media (max-width: 400px) {
-  .card-image {
-    height: 140px;
-  }
 }
 </style>
 
