@@ -11,27 +11,12 @@ const theme = useTheme()
 const useAuth = useAuthStore()
 const postStore = usePostStore()
 
-const search = ref ({
-  loaded: false,
-  loading: false,
-})
-
 const showMore = ref(false)
 const rating = ref(0)
 const comment = ref('')
 const sheet = ref(false)
-const banner = ref(false)
-const showBanner = () =>{
-  banner.value = !banner.value
-}
-
-const onClick = () => {
-  search.value.loading = true
-  setTimeout(() => {
-    search.value.loading = false
-    search.value.loaded = true
-  }, 2000)
-}
+const filterValue = ['All Boys', 'All Girls', 'Mix', 'Free Electricity', 'Free Water', 'Free Wifi']
+const filter = ref(null)
 
 const postDialog = ref({
   tags: [],
@@ -61,7 +46,7 @@ const openDialog = (post) => {
 };
 
 const loadMorePosts = async () => {
-  if (!search.value.loading) {
+  if (!postStore.formAction.formProcess) {
     await postStore.fetchMorePosts();
   }
 };
@@ -125,10 +110,9 @@ const logout = async () => {
       <v-app-bar
         color="green"
         :elevation="2"
-        density="comfortable"
       >
         <v-row class="d-flex align-center">
-          <v-col cols="4" sm="3" lg="4">
+          <v-col cols="6">
             <RouterLink
               style="text-decoration: none;color: inherit;"
               to="/"
@@ -146,18 +130,7 @@ const logout = async () => {
             </RouterLink>
           </v-col>
 
-          <v-col cols="6" sm="6" lg="4" class="d-none d-sm-flex justify-center align-center">
-
-          </v-col>
-
-          <v-col cols="8" sm="3" lg="4" class="d-flex align-center justify-end pr-10">
-            <v-btn
-              class="d-flex d-sm-none mr-5"
-              icon="mdi-magnify"
-              variant="text"
-              @click="showBanner"
-            ></v-btn>
-
+          <v-col cols="6" class="d-flex align-center justify-end pr-10">
             <v-menu location="bottom">
               <template v-slot:activator="{ props }">
                 <v-avatar
@@ -189,50 +162,19 @@ const logout = async () => {
         </v-row>
       </v-app-bar>
 
-      <v-app-bar
-        :elevation="3"
-        v-if="banner"
-        class="d-block d-sm-none px-5"
-      >
-        <v-banner>
-          <div class="d-inline-flex align-center justify-center border rounded-lg w-100 px-3 ga-4">
-            <v-text-field
-              class="mb-2"
-              :loading="search.loading"
-              append-inner-icon="mdi-magnify"
-              density="compact"
-              label="Search"
-              variant="plain"
-              hide-details
-              single-line
-              @click:append-inner="onClick"
-              max-width="350"
-            ></v-text-field>
-            <v-btn
-              style="background-color: forestgreen; color: white"
-              class="text-none"
-              size="small"
-            >
-              Filter
-            </v-btn>
-          </div>
-        </v-banner>
-      </v-app-bar>
-
       <v-row class="mt-4 mx-0 mx-md-16 pb-5 pt-10">
         <v-col cols="12">
           <v-row>
             <v-col cols="12" class="px-6">
               <h1 class="text-h4 text-green-darken-4 font-weight-bold">Find Your Perfect Boarding House</h1>
             </v-col>
-            <v-col cols="12" md="10" lg="6" class="px-6 d-flex justify-center align-center">
+            <v-col cols="12" lg="8" class="px-6 px-md-8 d-flex justify-center align-center ga-2">
               <div
                 class="d-inline-flex align-center justify-start rounded-lg px-3 ga-4 bg-white"
                 style="width: 100%; border: #69F0AE solid 1px; "
               >
                 <v-text-field
                   class="mb-2 w-100"
-                  :loading="search.loading"
                   density="compact"
                   label="Search"
                   variant="plain"
@@ -240,7 +182,7 @@ const logout = async () => {
                   single-line
                 ></v-text-field>
                 <v-icon
-                  class="d-flex d-md-none"
+                  class="d-flex d-sm-none"
                   color="green"
                   size="x-large"
                 >
@@ -254,8 +196,16 @@ const logout = async () => {
                   mdi-view-headline
                 </v-icon>
               </div>
+              <div class="d-none d-sm-flex ">
+                <v-btn
+                  prepend-icon="mdi-magnify"
+                  class="text-none bg-green py-5 d-flex align-center rounded-lg"
+                >
+                  Search
+                </v-btn>
+              </div>
             </v-col>
-            <v-col cols="2" class="px-5 d-none d-lg-flex justify-center align-center">
+            <v-col cols="2" class="px-7 d-none d-lg-flex justify-center align-center">
               <v-select
                 clearable
                 placeholder="Price range"
@@ -265,25 +215,29 @@ const logout = async () => {
                 variant="plain"
               ></v-select>
             </v-col>
-            <v-col cols="2" class="px-5 d-none d-lg-flex justify-center align-center">
+            <v-col cols="2" class="px-7 d-none d-lg-flex justify-center align-center">
               <v-select
+                v-model="filter"
                 style="border: #69F0AE solid 1px; border-radius: 8px; background-color: white; height: 75%; padding-left: 10px"
                 clearable
-                chips
                 placeholder="Filter by"
                 multiple
                 density="compact"
-                :items="['All Boys', 'All Girls', 'Mix', 'Free Electricity', 'Free Water', 'Free Wifi']"
+                :items="filterValue"
                 variant="plain"
-              ></v-select>
-            </v-col>
-            <v-col cols="2" class="px-5 d-none d-md-flex justify-center align-center">
-              <v-btn
-                prepend-icon="mdi-magnify"
-                class="text-none bg-green py-5 d-flex align-center rounded-lg"
               >
-                Search
-              </v-btn>
+                <template v-slot:selection="{ item, index }">
+                  <v-chip v-if="index < 1">
+                    <span>{{ item.title }}</span>
+                  </v-chip>
+                  <span
+                    v-if="index === 1"
+                    class="text-grey text-caption align-self-center"
+                  >
+                    (+{{ filter.length - 1 }} others)
+                  </span>
+                </template>
+              </v-select>
             </v-col>
           </v-row>
         </v-col>
@@ -491,7 +445,6 @@ const logout = async () => {
                           <v-avatar
                             image="https://cdn.vuetifyjs.com/images/john.jpg"
                             size="50"
-                            v-bind="props"
                           >
                           </v-avatar>
                           <h3 class="font-weight-bold">{{ review.name }}</h3>
