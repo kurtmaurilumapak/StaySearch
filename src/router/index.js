@@ -50,6 +50,12 @@ const router = createRouter({
       meta: { requiresAuth: true, role: 'owner' },
     },
     {
+      path: '/owner/map',
+      name: 'map',
+      component: () => import('@/views/system/owner/map.vue'),
+      meta: { requiresAuth: true, role: 'owner' },
+    },
+    {
       path: '/settings',
       name: 'settings',
       component: () => import('@/views/system/Settings.vue'),

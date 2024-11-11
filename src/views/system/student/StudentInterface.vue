@@ -81,6 +81,7 @@ const logout = async () => {
 
 
 <template>
+  <v-btn @click="logout"> logout</v-btn>
   <AppLayout>
     <template #content>
       <v-app-bar
