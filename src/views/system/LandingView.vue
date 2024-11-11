@@ -119,8 +119,8 @@ const openModal = (image) => {
       </v-row>
     </v-container>
 
-    <v-container fluid class="pa-4 text-center d-flex flex-column justify-center" id="gallery">
-      <v-row class="w-lg-75 d-flex justify-center">
+    <v-container fluid class="pa-4 text-center d-flex flex-column justify-center align-center" id="gallery">
+      <v-row class="w-100 d-flex justify-center">
         <v-col cols="12">
           <v-row>
             <!-- Image 1 -->
