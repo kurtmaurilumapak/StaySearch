@@ -18,6 +18,8 @@ const sheet = ref(false)
 const filterValue = ['All Boys', 'All Girls', 'Mix', 'Free Electricity', 'Free Water', 'Free Wifi']
 const filter = ref(null)
 
+const searchQuery = ref('')
+
 const postDialog = ref({
   tags: [],
   PostContent: false,
@@ -61,6 +63,14 @@ onMounted(async () => {
 
 });
 
+const filteredPosts = computed(() => {
+  if (!searchQuery.value) {
+    return postStore.posts
+  }
+  return postStore.posts.filter(post =>
+    post.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+  )
+})
 const addReview = async () => {
   try {
     const newReview = await postStore.addReview(
@@ -94,6 +104,8 @@ const averageRating = computed(() => {
 })
 
 
+
+
 const logout = async () => {
   await useAuth.signOut()
   theme.global.name.value = 'light'
@@ -103,14 +115,9 @@ const logout = async () => {
 
 
 <template>
-<<<<<<< HEAD
-  <v-btn @click="logout"> logout</v-btn>
-  <AppLayout>
-=======
   <AppLayout
     class="bg-green-lighten-5"
   >
->>>>>>> 9bc3694d6b8c0608dee88478b8b852ed9d83b1b9
     <template #content>
       <v-app-bar
         color="green"
@@ -185,7 +192,10 @@ const logout = async () => {
                   variant="plain"
                   hide-details
                   single-line
+                  v-model="searchQuery"
                 ></v-text-field>
+              
+                
                 <v-icon
                   class="d-flex d-sm-none"
                   color="green"
@@ -210,6 +220,18 @@ const logout = async () => {
                 </v-btn>
               </div>
             </v-col>
+            <v-col v-for="post in filteredPosts"
+                :key="post.id"
+                cols="12" sm="6" lg="4"
+                class="d-flex justify-center align-center">
+                <v-card
+                :elevation="0"
+                style="border: #69F0AE solid 1px; border-radius: 17px"
+                width="95%"
+                >
+               
+                 </v-card>
+                </v-col>
             <v-col cols="2" class="px-7 d-none d-lg-flex justify-center align-center">
               <v-select
                 clearable

@@ -49,12 +49,7 @@ const router = createRouter({
       component: () => import('@/views/system/owner/Reservations.vue'),
       meta: { requiresAuth: true, role: 'owner' },
     },
-    {
-      path: '/owner/map',
-      name: 'map',
-      component: () => import('@/views/system/owner/map.vue'),
-      meta: { requiresAuth: true, role: 'owner' },
-    },
+   
     {
       path: '/settings',
       name: 'settings',
