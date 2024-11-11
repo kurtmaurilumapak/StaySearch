@@ -181,24 +181,32 @@ export const usePostStore = defineStore('post', {
       }
     },
 
-    async allPost() {
-      const { data: posts, error: postError } = await supabase
+    async allPost(fetchAll = false) {
+      const query = supabase
         .from('boarding_houses')
         .select('*, boarding_house_images(image_url), boarding_house_tags(tag_id, tags(name)), reviews(comment, rating, name)')
-        .range((this.currentPage - 1) * this.postsPerPage, this.currentPage * this.postsPerPage - 1);
 
+      if (!fetchAll) {
+        query.range((this.currentPage - 1) * this.postsPerPage, this.currentPage * this.postsPerPage - 1)
+      }
+      const { data: posts, error: postError } = await query
 
       if (postError) {
         throw postError
       }
 
-      this.posts.push(...posts);
+      if (fetchAll) {
+        this.posts = posts
+      } else {
+        this.posts.push(...posts)
+      }
     },
     async fetchMorePosts() {
       this.formAction.formProcess = true
-      this.currentPage += 1; // Increment the current page
+      this.currentPage += 1
       await this.allPost(); // Fetch the new posts
       this.formAction.formProcess = false
     },
+
   }
 })

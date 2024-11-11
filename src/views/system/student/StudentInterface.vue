@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, onMounted } from 'vue'
+import { computed, ref, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router';
 import AppLayout from '@/components/layout/AppLayout.vue'
 import { usePostStore } from '@/stores/postStore'
@@ -20,6 +20,7 @@ const filter = ref(null)
 const priceRange = ref(null)
 const showResult = ref(false)
 const searchQuery = ref('')
+const currentSearchQuery = ref('')
 
 const postDialog = ref({
   tags: [],
@@ -64,35 +65,42 @@ onMounted(async () => {
 
 });
 
+watch([filter, priceRange], async () => {
+  await postStore.allPost(true);
+});
+
 const filteredPosts = computed(() => {
-  if (showResult.value) {
-    return postStore.posts.filter(post => {
-    const matchesSearchQuery = !searchQuery.value || post.name.toLowerCase().includes(searchQuery.value.toLowerCase());
-    
+  return postStore.posts.filter(post => {
+    const matchesSearchQuery = !currentSearchQuery.value || post.name.toLowerCase().includes(currentSearchQuery.value.toLowerCase())
+
     const matchesPriceRange = !priceRange.value || (
       (priceRange.value === '₱0 - ₱500' && post.price >= 0 && post.price <= 500) ||
       (priceRange.value === '₱501 - ₱1000' && post.price > 500 && post.price <= 1000) ||
       (priceRange.value === '₱1001 - ₱1500' && post.price > 1000 && post.price <= 1500) ||
       (priceRange.value === '₱1501+' && post.price > 1500)
-    );
-    
-    const matchesFilters = filter.value.length === 0 || filter.value.every(f => post.boarding_house_tags.some(tag => tag.tags.name === f));
+    )
 
-    return matchesSearchQuery && matchesPriceRange && matchesFilters;
-  });
-  }
-  else if(!showResult.value || !searchQuery.value) {
-    if(!searchQuery.value){
-      showResult.value = false
-    }
-    return postStore.posts
-  }
-  
+    const matchesFilters = !filter.value || filter.value.length === 0 || filter.value.every(f => post.boarding_house_tags.some(tag => tag.tags.name === f))
+
+    return matchesSearchQuery && matchesPriceRange && matchesFilters
+  })
 })
 
-const performSearch = () => {
+const performSearch = async () => {
+  postStore.formAction.formProcess = true
+  currentSearchQuery.value = searchQuery.value
   showResult.value = true
+  await postStore.allPost(true)
+
+  // Filter posts based on the search query
+  postStore.searchResults = postStore.posts.filter(post =>
+    post.name.toLowerCase().includes(searchQuery.value.toLowerCase()),
+    postStore.formAction.formProcess = false
+  );
+
+  postStore.currentPage = 1
 }
+
 const addReview = async () => {
   try {
     const newReview = await postStore.addReview(
@@ -212,6 +220,7 @@ const logout = async () => {
                   variant="plain"
                   hide-details
                   single-line
+                  clearable
                   v-model="searchQuery"
                 ></v-text-field>
               
@@ -227,6 +236,7 @@ const logout = async () => {
               </div>
               <div class="d-none d-sm-flex ">
                 <v-btn
+                  :loading="postStore.formAction.formProcess"
                   prepend-icon="mdi-magnify"
                   class="text-none bg-green py-5 d-flex align-center rounded-lg"
                   @click="performSearch"
@@ -234,9 +244,6 @@ const logout = async () => {
                   Search
                 </v-btn>
               </div>
-            </v-col>
-            
-            <v-col cols="2" class="px-7 d-none d-lg-flex justify-center align-center">
             </v-col>
             <v-col cols="2" class="px-7 d-none d-md-flex justify-center align-center">
               <v-select
