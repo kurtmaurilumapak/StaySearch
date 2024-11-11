@@ -182,7 +182,15 @@ onMounted(async () => {
                                       color="green-darken-2"
                                       text-color="white"
                                     >
-                                      {{ post.boarding_house_tags[0].tags.name }} ...
+                                      {{ post.boarding_house_tags[0].tags.name }}
+                                    </v-chip>
+
+                                    <v-chip
+                                      v-if="post.boarding_house_tags.length > 1"
+                                      class="mr-1 mb-1 px-3"
+                                      color="green"
+                                    >
+                                      +{{ post.boarding_house_tags.length - 1 }} more
                                     </v-chip>
                                   </div>
                                 </v-col>

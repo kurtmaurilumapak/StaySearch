@@ -168,7 +168,7 @@ const logout = async () => {
             <v-col cols="12" class="px-6">
               <h1 class="text-h4 text-green-darken-4 font-weight-bold">Find Your Perfect Boarding House</h1>
             </v-col>
-            <v-col cols="12" lg="8" class="px-6 px-md-8 d-flex justify-center align-center ga-2">
+            <v-col cols="12" md="8" class="px-6 px-md-8 d-flex justify-center align-center ga-2">
               <div
                 class="d-inline-flex align-center justify-start rounded-lg px-3 ga-4 bg-white"
                 style="width: 100%; border: #69F0AE solid 1px; "
@@ -189,7 +189,7 @@ const logout = async () => {
                   mdi-magnify
                 </v-icon>
                 <v-icon
-                  class="d-flex d-lg-none"
+                  class="d-flex d-md-none"
                   color="green"
                   size="x-large"
                 >
@@ -205,7 +205,7 @@ const logout = async () => {
                 </v-btn>
               </div>
             </v-col>
-            <v-col cols="2" class="px-7 d-none d-lg-flex justify-center align-center">
+            <v-col cols="2" class="px-7 d-none d-md-flex justify-center align-center">
               <v-select
                 clearable
                 placeholder="Price range"
@@ -215,7 +215,7 @@ const logout = async () => {
                 variant="plain"
               ></v-select>
             </v-col>
-            <v-col cols="2" class="px-7 d-none d-lg-flex justify-center align-center">
+            <v-col cols="2" class="px-7 d-none d-md-flex justify-center align-center">
               <v-select
                 v-model="filter"
                 style="border: #69F0AE solid 1px; border-radius: 8px; background-color: white; height: 75%; padding-left: 10px"
