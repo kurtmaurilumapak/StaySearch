@@ -7,8 +7,6 @@ import { ref } from 'vue'
 const drawer = ref(true);
 
 
-
-
 </script>
 
 <template>
@@ -16,31 +14,8 @@ const drawer = ref(true);
     <template #content>
       <Navbar v-model="drawer" />
       <v-row>
-        <v-col cols="12" md="2" class="d-none d-md-block">
-          <v-row class="pl-5">
-            <v-col cols="12" class="d-flex justify-center">
-              <RouterLink
-                style="text-decoration: none;color: inherit;"
-                to="/"
-                class="d-inline-flex align-center justify-center ga-1 my-5"
-              >
-                <img
-                  src="@/assets/logo.png"
-                  alt="Logo"
-                  width="40"
-                  height="40"
-                />
-                <h2 class="font-weight-bold">
-                  StaySearch
-                </h2>
-              </RouterLink>
-            </v-col>
-          </v-row>
-        </v-col>
-
         <v-col
           cols="12"
-          md="10"
           class="d-flex justify-center align-center"
         >
           <v-card
@@ -51,24 +26,24 @@ const drawer = ref(true);
               class="py-0"
             >
               <v-row>
-                <v-col cols="6">
+                <v-col cols="6" class="d-flex justify-start align-center px-sm-16">
                   <RouterLink
                     style="text-decoration: none;color: inherit;"
                     to="/"
-                    class="d-md-none d-inline-flex align-center justify-center ga-1 my-5"
+                    class="d-inline-flex align-center justify-center ga-1 my-5"
                   >
                     <img
                       src="@/assets/logo.png"
                       alt="Logo"
-                      width="40"
-                      height="40"
+                      width="30"
+                      height="30"
                     />
-                    <h2 style="font-size: clamp(20px, 6vw, 25px)">
+                    <h3 class="font-weight-bold">
                       StaySearch
-                    </h2>
+                    </h3>
                   </RouterLink>
                 </v-col>
-                <v-col cols="6" class="d-flex align-center justify-end">
+                <v-col cols="6" class="d-flex align-center justify-end px-sm-16">
                   <v-btn
                     class="ma-2 d-flex d-lg-none"
                     icon="mdi-menu"
@@ -76,109 +51,48 @@ const drawer = ref(true);
                     @click="drawer = !drawer"
                   ></v-btn>
                 </v-col>
+
               </v-row>
             </v-card-title>
 
-            <v-divider></v-divider>
-            <v-spacer></v-spacer>
+            <v-divider class="d-block d-lg-none"></v-divider>
 
             <!-- CONTENTS -->
             <v-card-text>
-              <v-row>
-                <v-col cols="12" md="4" lg="4" class="justify-center align-center">
-                  <v-card
-    class="mx-auto my-8"
-    elevation="16"
-    max-width="344"
-    color="green-lighten-4
-"
-  >
-    <v-card-item>
-      <v-card-title class="text-center">
-        Number of Posts 
-      </v-card-title>
-
-     
-    </v-card-item>
-
-    <v-card-text class="text-h1 text-center">
-      <v-icon>mdi-post</v-icon>
-      10
-    </v-card-text>
-    <v-divider></v-divider>
-    <v-card-actions  class="d-flex justify-center">
-      <v-btn fab size="large" icons target="_blank" 
-      @click="$router.push('/owner/posts')"> 
-              <v-icon>
-                mdi-arrow-right-circle </v-icon>
-            </v-btn>
-    </v-card-actions>
-  </v-card>
-
+              <v-row class="px-sm-15">
+                <v-col cols="12">
+                  <h1>Hi owners name</h1>
                 </v-col>
-                <v-col cols="12" md="4" lg="4" class="justify-center align-center">
-                  <v-card
-    class="mx-auto my-8"
-    elevation="16"
-    max-width="344"
-    color="green-lighten-4
-"
-  >
-    <v-card-item>
-      <v-card-title class="text-center">
-        Number of Tenants
-      </v-card-title>
-
-    
-    </v-card-item>
-
-    <v-card-text class="text-h1 text-center">
-      <v-icon>mdi-account-group</v-icon>
-      43
-    </v-card-text>
-    <v-divider></v-divider>
-    <v-card-actions  class="d-flex justify-center">
-      <v-btn fab size="large" icons target="_blank"> 
-              <v-icon>
-                mdi-arrow-right-circle </v-icon>
-            </v-btn>
-    </v-card-actions>
-    
-  </v-card>
-
+                <v-col cols="12" md="4" class="py-7">
+                  <div class="border pa-10 rounded-lg">
+                    <div class="d-flex align-center px-7">
+                      <h3>Total Properties</h3>
+                      <v-spacer></v-spacer>
+                      <v-icon color="green">mdi-home</v-icon>
+                    </div>
+                    <h1 class="px-7">Total</h1>
+                  </div>
                 </v-col>
-                <v-col cols="12" md="4" lg="4" class="justify-center align-center">
-                  <v-card
-    class="mx-auto my-8"
-    elevation="16"
-    max-width="344"
-    color="green-lighten-4
-"
-  >
-    <v-card-item>
-      <v-card-title class="text-center">
-        Reservations
-      </v-card-title>
-
-      
-    </v-card-item>
-
-    <v-card-text class="text-h1 text-center">
-      <v-icon>mdi-calendar-multiselect</v-icon>
-      5
-    </v-card-text>
-    <v-divider></v-divider>
-    <v-card-actions  class="d-flex justify-center">
-      <v-btn fab size="large" icons target="_blank"
-      @click="$router.push('/owner/reservations')"> 
-              <v-icon>
-                mdi-arrow-right-circle </v-icon>
-            </v-btn>  
-    </v-card-actions>
-  </v-card>
-                  
+                <v-col cols="12" md="4" class="py-7">
+                  <div class="border pa-10 rounded-lg">
+                    <div class="d-flex align-center px-7">
+                      <h3>Total Reservations</h3>
+                      <v-spacer></v-spacer>
+                      <v-icon color="green">mdi-calendar-text</v-icon>
+                    </div>
+                    <h1 class="px-7">Total</h1>
+                  </div>
                 </v-col>
-                <!-- CARD POSTS -->
+                <v-col cols="12" md="4" class="py-7">
+                  <div class="border pa-10 rounded-lg">
+                    <div class="d-flex align-center px-7">
+                      <h3>Average Rating</h3>
+                      <v-spacer></v-spacer>
+                      <v-icon color="green">mdi-star-outline</v-icon>
+                    </div>
+                    <h1 class="px-7">Total</h1>
+                  </div>
+                </v-col>
               </v-row>
             </v-card-text>
           </v-card>

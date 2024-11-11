@@ -203,7 +203,7 @@ const logout = async () => {
             <v-col cols="12" md="8" class="px-6 px-md-8 d-flex justify-center align-center ga-2">
               <div
                 class="d-inline-flex align-center justify-start rounded-lg px-3 ga-4 bg-white"
-                style="width: 100%; border: #69F0AE solid 1px; "
+                style="width: 100%; border: green solid 2px; "
               >
                 <v-text-field
                   class="mb-2 w-100"
@@ -242,7 +242,7 @@ const logout = async () => {
               <v-select
                 clearable
                 placeholder="Price range"
-                style="border: #69F0AE solid 1px;border-radius: 8px ;background-color: white; height: 75%; padding-left: 10px"
+                style="border: green solid 2px;border-radius: 8px ;background-color: white; height: 75%; padding-left: 10px"
                 density="compact"
                 v-model="priceRange"
                 :items="['₱0 - ₱500', '₱501 - ₱1000', '₱1001 - ₱1500', '₱1501+']"
@@ -252,7 +252,7 @@ const logout = async () => {
             <v-col cols="2" class="px-7 d-none d-md-flex justify-center align-center">
               <v-select
                 v-model="filter"
-                style="border: #69F0AE solid 1px; border-radius: 8px; background-color: white; height: 75%; padding-left: 10px"
+                style="border: green solid 2px; border-radius: 8px; background-color: white; height: 75%; padding-left: 10px"
                 clearable
                 placeholder="Filter by"
                 multiple
@@ -284,15 +284,15 @@ const logout = async () => {
           cols="12" sm="6" lg="4"
           class="d-flex justify-center align-center">
           <v-card
-            :elevation="0"
-            style="border: #69F0AE solid 1px; border-radius: 17px"
+            :elevation="7"
+            style="border-radius: 17px"
             width="95%"
           >
             <v-card-title
               class="py-6"
             >
               <p class="px-4 text-h5 font-weight-bold text-green-darken-3">{{ post.name }}</p>
-              <p class="px-4 text-subtitle-2 text-grey truncate">{{ post.address }}</p>
+              <p class="px-4 text-subtitle-2 text-disabled truncate">{{ post.address }}</p>
 
             </v-card-title>
             <v-card-text class="d-flex flex-column px-7">

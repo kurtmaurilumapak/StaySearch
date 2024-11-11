@@ -58,41 +58,8 @@ onMounted(async () => {
         style="height: calc(100vh + 12px);"
       >
         <!-- CREATE POST -->
-        <v-col cols="12" md="2" class="d-none d-md-block">
-          <v-row class="pl-5">
-            <v-col cols="12" class="d-flex justify-center">
-              <RouterLink
-                style="text-decoration: none;color: inherit;"
-                to="/"
-                class="d-inline-flex align-center justify-center ga-1 my-5"
-              >
-                <img
-                  src="@/assets/logo.png"
-                  alt="Logo"
-                  width="40"
-                  height="40"
-                />
-                <h2 class="font-weight-bold">
-                  StaySearch
-                </h2>
-              </RouterLink>
-            </v-col>
-            <v-col cols="12" class="d-flex justify-center">
-              <v-btn
-                width="90%"
-                color="green-darken-2"
-                @click="$router.push('/owner/create')"
-              >
-                create post
-              </v-btn>
-            </v-col>
-          </v-row>
-        </v-col>
-
-        <!-- CREATED POSTS -->
         <v-col
           cols="12"
-          md="10"
           class="d-flex justify-center align-center"
         >
 
@@ -106,16 +73,24 @@ onMounted(async () => {
               class="py-0"
             >
               <v-row>
-                <v-col cols="6" sm="4" class="d-flex d-md-none align-center">
-                  <v-btn
-                    color="green-darken-2"
-                    @click="$router.push('/owner/create')"
-                    block
+                <v-col cols="6" class="d-flex justify-start align-center px-sm-10">
+                  <RouterLink
+                    style="text-decoration: none;color: inherit;"
+                    to="/"
+                    class="d-inline-flex align-center justify-center ga-1 my-5"
                   >
-                    create post
-                  </v-btn>
+                    <img
+                      src="@/assets/logo.png"
+                      alt="Logo"
+                      width="30"
+                      height="30"
+                    />
+                    <h3 class="font-weight-bold">
+                      StaySearch
+                    </h3>
+                  </RouterLink>
                 </v-col>
-                <v-col cols="6" sm="8" md="12" class="d-flex justify-end">
+                <v-col cols="6" class="d-flex align-center justify-end px-sm-10">
                   <v-btn
                     class="ma-2 d-flex d-lg-none"
                     icon="mdi-menu"
@@ -127,79 +102,122 @@ onMounted(async () => {
               </v-row>
             </v-card-title>
 
-            <v-divider></v-divider>
-            <v-spacer></v-spacer>
+            <v-divider class="d-block d-lg-none"></v-divider>
 
             <!-- CONTENTS -->
             <v-card-text>
               <v-row>
+                <v-col cols="12" class="d-flex justify-sm-space-between justify-end px-7 px-sm-10">
+                  <h1 class="d-none d-sm-block text-h4 text-green-darken-4 font-weight-bold">Your Posts</h1>
+                  <v-btn
+                    prepend-icon="mdi-plus"
+                    class="text-none"
+                    color="green"
+                    @click="$router.push('/owner/create')"
+                  >
+                    Create Listing
+                  </v-btn>
+                </v-col>
                 <!-- CARD POSTS -->
                 <v-col  v-for="post in posts" :key="post.id" cols="12" sm="6" lg="4" class="d-flex justify-center align-center">
                   <v-card
                     :elevation="7"
-                    class="rounded-xl"
-                    @click="openDialog(post)"
-                    width="100%"
-                    color="grey-lighten-3"
-
+                    style="border-radius: 17px"
+                    width="95%"
                   >
-                    <v-card-text>
-                      <v-row>
-                        <v-col cols="12">
-                          <v-row>
-                            <v-col cols="8">
-                              <v-img
-                                class="bg-white rounded-xl"
-                                :src="post.boarding_house_images?.[0]?.image_url"
-                                max-width="100%"
-                                height="170"
-                                aspect-ratio="1"
-                                cover
-                              ></v-img>
-                            </v-col>
-                            <v-col cols="4">
-                              <v-img
-                                class="bg-white rounded-xl"
-                                :src="post.boarding_house_images?.[1]?.image_url"
-                                max-width="100%"
-                                height="170"
-                                aspect-ratio="1"
-                                cover
-                              ></v-img>
-                            </v-col>
-                            <v-col cols="12">
-                              <v-row>
-                                <v-col cols="12" class="d-inline-flex justify-space-between">
-                                  <h1 class="text-h6 truncate">{{ post.name }}</h1>
-                                  <h2 class="text-subtitle-1 truncate"><v-icon>mdi-map-marker</v-icon>{{ post.address }}</h2>
-                                </v-col>
-                                <v-col cols="12" class="d-inline-flex justify-space-between">
-                                  <h2 class="text-h6"><v-icon color="green" class="mr-md-5">mdi-tag</v-icon>₱{{ post.price }}.00/month</h2>
-                                  <div class="d-flex flex-wrap">
-                                    <v-chip
-                                      v-if="post.boarding_house_tags.length > 0"
-                                      class="mr-1 mb-1"
-                                      color="green-darken-2"
-                                      text-color="white"
-                                    >
-                                      {{ post.boarding_house_tags[0].tags.name }}
-                                    </v-chip>
+                    <v-card-title
+                      class="py-6"
+                    >
+                      <p class="px-4 text-h5 font-weight-bold text-green-darken-3">{{ post.name }}</p>
+                      <p class="px-4 text-subtitle-2 text-disabled truncate">{{ post.address }}</p>
 
-                                    <v-chip
-                                      v-if="post.boarding_house_tags.length > 1"
-                                      class="mr-1 mb-1 px-3"
-                                      color="green"
-                                    >
-                                      +{{ post.boarding_house_tags.length - 1 }} more
-                                    </v-chip>
-                                  </div>
-                                </v-col>
-                              </v-row>
-                            </v-col>
-                          </v-row>
+                    </v-card-title>
+                    <v-card-text class="d-flex flex-column px-7">
+                      <v-row>
+                        <v-col cols="12" md="8">
+                          <v-img
+                            class="bg-grey rounded-lg mb-5"
+                            :src="post.boarding_house_images?.[0]?.image_url"
+                            width="100%"
+                            height="200"
+                            cover
+                          ></v-img>
+                        </v-col>
+                        <v-col cols="4" class="d-none d-md-block">
+                          <v-img
+                            class="bg-grey rounded-lg mb-5"
+                            :src="post.boarding_house_images?.[1]?.image_url"
+                            width="100%"
+                            height="200"
+                            cover
+                          ></v-img>
                         </v-col>
                       </v-row>
+                      <p class="text-h5 font-weight-bold text-green mb-2 px-1">₱{{ post.price }}.00/month</p>
+                      <div class="d-flex flex-wrap">
+                        <v-chip
+                          v-if="post.boarding_house_tags.length > 0"
+                          class="mr-1 mb-1 px-3"
+                          color="green"
+                        >
+                          {{ post.boarding_house_tags[0].tags.name }}
+                        </v-chip>
+
+                        <v-chip
+                          v-if="post.boarding_house_tags.length > 1"
+                          class="mr-1 mb-1 px-3"
+                          color="green"
+                        >
+                          +{{ post.boarding_house_tags.length - 1 }} more
+                        </v-chip>
+                      </div>
                     </v-card-text>
+                    <v-card-actions class="px-7 pb-7">
+                      <v-row>
+                        <v-col cols="6">
+                          <v-btn
+                            size="large"
+                            class="rounded-lg font-weight-bold bg-green text-body-2"
+                            block
+                            @click="openDialog(post)"
+                          >
+                            View Details
+                          </v-btn>
+                        </v-col>
+                        <v-col cols="6" class="d-flex justify-end align-center0">
+                          <v-menu location="start" width="175">
+                            <template v-slot:activator="{ props }">
+                              <v-icon
+                                v-bind="props"
+                              >
+                                mdi-dots-vertical
+                              </v-icon>
+                            </template>
+
+                            <v-list>
+                              <v-list-item>
+                                <v-list-item-title class="font-weight-bold">Actions</v-list-item-title>
+                              </v-list-item>
+                              <v-list-item
+                                density="compact"
+                                @click=""
+                              >
+                                <v-icon class="mr-5">mdi-pencil</v-icon>
+                                Edit
+                              </v-list-item>
+                              <v-divider class="mt-5"></v-divider>
+                              <v-list-item
+                                density="compact"
+                                @click=""
+                              >
+                                <p class="text-red"><v-icon class="mr-5">mdi-delete-variant</v-icon>Delete</p>
+
+                              </v-list-item>
+                            </v-list>
+                          </v-menu>
+                        </v-col>
+                      </v-row>
+                    </v-card-actions>
                   </v-card>
                 </v-col>
               </v-row>

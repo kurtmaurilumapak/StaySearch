@@ -12,54 +12,31 @@ const drawer = ref(true);
     <template #content>
       <Navbar v-model="drawer" />
       <v-row>
-        <!-- Sidebar Navigation -->
-        <v-col cols="12" md="2" class="d-none d-md-block">
-          <v-row class="pl-5">
-            <v-col cols="12" class="d-flex justify-center">
-              <RouterLink
-                style="text-decoration: none;color: inherit;"
-                to="/"
-                class="d-inline-flex align-center justify-center ga-1 my-5"
-              >
-                <img
-                  src="@/assets/logo.png"
-                  alt="Logo"
-                  width="40"
-                  height="40"
-                />
-                <h2 class="font-weight-bold">
-                  StaySearch
-                </h2>
-              </RouterLink>
-            </v-col>
-          </v-row>
-        </v-col>
-        <!-- Main Content Area -->
-        <v-col cols="12" md="10" class="d-flex justify-center align-center">
+        <v-col cols="12" class="d-flex justify-center align-center">
           <v-card :elevation="7"  style="border-radius: 0; height: 100vh; width: 100%;">
             <!-- Header with Notification & Menu -->
             <v-card-title
               class="py-0"
             >
               <v-row>
-                <v-col cols="6">
+                <v-col cols="6" class="d-flex justify-start align-center px-md-16">
                   <RouterLink
                     style="text-decoration: none;color: inherit;"
                     to="/"
-                    class="d-md-none d-inline-flex align-center justify-center ga-1 my-5"
+                    class="d-inline-flex align-center justify-center ga-1 my-5"
                   >
                     <img
                       src="@/assets/logo.png"
                       alt="Logo"
-                      width="40"
-                      height="40"
+                      width="30"
+                      height="30"
                     />
-                    <h2 style="font-size: clamp(20px, 6vw, 25px)">
+                    <h3 class="font-weight-bold">
                       StaySearch
-                    </h2>
+                    </h3>
                   </RouterLink>
                 </v-col>
-                <v-col cols="6" class="d-flex align-center justify-end">
+                <v-col cols="6" class="d-flex align-center justify-end px-md-16">
                   <v-btn
                     class="ma-2 d-flex d-lg-none"
                     icon="mdi-menu"
@@ -67,86 +44,105 @@ const drawer = ref(true);
                     @click="drawer = !drawer"
                   ></v-btn>
                 </v-col>
+
               </v-row>
             </v-card-title>
 
-            <v-divider></v-divider>
-            <v-spacer></v-spacer>
+            <v-divider class="d-block d-lg-none"></v-divider>
 
             <!-- Boarding House Posts -->
-            <v-row class="pa-6" style="overflow-y: auto; max-height: 100vh">
-              <v-col cols="12" md="6" lg="4">
+            <v-row class="pa-6 px-md-16" style="overflow-y: auto; max-height: 100vh">
+              <v-col cols="12" md="6">
                 <v-card class="mb-5" elevation="12" style="border-radius: 12px; overflow: hidden;">
-                  <v-img src="https://cdn.vuetifyjs.com/images/parallax/material.jpg" height="200px"></v-img>
-                  <v-card-title class="text-h5" style="background-color: #375a8b; color: white;">Boarding House</v-card-title>
+                  <v-card-title
+                    class="d-flex bg-green"
+                  >
+                    <v-row>
+                      <v-col cols="6" class="d-flex align-center">
+                        <v-icon>mdi-calendar-text</v-icon>
+                        <p class="d-none d-sm-block">Reservations</p>
+                      </v-col>
+                      <v-col cols="6" class="d-flex flex-column align-end">
+                       <div>
+                         <p>Boarding House</p>
+                         <p>address</p>
+                       </div>
+                      </v-col>
+                    </v-row>
+                  </v-card-title>
                   <v-card-text style="padding: 20px;">
                     <v-row>
-                      <v-col cols="6"><h3>Name:</h3></v-col>
-                      <v-col cols="6"><h3>Date:</h3></v-col>
-                    </v-row>
-                    <v-divider></v-divider>
-                    <v-row>
-                      <v-col cols="6"><h3>Name:</h3></v-col>
-                      <v-col cols="6"><h3>Date:</h3></v-col>
-                    </v-row>
-                    <v-divider></v-divider>
-                    <v-row>
-                      <v-col cols="6"><h3>Name:</h3></v-col>
-                      <v-col cols="6"><h3>Date:</h3></v-col>
+                      <v-col cols="12">
+                        <h2>All Reservations</h2>
+                      </v-col>
+                      <v-col cols="12" class="d-flex align-center border rounded-lg mb-4">
+                        <div>
+                          <h2>Name</h2>
+                          <p>Check-in: date</p>
+                        </div>
+                        <v-spacer></v-spacer>
+                        <p>status</p>
+                      </v-col>
+                      <v-col cols="12" class="d-flex align-center border rounded-lg mb-4">
+                        <div>
+                          <h2>Name</h2>
+                          <p>Check-in: date</p>
+                        </div>
+                        <v-spacer></v-spacer>
+                        <p>status</p>
+                      </v-col>
+
                     </v-row>
                   </v-card-text>
-                  <v-card-actions>
-                    <v-btn color="dark" block>View Details</v-btn>
+                  <v-card-actions class="d-flex justify-center">
+                    <v-pagination :length="4"></v-pagination>
                   </v-card-actions>
                 </v-card>
               </v-col>
-              <v-col cols="12" md="6" lg="4">
+              <v-col cols="12" md="6">
                 <v-card class="mb-5" elevation="12" style="border-radius: 12px; overflow: hidden;">
-                  <v-img src="https://cdn.vuetifyjs.com/images/parallax/material.jpg" height="200px"></v-img>
-                  <v-card-title class="text-h5" style="background-color: #375a8b; color: white;">Boarding House</v-card-title>
+                  <v-card-title
+                    class="d-flex bg-green"
+                  >
+                    <v-row>
+                      <v-col cols="6" class="d-flex align-center">
+                        <v-icon>mdi-calendar-text</v-icon>
+                        <p class="d-none d-sm-block">Reservations</p>
+                      </v-col>
+                      <v-col cols="6" class="d-flex flex-column align-end">
+                        <div>
+                          <p>Boarding House</p>
+                          <p>address</p>
+                        </div>
+                      </v-col>
+                    </v-row>
+                  </v-card-title>
                   <v-card-text style="padding: 20px;">
                     <v-row>
-                      <v-col cols="6"><h3>Name:</h3></v-col>
-                      <v-col cols="6"><h3>Date:</h3></v-col>
-                    </v-row>
-                    <v-divider></v-divider>
-                    <v-row>
-                      <v-col cols="6"><h3>Name:</h3></v-col>
-                      <v-col cols="6"><h3>Date:</h3></v-col>
-                    </v-row>
-                    <v-divider></v-divider>
-                    <v-row>
-                      <v-col cols="6"><h3>Name:</h3></v-col>
-                      <v-col cols="6"><h3>Date:</h3></v-col>
-                    </v-row>
-                  </v-card-text>
-                  <v-card-actions>
-                    <v-btn color="dark" block>View Details</v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-col>
-              <v-col cols="12" md="6" lg="4">
-                <v-card class="mb-5" elevation="12" style="border-radius: 12px; overflow: hidden;">
-                  <v-img src="https://cdn.vuetifyjs.com/images/parallax/material.jpg" height="200px"></v-img>
-                  <v-card-title class="text-h5" style="background-color: #375a8b; color: white;">Boarding House</v-card-title>
-                  <v-card-text style="padding: 20px;">
-                    <v-row>
-                      <v-col cols="6"><h3>Name:</h3></v-col>
-                      <v-col cols="6"><h3>Date:</h3></v-col>
-                    </v-row>
-                    <v-divider></v-divider>
-                    <v-row>
-                      <v-col cols="6"><h3>Name:</h3></v-col>
-                      <v-col cols="6"><h3>Date:</h3></v-col>
-                    </v-row>
-                    <v-divider></v-divider>
-                    <v-row>
-                      <v-col cols="6"><h3>Name:</h3></v-col>
-                      <v-col cols="6"><h3>Date:</h3></v-col>
+                      <v-col cols="12">
+                        <h2>All Reservations</h2>
+                      </v-col>
+                      <v-col cols="12" class="d-flex align-center border rounded-lg mb-4">
+                        <div>
+                          <h2>Name</h2>
+                          <p>Check-in: date</p>
+                        </div>
+                        <v-spacer></v-spacer>
+                        <p>status</p>
+                      </v-col>
+                      <v-col cols="12" class="d-flex align-center border rounded-lg mb-4">
+                        <div>
+                          <h2>Name</h2>
+                          <p>Check-in: date</p>
+                        </div>
+                        <v-spacer></v-spacer>
+                        <p>status</p>
+                      </v-col>
+
                     </v-row>
                   </v-card-text>
-                  <v-card-actions>
-                    <v-btn color="dark" block>View Details</v-btn>
+                  <v-card-actions class="d-flex justify-center">
+                    <v-pagination :length="4"></v-pagination>
                   </v-card-actions>
                 </v-card>
               </v-col>
