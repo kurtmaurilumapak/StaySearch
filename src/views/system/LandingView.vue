@@ -6,24 +6,6 @@ const dialog = ref(false)
 const selectedImage = ref(null) 
 const drawer = ref(false)
 
-const developers = [
-  {
-    avatar: 'background.png',
-    name: 'Ainor Jamal',
-    text: 'facebook.com/ainor.jamal.9'
-  },
-  {
-    avatar: 'kurt.png',
-    name: 'Kurt Mauri Lumapak',
-    text: 'facebook.com/kurtniezas01'
-  },
-  {
-    avatar: 'https://scontent.fcgy3-1.fna.fbcdn.net/v/t39.30808-1/414713350_1645837936165455_7931494424647193135_n.jpg?stp=dst-jpg_s200x200&_nc_cat=110&ccb=1-7&_nc_sid=0ecb9b&_nc_eui2=AeEl3wjtqx1mASZbbPom193vV2fpz0Tp331XZ-nPROnffdDt3iJ611emik_tOX2RN9jaVYVguJHMa4FVhcPSf4Sa&_nc_ohc=EWQMoAQT-48Q7kNvgHQbn9I&_nc_ht=scontent.fcgy3-1.fna&_nc_gid=A0PwDMkACWw0xqLPJUcOr_B&oh=00_AYDpYWxne7w_cv2ZXbr93q0Qnqg1Bq3a3uk9bX4LBZUggg&oe=6711B1BA',
-    name: 'Harold Florendo',
-    text: 'facebook.com/harold.florendo.777'
-  }, 
-]
-
 
 const scrollToSection = (sectionId) => {
   const section = document.getElementById(sectionId)
@@ -119,8 +101,8 @@ const openModal = (image) => {
       </v-row>
     </v-container>
 
-    <v-container fluid class="pa-4 text-center d-flex flex-column justify-center" id="gallery">
-      <v-row class="w-lg-75 d-flex justify-center">
+    <v-container fluid class="pa-4 text-center d-flex flex-column justify-center align-center" id="gallery">
+      <v-row class="w-100 d-flex justify-center">
         <v-col cols="12">
           <v-row>
             <!-- Image 1 -->

@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, onMounted  } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router';
 import AppLayout from '@/components/layout/AppLayout.vue'
 import { usePostStore } from '@/stores/postStore'
@@ -9,54 +9,19 @@ import { useTheme } from 'vuetify'
 const router = useRouter()
 const theme = useTheme()
 const useAuth = useAuthStore()
-const usePost = usePostStore()
+const postStore = usePostStore()
 
-onMounted(() => {
-  usePost.fetchPosts();
-  console.log(usePost.postsData.boardingHouses);
-});
-
-const search = ref ({
-  loaded: false,
-  loading: false,
-})
-
-
-const banner = ref(false)
-const showBanner = () =>{
-  banner.value = !banner.value
-}
-
-const sorts = [
-  'Newest',
-  'Price',
-  'Proximity to Campus',
-  'Ratings',
-]
-
-const onClick = () => {
-  search.value.loading = true
-  setTimeout(() => {
-    search.value.loading = false
-    search.value.loaded = true
-  }, 2000)
-}
+const showMore = ref(false)
+const rating = ref(0)
+const comment = ref('')
+const sheet = ref(false)
+const filterValue = ['All Boys', 'All Girls', 'Mix', 'Free Electricity', 'Free Water', 'Free Wifi']
+const filter = ref(null)
 
 const postDialog = ref({
-  tags: [
-    'All Boys',
-    'Free Electricity',
-    'Free Water',
-    'Free Wifi',
-  ],
+  tags: [],
   PostContent: false,
-  images: [
-    'https://images.pexels.com/photos/28665515/pexels-photo-28665515/free-photo-of-hamburg-urban-train-station-architectural-view.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
-    'https://images.pexels.com/photos/7994278/pexels-photo-7994278.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
-    'https://images.pexels.com/photos/2940506/pexels-photo-2940506.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
-    'https://images.pexels.com/photos/28959278/pexels-photo-28959278/free-photo-of-a-flock-of-seagulls-soaring-in-clear-blue-sky.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
-    'https://images.pexels.com/photos/10414211/pexels-photo-10414211.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
-  ],
+  images: [],
   carouselOpen: false,
   carouselIndex: 0,
 
@@ -66,9 +31,67 @@ const openCarousel = (index) => {
   postDialog.value.carouselIndex = index
   postDialog.value.carouselOpen = true
 }
-const openDialog = () => {
-  postDialog.value.PostContent = true;
+
+const openDialog = (post) => {
+  postDialog.value.PostContent = true
+  postDialog.value.tags = post.boarding_house_tags?.map(tag => tag.tags.name)
+  postDialog.value.images = post.boarding_house_images.map(image => image.image_url)
+  postDialog.value.address = post.address
+  postDialog.value.price = post.price
+  postDialog.value.name = post.name
+  postDialog.value.description = post.description
+  postDialog.value.reviews = post.reviews || []
+
+  postDialog.value.boardingHouseId = post.id
+};
+
+const loadMorePosts = async () => {
+  if (!postStore.formAction.formProcess) {
+    await postStore.fetchMorePosts();
+  }
+};
+
+onMounted(async () => {
+  try {
+    await postStore.allPost();
+    showMore.value = true
+  } catch (error) {
+    console.error('Error fetching all posts:', error);
+  }
+
+});
+
+const addReview = async () => {
+  try {
+    const newReview = await postStore.addReview(
+   {
+    rating: rating.value,
+    comment: comment.value,
+    },
+
+    postDialog.value.boardingHouseId
+    )
+    postDialog.value.reviews.push({
+      rating: newReview.rating,
+      comment: newReview.comment,
+      name: newReview.name, // Assuming name is returned from the addReview function
+    });
+
+    sheet.value = false
+    rating.value = 0
+    comment.value = ''
+  } catch (error) {
+    console.error('Error adding review:', error)
+  }
 }
+
+const averageRating = computed(() => {
+  if (postDialog.value.reviews && postDialog.value.reviews.length > 0) {
+    const totalRating = postDialog.value.reviews.reduce((acc, review) => acc + review.rating, 0)
+    return totalRating / postDialog.value.reviews.length
+  }
+  return 0
+})
 
 
 const logout = async () => {
@@ -76,20 +99,25 @@ const logout = async () => {
   theme.global.name.value = 'light'
   await router.push('/login')
 }
-
 </script>
 
 
 <template>
+<<<<<<< HEAD
   <v-btn @click="logout"> logout</v-btn>
   <AppLayout>
+=======
+  <AppLayout
+    class="bg-green-lighten-5"
+  >
+>>>>>>> 9bc3694d6b8c0608dee88478b8b852ed9d83b1b9
     <template #content>
       <v-app-bar
+        color="green"
         :elevation="2"
-        density="comfortable"
       >
         <v-row class="d-flex align-center">
-          <v-col cols="4">
+          <v-col cols="6">
             <RouterLink
               style="text-decoration: none;color: inherit;"
               to="/"
@@ -107,41 +135,7 @@ const logout = async () => {
             </RouterLink>
           </v-col>
 
-          <v-col cols="5" sm="5" md="4" lg="3" class="d-none d-sm-flex pr-10">
-            <div
-              class="d-inline-flex align-center justify-center border rounded-lg px-3 ga-4"
-              style="width: 100%;"
-            >
-              <v-text-field
-                class="mb-2"
-                :loading="search.loading"
-                append-inner-icon="mdi-magnify"
-                density="compact"
-                label="Search"
-                variant="plain"
-                hide-details
-                single-line
-                @click:append-inner="onClick"
-                max-width="350"
-              ></v-text-field>
-              <v-btn
-                style="background-color: forestgreen; color: white"
-                class="text-none"
-                size="small"
-              >
-                Filter
-              </v-btn>
-            </div>
-          </v-col>
-
-          <v-col cols="8" sm="3" md="4" lg="5" class="d-flex align-center justify-end pr-10">
-            <v-btn
-              class="d-flex d-sm-none mr-5"
-              icon="mdi-magnify"
-              variant="text"
-              @click="showBanner"
-            ></v-btn>
-
+          <v-col cols="6" class="d-flex align-center justify-end pr-10">
             <v-menu location="bottom">
               <template v-slot:activator="{ props }">
                 <v-avatar
@@ -173,129 +167,166 @@ const logout = async () => {
         </v-row>
       </v-app-bar>
 
-      <v-banner
-        v-if="banner"
-        class="d-block d-sm-none"
-      >
-        <div class="d-inline-flex align-center justify-center border rounded-lg w-100 px-3 ga-4">
-          <v-text-field
-            class="mb-2"
-            :loading="search.loading"
-            append-inner-icon="mdi-magnify"
-            density="compact"
-            label="Search"
-            variant="plain"
-            hide-details
-            single-line
-            @click:append-inner="onClick"
-            max-width="350"
-          ></v-text-field>
-          <v-btn
-            style="background-color: forestgreen; color: white"
-            class="text-none"
-            size="small"
-          >
-            Filter
-          </v-btn>
-        </div>
-      </v-banner>
-
-
-      <v-row class="mt-4 mx-0 mx-md-5 pb-5">
+      <v-row class="mt-4 mx-0 mx-md-16 pb-5 pt-10">
         <v-col cols="12">
-          <h1 class="text-h4 pb-5">Boarding Houses in -your search-</h1>
-          <span class="text-disabled">Sort by:</span>
-          <v-chip-group
-            selected-class="text-success"
-            multiple
-          >
-            <v-chip
-              v-for="tag in sorts"
-              :key="tag"
-              :text="tag"
-            ></v-chip>
-          </v-chip-group>
+          <v-row>
+            <v-col cols="12" class="px-6">
+              <h1 class="text-h4 text-green-darken-4 font-weight-bold">Find Your Perfect Boarding House</h1>
+            </v-col>
+            <v-col cols="12" lg="8" class="px-6 px-md-8 d-flex justify-center align-center ga-2">
+              <div
+                class="d-inline-flex align-center justify-start rounded-lg px-3 ga-4 bg-white"
+                style="width: 100%; border: #69F0AE solid 1px; "
+              >
+                <v-text-field
+                  class="mb-2 w-100"
+                  density="compact"
+                  label="Search"
+                  variant="plain"
+                  hide-details
+                  single-line
+                ></v-text-field>
+                <v-icon
+                  class="d-flex d-sm-none"
+                  color="green"
+                  size="x-large"
+                >
+                  mdi-magnify
+                </v-icon>
+                <v-icon
+                  class="d-flex d-lg-none"
+                  color="green"
+                  size="x-large"
+                >
+                  mdi-view-headline
+                </v-icon>
+              </div>
+              <div class="d-none d-sm-flex ">
+                <v-btn
+                  prepend-icon="mdi-magnify"
+                  class="text-none bg-green py-5 d-flex align-center rounded-lg"
+                >
+                  Search
+                </v-btn>
+              </div>
+            </v-col>
+            <v-col cols="2" class="px-7 d-none d-lg-flex justify-center align-center">
+              <v-select
+                clearable
+                placeholder="Price range"
+                style="border: #69F0AE solid 1px;border-radius: 8px ;background-color: white; height: 75%; padding-left: 10px"
+                density="compact"
+                :items="['₱0 - ₱500', '₱501 - ₱1000', '₱1001 - ₱1500', '₱1501+']"
+                variant="plain"
+              ></v-select>
+            </v-col>
+            <v-col cols="2" class="px-7 d-none d-lg-flex justify-center align-center">
+              <v-select
+                v-model="filter"
+                style="border: #69F0AE solid 1px; border-radius: 8px; background-color: white; height: 75%; padding-left: 10px"
+                clearable
+                placeholder="Filter by"
+                multiple
+                density="compact"
+                :items="filterValue"
+                variant="plain"
+              >
+                <template v-slot:selection="{ item, index }">
+                  <v-chip v-if="index < 1">
+                    <span>{{ item.title }}</span>
+                  </v-chip>
+                  <span
+                    v-if="index === 1"
+                    class="text-grey text-caption align-self-center"
+                  >
+                    (+{{ filter.length - 1 }} others)
+                  </span>
+                </template>
+              </v-select>
+            </v-col>
+          </v-row>
         </v-col>
 
-        <v-col
-          cols="12" sm="6" md="4" lg="3"
-          class="d-flex justify-center align-center"
-          v-if="usePost.formAction.formProcess"
-        >
-          <v-card
-            class="border rounded-xl py-5"
-            width="100%"
-          >
-            <v-card-text>
-              <v-row no-gutters>
-                <v-col cols="5">
-                  <v-skeleton-loader
-                    class="border"
-                    type="image"
-                    max-width="95%"
-                  ></v-skeleton-loader>
-                </v-col>
-                <v-col cols="7">
-                  <v-skeleton-loader
-                    type="article"
-                    max-width="100%"
-                  ></v-skeleton-loader>
-                </v-col>
-              </v-row>
-            </v-card-text>
-          </v-card>
-        </v-col>
 
         <v-col
-          v-for="house in usePost.postsData.boardingHouses"
-          :key="house.id"
-          cols="12" sm="6" md="4" lg="3"
+          v-for="post in postStore.posts"
+          :key="post.id"
+          cols="12" sm="6" lg="4"
           class="d-flex justify-center align-center">
           <v-card
-            :elevation="7"
-            class="rounded-xl"
-            @click="openDialog"
-            width="100%"
+            :elevation="0"
+            style="border: #69F0AE solid 1px; border-radius: 17px"
+            width="95%"
           >
-            <v-card-text>
+            <v-card-title
+              class="py-6"
+            >
+              <p class="px-4 text-h5 font-weight-bold text-green-darken-3">{{ post.name }}</p>
+              <p class="px-4 text-subtitle-2 text-grey truncate">{{ post.address }}</p>
+
+            </v-card-title>
+            <v-card-text class="d-flex flex-column px-7">
               <v-row>
-                <v-col cols="12">
-                  <v-row>
-                    <v-col cols="8">
-                      <v-img
-                        class="bg-white rounded-xl"
-                        :src="house.boarding_house_images[0]?.image_url"
-                        max-width="100%"
-                        height="170"
-                        cover
-                      ></v-img>
-                    </v-col>
-                    <v-col cols="4">
-                      <v-img
-                        class="bg-white rounded-xl"
-                        :src="house.boarding_house_images[1]?.image_url"
-                        max-width="100%"
-                        height="170"
-                        cover
-                      ></v-img>
-                    </v-col>
-                  </v-row>
-                  <v-col cols="12">
-                    <v-row>
-                      <v-col cols="12" class="d-inline-flex justify-space-between">
-                        <h1 class="text-h6">{{ house.name }}</h1>
-                        <h2 class="text-subtitle-1"><v-icon>mdi-map-marker</v-icon>{{ house.address }}</h2>
-                      </v-col>
-                      <v-col cols="12" class="d-inline-flex justify-space-between">
-                        <h2 class="text-h6"><v-icon color="green" class="mr-5">mdi-tag</v-icon>{{ house.price }}/month</h2>
-                        <span class="text-body-2">Tags</span>
-                      </v-col>
-                    </v-row>
-                  </v-col>
+                <v-col cols="12" md="8">
+                  <v-img
+                    class="bg-grey rounded-lg mb-5"
+                    :src="post.boarding_house_images?.[0]?.image_url"
+                    width="100%"
+                    height="200"
+                    cover
+                  ></v-img>
+                </v-col>
+                <v-col cols="4" class="d-none d-md-block">
+                  <v-img
+                    class="bg-grey rounded-lg mb-5"
+                    :src="post.boarding_house_images?.[1]?.image_url"
+                    width="100%"
+                    height="200"
+                    cover
+                  ></v-img>
                 </v-col>
               </v-row>
+              <p class="text-h5 font-weight-bold text-green mb-2 px-1">₱{{ post.price }}.00/month</p>
+              <div class="d-flex flex-wrap">
+                <v-chip
+                  v-if="post.boarding_house_tags.length > 0"
+                  class="mr-1 mb-1 px-3"
+                  color="green"
+                >
+                  {{ post.boarding_house_tags[0].tags.name }}
+                </v-chip>
+
+                <v-chip
+                  v-if="post.boarding_house_tags.length > 1"
+                  class="mr-1 mb-1 px-3"
+                  color="green"
+                >
+                  +{{ post.boarding_house_tags.length - 1 }} more
+                </v-chip>
+              </div>
             </v-card-text>
+            <v-card-actions class="px-7 pb-7">
+              <v-btn
+                size="large"
+                class="rounded-lg font-weight-bold bg-green text-body-2"
+                block
+                @click="openDialog(post)"
+              >
+                View Details
+              </v-btn>
+            </v-card-actions>
           </v-card>
+        </v-col>
+        <v-col cols="12" class="d-flex justify-center align-center">
+          <v-btn
+            v-if="showMore"
+            :loading="postStore.formAction.formProcess"
+            @click="loadMorePosts"
+            color="green-darken-2"
+            class="mt-4"
+          >
+            Load More
+          </v-btn>
         </v-col>
       </v-row>
 
@@ -318,10 +349,10 @@ const logout = async () => {
               ></v-btn>
             </v-card-title>
             <v-divider></v-divider>
-            <v-card-text>
+            <v-card-text class="overflow-x-hidden">
               <v-row>
                 <v-col cols="12" class="text-center">
-                  <h2>Boarding House Name</h2>
+                  <h2>{{ postDialog.name }}</h2>
                 </v-col>
                 <v-col cols="12">
                   <v-row>
@@ -356,7 +387,7 @@ const logout = async () => {
                             cover
                           >
                             <div v-if="extraImagesCount > 0" class="overlay">
-                              <span>{{ extraImagesCount }}+ more</span>
+                              <span style="font-size: clamp(5px, 3vw, 25px)">{{ extraImagesCount }}+ more</span>
                             </div>
                           </v-img>
                         </v-col>
@@ -364,38 +395,126 @@ const logout = async () => {
                     </v-col>
                   </v-row>
                 </v-col>
-                <v-col cols="12" class="d-block">
-                  <h2 class="text-subtitle-1"><v-icon>mdi-map-marker</v-icon>Address</h2>
-                  <br>
-                  <h2 class="text-h6"><v-icon color="green" class="mr-5">mdi-tag</v-icon>Price/month</h2>
-                </v-col>
-                <v-col cols="12">
-                  <h2 class="text-h6">Details</h2>
-                </v-col>
                 <v-col cols="12">
                   <div v-if="postDialog.tags.length > 0">
-                    <v-chip color="pink" class="mr-1" label>
-                      <v-icon icon="mdi-label" start></v-icon>
-                      Tags:
-                    </v-chip>
-                    <v-chip
-                      label
-                      v-for="tag in postDialog.tags"
-                      :key="tag"
-                      color="green-darken-2"
-                      class="ma-1"
-                    >
-                      {{ tag }}
-                    </v-chip>
+                    <div class="d-flex flex-wrap">
+                      <v-chip
+                        v-for="(tag, index) in postDialog.tags"
+                        :key="index"
+                        color="green-darken-2"
+                        class="ma-1"
+                      >
+                        {{ tag }}
+                      </v-chip>
+                    </div>
                   </div>
                 </v-col>
+                <v-col cols="12" class="d-block">
+                  <div class="d-flex justify-space-between">
+                    <h2 class="text-subtitle-1"><v-icon>mdi-map-marker</v-icon>{{ postDialog.address }}</h2>
+
+                  </div>
+                  <br>
+                  <h2 class="text-h6"><v-icon color="green" class="mr-5">mdi-tag</v-icon>₱{{ postDialog.price }}.00/month</h2>
+                </v-col>
+                <v-col cols="12">
+                  <h2 class="text-h6">{{ postDialog.description }}</h2>
+                </v-col>
+                <v-col cols="12" class="d-flex justify-center">
+                  <v-btn
+                    color="green-darken-2"
+                    variant="outlined"
+                    block
+                    @click="sheet = !sheet"
+                  >
+                    add review
+                  </v-btn>
+                </v-col>
                 <v-divider class="mb-2"></v-divider>
-                <v-col cols="12" class="text-center">
-                  <span>REVIEWS</span>
+                <v-col cols="12">
+
+                  <div class="d-flex align-center px-5">
+                    <h3 class="pr-5">REVIEWS ({{ postDialog.reviews.length }})</h3>
+                    <v-spacer></v-spacer>
+                    <h3>{{ averageRating.toFixed(1) }}</h3>
+                    <v-rating
+                      :size="21"
+                      :model-value="averageRating.toFixed(1)"
+                      color="yellow-darken-3"
+                      half-increments
+                    ></v-rating>
+                  </div>
+                  <div
+                    class="d-flex flex-column text-start py-5 px-5"
+                  >
+                    <div
+                      v-for="(review, index) in postDialog.reviews"
+                      :key="index"
+                      class="mb-3 py-5"
+                      style="background-color: ghostwhite; border-radius: 15px"
+                    >
+                      <v-row>
+                        <v-col cols="12" class="d-flex align-center ga-5 ml-5">
+                          <v-avatar
+                            image="https://cdn.vuetifyjs.com/images/john.jpg"
+                            size="50"
+                          >
+                          </v-avatar>
+                          <h3 class="font-weight-bold">{{ review.name }}</h3>
+                        </v-col>
+                        <v-col cols="12" class="ml-5">
+                          <v-rating
+                            size="small"
+                            :model-value="review.rating"
+                            color="yellow-darken-3"
+                            half-increments
+                          ></v-rating>
+                        </v-col>
+                        <v-col cols="12" class="px-10">
+                          <span style="font-size: 17px">{{ review.comment }}</span>
+                        </v-col>
+                      </v-row>
+                    </div>
+                  </div>
                 </v-col>
               </v-row>
             </v-card-text>
           </div>
+          <v-bottom-sheet
+            v-model="sheet"
+            inset
+          >
+            <v-card
+              class="text-center"
+              height="500"
+            >
+              <v-card-text class="d-flex flex-column">
+                <v-rating
+                  size="x-large"
+                  v-model="rating"
+                  color="yellow-darken-3"
+                  half-increments
+                ></v-rating>
+                <br>
+                <v-textarea
+                  v-model="comment"
+                  variant="outlined"
+                  label="Comment"
+                  auto-grow
+                >
+                </v-textarea>
+                <div>
+                  <v-btn
+                    :loading="postStore.formAction.formProcess"
+                    block
+                    @click="addReview"
+                  >
+                    submit
+                  </v-btn>
+                </div>
+              </v-card-text>
+            </v-card>
+          </v-bottom-sheet>
         </v-card>
       </v-dialog>
 
@@ -416,7 +535,7 @@ const logout = async () => {
   </AppLayout>
 </template>
 
-<style>
+<style scoped>
 .overlay {
   display: flex;
   align-items: center;
@@ -427,6 +546,13 @@ const logout = async () => {
   height: 100%;
   width: 100%;
   position: absolute;
+}
+.truncate {
+  display: block;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>
 
