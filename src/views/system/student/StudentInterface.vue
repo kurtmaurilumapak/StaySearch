@@ -25,13 +25,6 @@ const showBanner = () =>{
   banner.value = !banner.value
 }
 
-const sorts = [
-  'Newest',
-  'Price',
-  'Proximity to Campus',
-  'Ratings',
-]
-
 const onClick = () => {
   search.value.loading = true
   setTimeout(() => {

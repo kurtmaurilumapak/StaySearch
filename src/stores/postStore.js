@@ -10,7 +10,7 @@ export const usePostStore = defineStore('post', {
     name: '',
     posts: [],
     currentPage: 1,
-    postsPerPage: 16,
+    postsPerPage: 15,
     formAction: {...formActionDefault},
     session: null
   }),
