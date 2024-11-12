@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, onMounted, watch } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router';
 import AppLayout from '@/components/layout/AppLayout.vue'
 import { usePostStore } from '@/stores/postStore'
@@ -11,16 +11,58 @@ const theme = useTheme()
 const useAuth = useAuthStore()
 const postStore = usePostStore()
 
-const showMore = ref(false)
+
 const rating = ref(0)
 const comment = ref('')
 const sheet = ref(false)
-const filterValue = ['All Boys', 'All Girls', 'Mix', 'Free Electricity', 'Free Water', 'Free Wifi']
-const filter = ref(null)
-const priceRange = ref(null)
-const showResult = ref(false)
+const filterValue = ['Free Electricity', 'Free Water', 'Free Wifi']
+const type = ['All Boys', 'All Girls', 'Mix']
+const filter = ref([])
+const priceRanges = [
+  { label: ''},
+  { label: '₱0-500', range: [0, 500] },
+  { label: '₱501-1000', range: [501, 1000] },
+  { label: '₱1001-1500', range: [1001, 1500] },
+  { label: '₱1501-2000', range: [1501, 2000] },
+  { label: '₱2001-2500+', range: [2001, 99999] }
+];
+const priceRangeIndex = ref(0);
 const searchQuery = ref('')
-const currentSearchQuery = ref('')
+const selectedType = ref('')
+
+const filteredPosts = computed(() => {
+  return postStore.posts.filter(post => {
+    const priceRange = priceRanges[priceRangeIndex.value].range;
+    const postPrice = post.price;
+
+    if (filter.value.length === 0 && selectedType.value === '' && priceRangeIndex.value === 0) {
+      return true;
+    }
+
+    // Filter by price range
+    if (priceRange && priceRangeIndex.value !== 0 && (postPrice < priceRange[0] || postPrice > priceRange[1])) {
+      return false;
+    }
+
+    // Filter by boarding house type
+    if (selectedType.value && selectedType.value !== '') {
+      const postTags = post.boarding_house_tags.map(tag => tag.tags.name);
+      if (!postTags.includes(selectedType.value)) {
+        return false; // Exclude posts that don't match the selected type
+      }
+    }
+
+    // Filter by amenities (checkboxes)
+    if (filter.value.length > 0) {
+      const postTags = post.boarding_house_tags.map(tag => tag.tags.name);
+      const hasRequiredAmenities = filter.value.every(amenity => postTags.includes(amenity));
+      if (!hasRequiredAmenities) {
+        return false;
+      }
+    }
+    return true;
+  });
+});
 
 const handleBrandClick = () => {
   window.location.reload();
@@ -53,57 +95,14 @@ const openDialog = (post) => {
   postDialog.value.boardingHouseId = post.id
 };
 
-const loadMorePosts = async () => {
-  if (!postStore.formAction.formProcess) {
-    await postStore.fetchMorePosts();
-  }
-};
-
 onMounted(async () => {
   try {
-    await postStore.allPost();
-    showMore.value = true
+    await postStore.allPost()
   } catch (error) {
-    console.error('Error fetching all posts:', error);
+    console.error('Error fetching posts:', error);
   }
-
 });
 
-watch([filter, priceRange], async () => {
-  await postStore.allPost(true);
-});
-
-const filteredPosts = computed(() => {
-  return postStore.posts.filter(post => {
-    const matchesSearchQuery = !currentSearchQuery.value || post.name.toLowerCase().includes(currentSearchQuery.value.toLowerCase())
-
-    const matchesPriceRange = !priceRange.value || (
-      (priceRange.value === '₱0 - ₱500' && post.price >= 0 && post.price <= 500) ||
-      (priceRange.value === '₱501 - ₱1000' && post.price > 500 && post.price <= 1000) ||
-      (priceRange.value === '₱1001 - ₱1500' && post.price > 1000 && post.price <= 1500) ||
-      (priceRange.value === '₱1501+' && post.price > 1500)
-    )
-
-    const matchesFilters = !filter.value || filter.value.length === 0 || filter.value.every(f => post.boarding_house_tags.some(tag => tag.tags.name === f))
-
-    return matchesSearchQuery && matchesPriceRange && matchesFilters
-  })
-})
-
-const performSearch = async () => {
-  postStore.formAction.formProcess = true
-  currentSearchQuery.value = searchQuery.value
-  showResult.value = true
-  await postStore.allPost(true)
-
-  // Filter posts based on the search query
-  postStore.searchResults = postStore.posts.filter(post =>
-    post.name.toLowerCase().includes(searchQuery.value.toLowerCase()),
-    postStore.formAction.formProcess = false
-  );
-
-  postStore.currentPage = 1
-}
 
 const addReview = async () => {
   try {
@@ -207,13 +206,13 @@ const logout = async () => {
         </v-row>
       </v-app-bar>
 
-      <v-row class="mt-4 mx-0 mx-md-16 pb-5 pt-10">
+      <v-row class="mt-4 mx-0 mx-lg-16 pb-5 pt-10">
         <v-col cols="12">
           <v-row>
             <v-col cols="12" class="px-6">
               <h1 class="text-h4 text-green-darken-4 font-weight-bold">Find Your Perfect Boarding House</h1>
             </v-col>
-            <v-col cols="12" md="8" class="px-6 px-md-8 d-flex justify-center align-center ga-2">
+            <v-col cols="12" class="d-flex justify-center align-center ga-2">
               <div
                 class="d-inline-flex align-center justify-start rounded-lg px-3 ga-4 bg-white"
                 style="width: 100%; border: green solid 2px; "
@@ -237,138 +236,138 @@ const logout = async () => {
                 >
                   mdi-magnify
                 </v-icon>
-                
+
               </div>
               <div class="d-none d-sm-flex ">
                 <v-btn
                   :loading="postStore.formAction.formProcess"
                   prepend-icon="mdi-magnify"
                   class="text-none bg-green py-5 d-flex align-center rounded-lg"
-                  @click="performSearch"
                 >
                   Search
                 </v-btn>
               </div>
             </v-col>
-            <v-col cols="2" class="px-7 d-none d-md-flex justify-center align-center">
-              <v-select
-                clearable
-                placeholder="Price range"
-                style="border: green solid 2px;border-radius: 8px ;background-color: white; height: 75%; padding-left: 10px"
-                density="compact"
-                v-model="priceRange"
-                :items="['₱0 - ₱500', '₱501 - ₱1000', '₱1001 - ₱1500', '₱1501+']"
-                variant="plain"
-              ></v-select>
-            </v-col>
-            <v-col cols="2" class="px-7 d-none d-md-flex justify-center align-center">
-              <v-select
-                v-model="filter"
-                style="border: green solid 2px; border-radius: 8px; background-color: white; height: 75%; padding-left: 10px"
-                clearable
-                placeholder="Filter by"
-                multiple
-                density="compact"
-                :items="filterValue"
-                variant="plain"
-              >
-                <template v-slot:selection="{ item, index }">
-                  <v-chip v-if="index < 1">
-                    <span>{{ item.title }}</span>
-                  </v-chip>
-                  <span
-                    v-if="index === 1"
-                    class="text-grey text-caption align-self-center"
-                  >
-                    (+{{ filter.length - 1 }} others)
-                  </span>
-                </template>
-              </v-select>
-            </v-col>
           </v-row>
         </v-col>
 
-
-        <v-col
-          
-          v-for="post in filteredPosts"
-          :key="post.id"
-          cols="12" sm="6" lg="4"
-          class="d-flex justify-center align-center">
+        <v-col cols="12" md="3" lg="2">
           <v-card
-            :elevation="7"
-            style="border-radius: 17px"
-            width="95%"
+            class="rounded-lg"
           >
-            <v-card-title
-              class="py-6"
-            >
-              <p class="px-4 text-h5 font-weight-bold text-green-darken-3">{{ post.name }}</p>
-              <p class="px-4 text-subtitle-2 text-disabled truncate">{{ post.address }}</p>
+            <v-card-title class="px-5 py-5 font-weight-bold text-green-darken-4">Filters</v-card-title>
+            <v-card-text class="px-5 text-green-darken-4 font-weight-bold">
+             <div>
+               <p>Price Range</p>
+               <p>{{ priceRanges[priceRangeIndex].label }}</p>
+             </div>
+              <v-slider
+                v-model="priceRangeIndex"
+                :max="priceRanges.length - 1"
+                show-ticks="always"
+                step="1"
+                tick-size="4"
+                color="green"
+              ></v-slider>
 
-            </v-card-title>
-            <v-card-text class="d-flex flex-column px-7">
-              <v-row>
-                <v-col cols="12" md="8">
-                  <v-img
-                    class="bg-grey rounded-lg mb-5"
-                    :src="post.boarding_house_images?.[0]?.image_url"
-                    width="100%"
-                    height="200"
-                    cover
-                  ></v-img>
-                </v-col>
-                <v-col cols="4" class="d-none d-md-block">
-                  <v-img
-                    class="bg-grey rounded-lg mb-5"
-                    :src="post.boarding_house_images?.[1]?.image_url"
-                    width="100%"
-                    height="200"
-                    cover
-                  ></v-img>
-                </v-col>
-              </v-row>
-              <p class="text-h5 font-weight-bold text-green mb-2 px-1">₱{{ post.price }}.00/month</p>
-              <div class="d-flex flex-wrap">
-                <v-chip
-                  v-if="post.boarding_house_tags.length > 0"
-                  class="mr-1 mb-1 px-3"
-                  color="green"
-                >
-                  {{ post.boarding_house_tags[0].tags.name }}
-                </v-chip>
-
-                <v-chip
-                  v-if="post.boarding_house_tags.length > 1"
-                  class="mr-1 mb-1 px-3"
-                  color="green"
-                >
-                  +{{ post.boarding_house_tags.length - 1 }} more
-                </v-chip>
-              </div>
-            </v-card-text>
-            <v-card-actions class="px-7 pb-7">
-              <v-btn
-                size="large"
-                class="rounded-lg font-weight-bold bg-green text-body-2"
-                block
-                @click="openDialog(post)"
+              <p>Boarding House Type</p>
+              <v-select
+                v-model="selectedType"
+                color="green"
+                density="compact"
+                variant="outlined"
+                :items="type"
+                clearable
               >
-                View Details
-              </v-btn>
-            </v-card-actions>
+              </v-select>
+
+              <p>Amenities</p>
+              <v-checkbox
+                class="text-black"
+                v-model="filter"
+                :label="label"
+                :value="label"
+                v-for="(label, index) in filterValue"
+                :key="index"
+                color="success"
+                hide-details
+              />
+            </v-card-text>
           </v-card>
         </v-col>
-        <v-col cols="12" class="d-flex justify-center align-center">
-          <v-btn
-            v-if="showMore"
-            :loading="postStore.formAction.formProcess"
-            @click="loadMorePosts"
-            color="green-darken-2"
-            class="mt-4"
-          >
-            Load More
-          </v-btn>
+
+        <v-col cols="12" md="9" lg="10">
+          <v-row>
+            <v-col
+              v-for="post in filteredPosts"
+              :key="post.id"
+              cols="12" sm="6" lg="4"
+              class="d-flex justify-center align-center">
+              <v-card
+                class="rounded-lg"
+                :elevation="7"
+                width="100%"
+              >
+                <v-card-text class="d-flex flex-column">
+                  <v-row>
+                    <v-col cols="12" md="8">
+                      <v-img
+                        class="bg-grey rounded-lg mb-5"
+                        :src="post.boarding_house_images?.[0]?.image_url"
+                        width="100%"
+                        height="200"
+                        cover
+                      ></v-img>
+                    </v-col>
+                    <v-col cols="4" class="d-none d-md-block">
+                      <v-img
+                        class="bg-grey rounded-lg mb-5"
+                        :src="post.boarding_house_images?.[1]?.image_url"
+                        width="100%"
+                        height="200"
+                        cover
+                      ></v-img>
+                    </v-col>
+                  </v-row>
+                  <p class="text-h5 font-weight-bold text-green-darken-3">{{ post.name }}</p>
+                  <p class="text-subtitle-2 text-disabled truncate">{{ post.address }}</p>
+                  <p class="text-h5 font-weight-bold text-green mb-2 px-1">₱{{ post.price }}.00/month</p>
+                  <div class="d-flex flex-wrap">
+                    <v-chip
+                      v-if="post.boarding_house_tags.length > 0"
+                      class="mr-1 mb-1 px-3"
+                      color="green"
+                    >
+                      {{ post.boarding_house_tags[0].tags.name }}
+                    </v-chip>
+
+                    <v-chip
+                      v-if="post.boarding_house_tags.length > 1"
+                      class="mr-1 mb-1 px-3"
+                      color="green"
+                    >
+                      +{{ post.boarding_house_tags.length - 1 }} more
+                    </v-chip>
+                  </div>
+                </v-card-text>
+                <v-card-actions class="px-7 pb-7">
+                  <v-btn
+                    size="large"
+                    class="rounded-lg font-weight-bold bg-green text-body-2"
+                    block
+                    @click="openDialog(post)"
+                  >
+                    View Details
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-col>
+            <v-col cols="12" class="d-flex justify-center align-center">
+              <v-pagination>
+
+              </v-pagination>
+            </v-col>
+          </v-row>
         </v-col>
       </v-row>
 
