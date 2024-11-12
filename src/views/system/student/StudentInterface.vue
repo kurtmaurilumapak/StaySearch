@@ -19,16 +19,50 @@ const filterValue = ['Free Electricity', 'Free Water', 'Free Wifi']
 const type = ['All Boys', 'All Girls', 'Mix']
 const filter = ref([])
 const priceRanges = [
+  { label: ''},
   { label: '₱0-500', range: [0, 500] },
   { label: '₱501-1000', range: [501, 1000] },
   { label: '₱1001-1500', range: [1001, 1500] },
   { label: '₱1501-2000', range: [1501, 2000] },
-  { label: '₱2001-2500', range: [2001, 2500] },
+  { label: '₱2001-2500+', range: [2001, 99999] }
 ];
 const priceRangeIndex = ref(0);
-const showResult = ref(false)
 const searchQuery = ref('')
-const currentSearchQuery = ref('')
+const selectedType = ref('')
+
+const filteredPosts = computed(() => {
+  return postStore.posts.filter(post => {
+    const priceRange = priceRanges[priceRangeIndex.value].range;
+    const postPrice = post.price;
+
+    if (filter.value.length === 0 && selectedType.value === '' && priceRangeIndex.value === 0) {
+      return true;
+    }
+
+    // Filter by price range
+    if (priceRange && priceRangeIndex.value !== 0 && (postPrice < priceRange[0] || postPrice > priceRange[1])) {
+      return false;
+    }
+
+    // Filter by boarding house type
+    if (selectedType.value && selectedType.value !== '') {
+      const postTags = post.boarding_house_tags.map(tag => tag.tags.name);
+      if (!postTags.includes(selectedType.value)) {
+        return false; // Exclude posts that don't match the selected type
+      }
+    }
+
+    // Filter by amenities (checkboxes)
+    if (filter.value.length > 0) {
+      const postTags = post.boarding_house_tags.map(tag => tag.tags.name);
+      const hasRequiredAmenities = filter.value.every(amenity => postTags.includes(amenity));
+      if (!hasRequiredAmenities) {
+        return false;
+      }
+    }
+    return true;
+  });
+});
 
 const postDialog = ref({
   tags: [],
@@ -57,55 +91,14 @@ const openDialog = (post) => {
   postDialog.value.boardingHouseId = post.id
 };
 
-const fetchPosts = async () => {
+onMounted(async () => {
   try {
-    await postStore.allPost(); // Fetch posts for the current page
+    await postStore.allPost()
   } catch (error) {
     console.error('Error fetching posts:', error);
   }
-};
-
-onMounted(() => {
-  fetchPosts();
 });
 
-const filteredPosts = computed(() => {
-  const selectedPriceRange = priceRanges[priceRangeIndex.value]; // Get the price range by index
-
-  const isSearchEmpty = !currentSearchQuery.value || currentSearchQuery.value.trim() === '';
-  const isFilterEmpty = filter.value.length === 0;
-
-  if (isSearchEmpty && isFilterEmpty) {
-    return postStore.posts;
-  }
-
-  return postStore.posts.filter(post => {
-    const matchesSearchQuery = !currentSearchQuery.value || post.name.toLowerCase().includes(currentSearchQuery.value.toLowerCase());
-    const matchesPriceRange = post.price >= selectedPriceRange.range[0] && post.price <= selectedPriceRange.range[1];
-    const matchesFilters = isFilterEmpty || filter.value.every(f => post.boarding_house_tags.some(tag => tag.tags.name === f));
-
-    return matchesSearchQuery && matchesPriceRange && matchesFilters;
-  });
-});
-
-const performSearch = async () => {
-  postStore.formAction.formProcess = true
-  currentSearchQuery.value = searchQuery.value
-  showResult.value = true
-  await postStore.allPost(true)
-
-  // Filter posts based on the search query
-  postStore.searchResults = postStore.posts.filter(post =>
-    post.name.toLowerCase().includes(searchQuery.value.toLowerCase()),
-    postStore.formAction.formProcess = false
-  );
-
-  postStore.currentPage = 1
-}
-
-const applyFilter = () => {
-  showResult.value = true
-}
 
 const addReview = async () => {
   try {
@@ -245,7 +238,6 @@ const logout = async () => {
                   :loading="postStore.formAction.formProcess"
                   prepend-icon="mdi-magnify"
                   class="text-none bg-green py-5 d-flex align-center rounded-lg"
-                  @click="performSearch"
                 >
                   Search
                 </v-btn>
@@ -275,6 +267,7 @@ const logout = async () => {
 
               <p>Boarding House Type</p>
               <v-select
+                v-model="selectedType"
                 color="green"
                 density="compact"
                 variant="outlined"
@@ -294,15 +287,6 @@ const logout = async () => {
                 color="success"
                 hide-details
               />
-              <v-btn
-                class="text-none"
-                block
-                density="comfortable"
-                color="green"
-                @click="applyFilter"
-              >
-                Apply filter
-              </v-btn>
             </v-card-text>
           </v-card>
         </v-col>
@@ -317,7 +301,7 @@ const logout = async () => {
               <v-card
                 class="rounded-lg"
                 :elevation="7"
-                width="90%"
+                width="100%"
               >
                 <v-card-text class="d-flex flex-column">
                   <v-row>
@@ -374,14 +358,9 @@ const logout = async () => {
               </v-card>
             </v-col>
             <v-col cols="12" class="d-flex justify-center align-center">
-              <v-pagination
-                v-model="postStore.currentPage"
-                :length="Math.ceil(postStore.posts.length / postStore.postsPerPage)"
-                circle
-                color="green"
-                class="mt-4"
-                @input="fetchPosts"
-              ></v-pagination>
+              <v-pagination>
+
+              </v-pagination>
             </v-col>
           </v-row>
         </v-col>
