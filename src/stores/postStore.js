@@ -198,15 +198,9 @@ export const usePostStore = defineStore('post', {
       if (fetchAll) {
         this.posts = posts
       } else {
-        this.posts.push(...posts)
+        this.posts = posts
       }
-    },
-    async fetchMorePosts() {
-      this.formAction.formProcess = true
-      this.currentPage += 1
-      await this.allPost(); // Fetch the new posts
-      this.formAction.formProcess = false
-    },
+    }
 
   }
 })
