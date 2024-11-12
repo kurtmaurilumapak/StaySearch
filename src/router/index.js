@@ -62,6 +62,16 @@ const router = createRouter({
       component: () => import('@/views/system/student/StudentInterface.vue'),
       meta: { requiresAuth: true, role: 'student' },
     },
+    {
+      path: '/admin/request',
+      name: 'request',
+      component: () => import('@/views/system/admin/Request.vue')
+    },
+    {
+      path: '/admin/approved',
+      name: 'approved',
+      component: () => import('@/views/system/admin/Approved.vue')
+    },
   ]
 })
 
