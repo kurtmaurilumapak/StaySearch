@@ -1,22 +1,35 @@
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import AppLayout from '@/components/layout/AppLayout.vue'
+import { useAuthStore } from '@/stores/authStore'
+import AlertNotification from '@/components/common/AlertNotification.vue'
 
-const form = ref({
-  user: [],
-  email: '',
-  password: '',
-  loading: false,
-})
-
-const load = () => {
-  form.value.loading = true
-  setTimeout(() => (form.value.loading = false), 3000)
-}
+const router = useRouter()
+const authStore = useAuthStore()
 
 const visible = ref(false)
-const user = ref('student')
 
+const onLogin = async () => {
+  authStore.formAction.formErrorMessage = ''
+  authStore.formAction.formSuccessMessage = ''
+
+  const { data, error } = await authStore.signIn()
+
+  if (!error) {
+    const role = data.user.user_metadata.role
+
+    if (role === 'student') {
+      await router.push('/student/page')
+    } else if (role === 'owner') {
+      await router.push('/owner/dashboard')
+    }
+    authStore.resetForm();
+  } else {
+    authStore.formAction.formErrorMessage = error.message
+  }
+  authStore.formAction.formProcess = false
+}
 </script>
 
 
@@ -78,32 +91,25 @@ const user = ref('student')
               </p>
             </v-card-text>
             <v-form
+              ref="form"
               style="background-color: white; margin-left: 5%; margin-right: 5%; padding-bottom: 5%; border-radius: 20px"
-              @submit.prevent="() => {}"
+              @submit.prevent="onLogin"
             >
               <v-row no-gutters>
-                <!-- User Type -->
-                <v-col
-                  cols="12"
-                  class="d-flex justify-center py-5"
-                >
-                  <v-btn-toggle
-                    v-model="user"
-                    class="my-auto border border-2"
-                    color="green-darken-1"
-                    mandatory
-                    density="comfortable"
+                <v-col cols="12" class="px-10 mt-4">
+                  <AlertNotification
+                    :form-success-message="authStore.formAction.formSuccessMessage"
+                    :form-error-message="authStore.formAction.formErrorMessage"
                   >
-                    <v-btn value="student" style="flex: 1;">Student</v-btn>
-                    <v-btn value="house_owner" style="flex: 1;">House Owner</v-btn>
-                  </v-btn-toggle>
+                  </AlertNotification>
                 </v-col>
+
                 <!-- Email -->
-                <v-col cols="12" >
+                <v-col cols="12" class="pt-5">
                   <v-text-field
                     class="px-10"
                     color="green-darken-1"
-                    v-model="form.email"
+                    v-model="authStore.formData.email"
                     label="Email"
                     placeholder="johndoe@email.com"
                     variant="outlined"
@@ -114,7 +120,7 @@ const user = ref('student')
                   <v-text-field
                     class="px-10"
                     color="green-darken-1"
-                    v-model="form.password"
+                    v-model="authStore.formData.password"
                     label="Password"
                     placeholder="············"
                     variant="outlined"
@@ -125,11 +131,11 @@ const user = ref('student')
                 </v-col>
                 <v-col cols="12" class="text-center pt-5">
                   <v-btn
-                    :loading="form.loading"
+                    :loading="authStore.formAction.formProcess"
                     color="green-darken-1"
                     width="50%"
-                    type="submit"
-                    @click="load"
+                    type="button"
+                    @click="onLogin"
                   >
                     Login
                   </v-btn>

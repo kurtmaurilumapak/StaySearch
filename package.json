@@ -3,6 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "main": "dist/vue-leaflet.cjs.js",
+  "unpkg": "dist/vue-leaflet.umd.js",
+  "module": "dist/vue-leaflet.es.js",
+  "files": [
+    "dist/"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -11,8 +17,9 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.45.6",
+    "@supabase/supabase-js": "^2.46.0",
     "pinia": "^2.1.7",
+    "ts-debounce": "^4.0.0",
     "vue": "^3.4.29",
     "vue-currency-input": "^3.1.0",
     "vue-router": "^4.3.3",
@@ -22,11 +29,15 @@
   "devDependencies": {
     "@mdi/font": "^7.4.47",
     "@rushstack/eslint-patch": "^1.8.0",
+    "@types/leaflet": "^1.9.14",
     "@vitejs/plugin-vue": "^5.0.5",
+    "@vue-leaflet/vue-leaflet": "^0.10.1",
     "@vue/eslint-config-prettier": "^9.0.0",
     "eslint": "^8.57.0",
     "eslint-plugin-vue": "^9.23.0",
+    "leaflet": "^1.9.4",
     "prettier": "^3.2.5",
-    "vite": "^5.3.1"
+    "vite": "^5.3.1",
+    "ts-debounce": "^4.0.0"
   }
 }

@@ -1,9 +1,15 @@
 <script setup>
 import { ref } from 'vue'
-
+import { useRouter } from 'vue-router'
 import dashboardIcon from '@/assets/navbar/dashboard.png';
 import postsIcon from '@/assets/navbar/post.png';
 import reservationsIcon from '@/assets/navbar/reservation.png';
+import { useAuthStore } from '@/stores/authStore'
+import { useTheme } from 'vuetify'
+
+const router = useRouter()
+const theme = useTheme()
+const useAuth = useAuthStore()
 
 const nav = ref({
   navItems: [
@@ -12,6 +18,12 @@ const nav = ref({
     { title: 'RESERVATIONS', path: '/owner/reservations', icon: reservationsIcon },
   ],
 })
+
+const logout = async () => {
+  await useAuth.signOut()
+  theme.global.name.value = 'light'
+  await router.push('/login')
+}
 
 </script>
 
@@ -38,13 +50,14 @@ const nav = ref({
           >
             <v-list-item
               class="text-center"
-              @click="$router.push('/owner/settings')"
+              @click="$router.push('/settings')"
             >
               SETTINGS
             </v-list-item>
             <v-list-item
               class="text-center"
               style="color: red;"
+              @click="logout"
             >
               LOGOUT
             </v-list-item>
