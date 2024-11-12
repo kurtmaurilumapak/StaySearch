@@ -22,6 +22,10 @@ const showResult = ref(false)
 const searchQuery = ref('')
 const currentSearchQuery = ref('')
 
+const handleBrandClick = () => {
+  window.location.reload();
+};
+
 const postDialog = ref({
   tags: [],
   PostContent: false,
@@ -155,8 +159,9 @@ const logout = async () => {
           <v-col cols="6">
             <RouterLink
               style="text-decoration: none;color: inherit;"
-              to="/"
+              to="/student/page"
               class="d-inline-flex align-center ga-1 my-5 ml-5"
+              @click="handleBrandClick"
             >
               <img
                 src="@/assets/logo.png"
