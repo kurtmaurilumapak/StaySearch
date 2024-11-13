@@ -90,24 +90,33 @@ const openModal = (image) => {
     </v-navigation-drawer>
 
     <!-- Hero Section -->
-    <v-container fluid class="bg-green d-flex justify-center align-center" style="height: 100vh">
-      <v-row class="d-flex justify-center align-center">
-        <v-col cols="12" md="6" class="d-flex flex-column justify-end text-right">
-          <h1 class="display-2 font-weight-bold mb-3 text-h3">
-            Find Your Perfect Campus Home
-          </h1>
-          <p class="text-white text-h5">Connecting students with the best boarding houses near campus. <br>Owners, list your properties and reach thousands of students!</p>
-        </v-col>
-        <v-col cols="12" md="6" class="d-flex justify-star">
-          <img
-            height="500"
-            src="@/assets/landing/hero.png"
-            alt="hero"
-          >
-        </v-col>
-      </v-row>
+    <!-- Hero Section -->
+<v-container fluid class="bg-green d-flex justify-center align-center" style="min-height: 100vh;">
+  <v-row class="d-flex justify-center align-center">
+    <!-- Text Column -->
+    <v-col cols="12" md="6" class="text-center text-md-right d-flex flex-column justify-center px-4">
+      <h1 class="display-2 font-weight-bold mb-3 text-h3 text-md-h2">
+        Find Your Perfect Campus Home
+      </h1>
+      <p class="text-white text-h5 text-md-subtitle-1">
+        Connecting students with the best boarding houses near campus. <br />
+        Owners, list your properties and reach thousands of students!
+      </p>
+    </v-col>
+    <!-- Image Column -->
+    <v-col cols="12" md="6" class="d-flex justify-center align-center">
+      <img
+        src="@/assets/landing/hero.png"
+        alt="hero"
+        class="hero-image"
+        max-width="100%"
+        height="auto"
+        
+      >
+    </v-col>
+  </v-row>
+</v-container>
 
-    </v-container>
     <v-container fluid class="d-flex flex-column py-15 text-center bg-green-lighten-5">
       <h1 class="text-green-darken-4 text-h3 font-weight-bold">How StaySearch Works</h1>
       <v-row class="mx-10 mt-15">
@@ -422,6 +431,13 @@ const openModal = (image) => {
 }
 .clear-modal-image {
 opacity: 1 !important; /* Ensure full opacity */
+}
+.hero-image {
+  width: 100%;
+  max-width: 600px; /* Set a max width for larger screens */
+  height: auto;
+  object-fit: contain; /* Keeps the entire image visible without cropping */
+  margin-top: 20px; /* Optional, to add spacing */
 }
 
 </style>
