@@ -9,8 +9,6 @@ export const usePostStore = defineStore('post', {
     id: '',
     name: '',
     posts: [],
-    currentPage: 1,
-    postsPerPage: 15,
     formAction: {...formActionDefault},
     session: null
   }),
@@ -185,7 +183,6 @@ export const usePostStore = defineStore('post', {
       const { data: posts, error: postError } = await supabase
         .from('boarding_houses')
         .select('*, boarding_house_images(image_url), boarding_house_tags(tag_id, tags(name)), reviews(comment, rating, name)')
-        .range((this.currentPage - 1) * this.postsPerPage, this.currentPage * this.postsPerPage - 1)
 
       if (postError) {
         throw postError

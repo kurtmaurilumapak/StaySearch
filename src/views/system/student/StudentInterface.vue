@@ -35,7 +35,7 @@ const filteredPosts = computed(() => {
     const priceRange = priceRanges[priceRangeIndex.value].range;
     const postPrice = post.price;
 
-    if (filter.value.length === 0 && selectedType.value === '' && priceRangeIndex.value === 0) {
+    if (filter.value.length === 0 && selectedType.value === '' && priceRangeIndex.value === 0 && !searchQuery.value) {
       return true;
     }
 
@@ -60,6 +60,14 @@ const filteredPosts = computed(() => {
         return false;
       }
     }
+
+    if (searchQuery.value) {
+      const lowerCaseQuery = searchQuery.value.toLowerCase();
+      if (!(post.name.toLowerCase().includes(lowerCaseQuery) || post.description.toLowerCase().includes(lowerCaseQuery) || post.address.toLowerCase().includes(lowerCaseQuery))) {
+        return false;
+      }
+    }
+
     return true;
   });
 });
@@ -117,7 +125,7 @@ const addReview = async () => {
     postDialog.value.reviews.push({
       rating: newReview.rating,
       comment: newReview.comment,
-      name: newReview.name, // Assuming name is returned from the addReview function
+      name: newReview.name,
     });
 
     sheet.value = false
@@ -227,25 +235,6 @@ const logout = async () => {
                   clearable
                   v-model="searchQuery"
                 ></v-text-field>
-              
-                
-                <v-icon
-                  class="d-flex d-sm-none"
-                  color="green"
-                  size="x-large"
-                >
-                  mdi-magnify
-                </v-icon>
-
-              </div>
-              <div class="d-none d-sm-flex ">
-                <v-btn
-                  :loading="postStore.formAction.formProcess"
-                  prepend-icon="mdi-magnify"
-                  class="text-none bg-green py-5 d-flex align-center rounded-lg"
-                >
-                  Search
-                </v-btn>
               </div>
             </v-col>
           </v-row>
@@ -368,11 +357,6 @@ const logout = async () => {
                   </v-btn>
                 </v-card-actions>
               </v-card>
-            </v-col>
-            <v-col cols="12" class="d-flex justify-center align-center">
-              <v-pagination>
-
-              </v-pagination>
             </v-col>
           </v-row>
         </v-col>
