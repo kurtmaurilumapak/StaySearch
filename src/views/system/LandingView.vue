@@ -1,7 +1,8 @@
 <script setup>
-import { ref } from 'vue'
-
-
+import { ref , onMounted} from 'vue'
+import hero from '@/assets/landing/hero.png'
+import 'aos/dist/aos.css'
+import AOS from 'aos'
 const dialog = ref(false) 
 const selectedImage = ref(null) 
 const drawer = ref(false)
@@ -19,6 +20,13 @@ const openModal = (image) => {
   selectedImage.value = image 
   dialog.value = true 
 }
+onMounted(() => {
+  AOS.init({
+    duration: 600, // Adjust as needed
+    once: false, 
+    mirror: true,   // Whether animation should happen only once
+  });
+});
 
 </script>
 
@@ -91,11 +99,11 @@ const openModal = (image) => {
 
     <!-- Hero Section -->
     <!-- Hero Section -->
-<v-container fluid class="bg-green d-flex justify-center align-center" style="min-height: 100vh;">
+<v-container fluid class="bg-green d-flex justify-center align-center" style="min-height: 100vh;" id="home">
   <v-row class="d-flex justify-center align-center">
     <!-- Text Column -->
     <v-col cols="12" md="6" class="text-center text-md-right d-flex flex-column justify-center px-4">
-      <h1 class="display-2 font-weight-bold mb-3 text-h3 text-md-h2">
+      <h1 class="display-2 font-weight-bold mb-3 text-h3 text-md-h2 py-10">
         Find Your Perfect Campus Home
       </h1>
       <p class="text-white text-h5 text-md-subtitle-1">
@@ -105,36 +113,36 @@ const openModal = (image) => {
     </v-col>
     <!-- Image Column -->
     <v-col cols="12" md="6" class="d-flex justify-center align-center">
-      <img
-        src="@/assets/landing/hero.png"
+      <v-img
+        :src="hero"
         alt="hero"
-        class="hero-image"
+        class="float py-10"
         max-width="100%"
-        height="auto"
+        height="400"
         
-      >
+      />
     </v-col>
   </v-row>
 </v-container>
 
     <v-container fluid class="d-flex flex-column py-15 text-center bg-green-lighten-5">
-      <h1 class="text-green-darken-4 text-h3 font-weight-bold">How StaySearch Works</h1>
+      <h1 class="text-green-darken-4 text-h3 font-weight-bold" data-aos="fade-right">How StaySearch Works</h1>
       <v-row class="mx-10 mt-15">
-        <v-col cols="12" md="4" class="mx-auto ">
+        <v-col cols="12" md="4" class="mx-auto " data-aos="fade-up">
           <v-icon size="xxx-large" color="green" class="bg-green-lighten-4 rounded-circle pa-13 mb-7">
             mdi-plus-circle-outline
           </v-icon>
           <h1 class="text-green-darken-4 mb-3">1. List Your Property</h1>
           <p>Owners create detailed listings with photos, amenities, and pricing.</p>
         </v-col>
-        <v-col cols="12" md="4" class="mx-auto ">
+        <v-col cols="12" md="4" class="mx-auto " data-aos="fade-up">
           <v-icon size="xxx-large" color="green" class="bg-green-lighten-4 rounded-circle pa-13 mb-7">
             mdi-magnify
           </v-icon>
           <h1 class="text-green-darken-4 mb-3">2. Students Browse</h1>
           <p>Students search, filter, and compare available housing options.</p>
         </v-col>
-        <v-col cols="12" md="4" class="mx-auto ">
+        <v-col cols="12" md="4" class="mx-auto " data-aos="fade-up">
           <v-icon size="xxx-large" color="green" class="bg-green-lighten-4 rounded-circle pa-13 mb-7">
             mdi-star-outline
           </v-icon>
@@ -149,7 +157,7 @@ const openModal = (image) => {
         <v-col cols="12">
           <v-row>
             <!-- Image 1 -->
-            <v-col cols="12" md="4">
+            <v-col cols="12" md="4" data-aos="fade-up">
               <v-hover v-slot="{ isHovering, props }">
                 <v-card
                   :class="{ 'on-hover': isHovering }"
@@ -170,7 +178,7 @@ const openModal = (image) => {
             </v-col>
 
             <!-- Image 2 -->
-            <v-col cols="12" md="8">
+            <v-col cols="12" md="8" data-aos="fade-up">
               <v-hover v-slot="{ isHovering, props }">
                 <v-card
                   :class="{ 'on-hover': isHovering }"
@@ -195,7 +203,7 @@ const openModal = (image) => {
         <v-col cols="12">
           <v-row>
             <!-- Image 3 -->
-            <v-col cols="12" md="4">
+            <v-col cols="12" md="4" data-aos="fade-up">
               <v-hover v-slot="{ isHovering, props }">
                 <v-card
 
@@ -215,7 +223,7 @@ const openModal = (image) => {
             </v-col>
 
             <!-- Image 4 -->
-            <v-col cols="12" md="4">
+            <v-col cols="12" md="4" data-aos="fade-up">
               <v-hover v-slot="{ isHovering, props }">
                 <v-card
                   :class="{ 'on-hover': isHovering }"
@@ -235,7 +243,7 @@ const openModal = (image) => {
             </v-col>
 
             <!-- Image 5 -->
-            <v-col cols="12" md="4">
+            <v-col cols="12" md="4" data-aos="fade-up">
               <v-hover v-slot="{ isHovering, props }">
                 <v-card
                   :class="{ 'on-hover': isHovering }"
@@ -257,7 +265,7 @@ const openModal = (image) => {
         </v-col>
 
         <!-- Image 6 -->
-        <v-col cols="12">
+        <v-col cols="12" data-aos="fade-up">
           <v-hover v-slot="{ isHovering, props }">
             <v-card
               :class="{ 'on-hover': isHovering }"
@@ -289,11 +297,11 @@ const openModal = (image) => {
     <!-- About Section -->
     <v-container fluid id="about" class="py-16 d-flex justify-center text-center bg-green">
      <div style="max-width: 50%">
-       <h1 class="text-h3 font-weight-bold">Join Our StaySearch Community Today</h1>
+       <h1 class="text-h3 font-weight-bold" data-aos="fade-right">Join Our StaySearch Community Today</h1>
        <br>
-       <h2>Whether you're a property owner looking to list your boarding house or a student searching for the perfect campus home, StaySearch has you covered.</h2>
+       <h2 data-aos="fade-left">Whether you're a property owner looking to list your boarding house or a student searching for the perfect campus home, StaySearch has you covered.</h2>
        <v-btn
-         class="text-none font-weight-bold rounded-lg mt-10"
+         class="text-none font-weight-bold rounded-lg mt-10" data-aos="fade-up-right"
          append-icon="mdi-chevron-right"
          color="green-darken-4"
          size="x-large"
@@ -303,7 +311,7 @@ const openModal = (image) => {
        </v-btn>
      </div>
     </v-container>
-    <v-container fluid id="aboutus" class="py-16 text-center bg-green-lighten-5">
+    <v-container fluid id="aboutus" class="py-16 text-center bg-green-lighten-5" data-aos="fade-right">
       <h1 class="text-green-darken-4 text-h3 font-weight-bold mb-10">About Us</h1>
       <v-row class="mx-16">
         <v-col cols="12" md="8">
@@ -324,7 +332,7 @@ const openModal = (image) => {
         </v-col>
         <v-col cols="12" md="4">
 
-          <v-card class="pa-5 text-left" height="100%">
+          <v-card class="pa-5 text-left" height="100%" data-aos="fade-left">
             <v-card-title>
               <h2 class="text-green-darken-4 font-weight-bold">Meet Our Team</h2>
             </v-card-title>
@@ -432,12 +440,20 @@ const openModal = (image) => {
 .clear-modal-image {
 opacity: 1 !important; /* Ensure full opacity */
 }
-.hero-image {
-  width: 100%;
-  max-width: 600px; /* Set a max width for larger screens */
-  height: auto;
-  object-fit: contain; /* Keeps the entire image visible without cropping */
-  margin-top: 20px; /* Optional, to add spacing */
+.float {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px); /* Move up */
+  }
+  100% {
+    transform: translateY(0); /* Move back down */
+  }
 }
 
 </style>
