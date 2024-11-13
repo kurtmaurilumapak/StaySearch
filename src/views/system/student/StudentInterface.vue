@@ -252,48 +252,55 @@ const logout = async () => {
         </v-col>
 
         <v-col cols="12" md="3" lg="2">
-          <v-card
-            class="rounded-lg"
-          >
-            <v-card-title class="px-5 py-5 font-weight-bold text-green-darken-4">Filters</v-card-title>
-            <v-card-text class="px-5 text-green-darken-4 font-weight-bold">
-             <div>
-               <p>Price Range</p>
-               <p>{{ priceRanges[priceRangeIndex].label }}</p>
-             </div>
-              <v-slider
-                v-model="priceRangeIndex"
-                :max="priceRanges.length - 1"
-                show-ticks="always"
-                step="1"
-                tick-size="4"
-                color="green"
-              ></v-slider>
-
-              <p>Boarding House Type</p>
-              <v-select
-                v-model="selectedType"
-                color="green"
-                density="compact"
-                variant="outlined"
-                :items="type"
-                clearable
+          <v-expansion-panels class="mb-6">
+            <v-expansion-panel>
+              <v-expansion-panel-title
+                expand-icon="mdi-menu-down"
+                class="px-5 py-5 font-weight-bold text-green-darken-4"
               >
-              </v-select>
+                Filters
+              </v-expansion-panel-title>
+              <v-expansion-panel-text
+                class="text-green-darken-4 font-weight-bold"
+              >
+                <div>
+                  <p>Price Range</p>
+                  <p>{{ priceRanges[priceRangeIndex].label }}</p>
+                </div>
+                <v-slider
+                  v-model="priceRangeIndex"
+                  :max="priceRanges.length - 1"
+                  show-ticks="always"
+                  step="1"
+                  tick-size="4"
+                  color="green"
+                ></v-slider>
 
-              <p>Amenities</p>
-              <v-checkbox
-                class="text-black"
-                v-model="filter"
-                :label="label"
-                :value="label"
-                v-for="(label, index) in filterValue"
-                :key="index"
-                color="success"
-                hide-details
-              />
-            </v-card-text>
-          </v-card>
+                <p>Boarding House Type</p>
+                <v-select
+                  v-model="selectedType"
+                  color="green"
+                  density="compact"
+                  variant="outlined"
+                  :items="type"
+                  clearable
+                >
+                </v-select>
+
+                <p>Amenities</p>
+                <v-checkbox
+                  class="text-black"
+                  v-model="filter"
+                  :label="label"
+                  :value="label"
+                  v-for="(label, index) in filterValue"
+                  :key="index"
+                  color="success"
+                  hide-details
+                />
+              </v-expansion-panel-text>
+            </v-expansion-panel>
+          </v-expansion-panels>
         </v-col>
 
         <v-col cols="12" md="9" lg="10">
