@@ -90,13 +90,47 @@ const openModal = (image) => {
     </v-navigation-drawer>
 
     <!-- Hero Section -->
-    <v-container fluid class="hero" id="home">
-      <v-row class="fill-height align-center justify-center text-center">
-        <v-col>
-          <h1 class="display-2 font-weight-bold mb-3 text-center text-h3">
-            Search for a Boarding House near Caraga State University
+    <v-container fluid class="bg-green d-flex justify-center align-center" style="height: 100vh">
+      <v-row class="d-flex justify-center align-center">
+        <v-col cols="12" md="6" class="d-flex flex-column justify-end text-right">
+          <h1 class="display-2 font-weight-bold mb-3 text-h3">
+            Find Your Perfect Campus Home
           </h1>
-          <v-btn size="x-large" color="green-darken-1" class="mt-5 px-10" large @click="$router.push({ name: 'login' })">Find</v-btn>
+          <p class="text-white text-h5">Connecting students with the best boarding houses near campus. <br>Owners, list your properties and reach thousands of students!</p>
+        </v-col>
+        <v-col cols="12" md="6" class="d-flex justify-star">
+          <img
+            height="500"
+            src="@/assets/landing/hero.png"
+            alt="hero"
+          >
+        </v-col>
+      </v-row>
+
+    </v-container>
+    <v-container fluid class="d-flex flex-column py-15 text-center bg-green-lighten-5">
+      <h1 class="text-green-darken-4 text-h3 font-weight-bold">How StaySearch Works</h1>
+      <v-row class="mx-10 mt-15">
+        <v-col cols="12" md="4" class="mx-auto ">
+          <v-icon size="xxx-large" color="green" class="bg-green-lighten-4 rounded-circle pa-13 mb-7">
+            mdi-plus-circle-outline
+          </v-icon>
+          <h1 class="text-green-darken-4 mb-3">1. List Your Property</h1>
+          <p>Owners create detailed listings with photos, amenities, and pricing.</p>
+        </v-col>
+        <v-col cols="12" md="4" class="mx-auto ">
+          <v-icon size="xxx-large" color="green" class="bg-green-lighten-4 rounded-circle pa-13 mb-7">
+            mdi-magnify
+          </v-icon>
+          <h1 class="text-green-darken-4 mb-3">2. Students Browse</h1>
+          <p>Students search, filter, and compare available housing options.</p>
+        </v-col>
+        <v-col cols="12" md="4" class="mx-auto ">
+          <v-icon size="xxx-large" color="green" class="bg-green-lighten-4 rounded-circle pa-13 mb-7">
+            mdi-star-outline
+          </v-icon>
+          <h1 class="text-green-darken-4 mb-3">3. Perfect Match</h1>
+          <p>Students find their ideal housing, and owners get reliable tenants.</p>
         </v-col>
       </v-row>
     </v-container>
@@ -232,12 +266,6 @@ const openModal = (image) => {
             </v-card>
           </v-hover>
         </v-col>
-
-        <!-- Image 7 -->
-       
-        <!-- Image 8 -->
-       
-        
       </v-row>
 
       <!-- Dialog Modal for Image Viewing -->
@@ -250,102 +278,127 @@ const openModal = (image) => {
     
 
     <!-- About Section -->
-    <v-container id="about" class="py-16 text-center">
-      <h2>About StaySearch</h2>
-      <v-row>
-        <v-col cols="12" md="8" class="mx-auto">
-          <p class="text-h6">
-            StaySearch is a web platform designed to help students and residents find affordable and accessible boarding houses near Caraga State University (CSU). We strive to simplify the process of finding the perfect place to stay by offering a comprehensive list of available options. Our goal is to connect boarders with safe, convenient, and budget-friendly accommodations, ensuring they have a comfortable living experience while studying at CSU.
-          </p>
-          <p class="text-h6">
-            Whether you’re a new student or a returning one, StaySearch makes it easy for you to find a home away from home. Our platform provides detailed information on boarding houses, including location, amenities, and pricing, to help you make an informed decision. StaySearch is more than just a listing site — it's your go-to guide for student housing around CSU.
-          </p>
+    <v-container fluid id="about" class="py-16 d-flex justify-center text-center bg-green">
+     <div style="max-width: 50%">
+       <h1 class="text-h3 font-weight-bold">Join Our StaySearch Community Today</h1>
+       <br>
+       <h2>Whether you're a property owner looking to list your boarding house or a student searching for the perfect campus home, StaySearch has you covered.</h2>
+       <v-btn
+         class="text-none font-weight-bold rounded-lg mt-10"
+         append-icon="mdi-chevron-right"
+         color="green-darken-4"
+         size="x-large"
+         @click="$router.push({ name: 'signup' })"
+       >
+         Get Started
+       </v-btn>
+     </div>
+    </v-container>
+    <v-container fluid id="aboutus" class="py-16 text-center bg-green-lighten-5">
+      <h1 class="text-green-darken-4 text-h3 font-weight-bold mb-10">About Us</h1>
+      <v-row class="mx-16">
+        <v-col cols="12" md="8">
+          <v-card class="pa-5 text-left" height="100%">
+            <v-card-title>
+              <h2 class="text-green-darken-4">Our Mission</h2>
+            </v-card-title>
+            <v-card-text>
+              <p class="text-h6">
+                StaySearch is a web platform designed to help students and residents find affordable and accessible boarding houses near Caraga State University (CSU). We strive to simplify the process of finding the perfect place to stay by offering a comprehensive list of available options. Our goal is to connect boarders with safe, convenient, and budget-friendly accommodations, ensuring they have a comfortable living experience while studying at CSU.
+              </p>
+              <p class="text-h6">
+                Whether you’re a new student or a returning one, StaySearch makes it easy for you to find a home away from home. Our platform provides detailed information on boarding houses, including location, amenities, and pricing, to help you make an informed decision. StaySearch is more than just a listing site — it's your go-to guide for student housing around CSU.
+              </p>
+            </v-card-text>
+
+          </v-card>
+        </v-col>
+        <v-col cols="12" md="4">
+
+          <v-card class="pa-5 text-left" height="100%">
+            <v-card-title>
+              <h2 class="text-green-darken-4 font-weight-bold">Meet Our Team</h2>
+            </v-card-title>
+            <v-card-text>
+              <v-row>
+                <v-col cols="12" class="d-inline-flex align-center justify-start ga-3">
+                  <v-avatar size="100px">
+                    <img
+                      class="h-100"
+                      src="@/assets/kurt.png"
+                      alt="avatar"
+                    >
+                  </v-avatar>
+                  <div>
+                    <h2 class="mt-3 text-green-darken-4">Kurt Mauri Lumapak</h2>
+                    <p >System Analyst</p>
+                    <v-btn
+                      href="https://www.facebook.com/kurtniezas01"
+                      color="green-darken-4"
+                      icon="mdi-facebook"
+                      variant="text"
+                      target="_blank"
+                    ></v-btn>
+                  </div>
+                </v-col>
+                <v-col cols="12" class="d-inline-flex align-center justify-start ga-3">
+                  <v-avatar size="100px">
+                    <img
+                      class="h-100"
+                      src="@/assets/ainor.png"
+                      alt="avatar"
+                    >
+                  </v-avatar>
+                  <div>
+                    <h2 class="mt-3 text-green-darken-4">Ainor Jamal</h2>
+                    <p >Web Developer</p>
+                    <v-btn
+                      href="https://www.facebook.com/ainor.jamal/9"
+                      color="green-darken-4"
+                      icon="mdi-facebook"
+                      variant="text"
+                      target="_blank"
+                    ></v-btn>
+                  </div>
+                </v-col>
+                <v-col cols="12" class="d-inline-flex align-center justify-start ga-3">
+                  <v-avatar size="100px">
+                    <img
+                      class="h-100"
+                      src="@/assets/harold.png"
+                      alt="avatar"
+                    >
+                  </v-avatar>
+                  <div>
+                    <h2 class="mt-3 text-green-darken-4">Harold Florendo</h2>
+                    <p>Web Developer</p>
+                    <v-btn
+                      href="https://www.facebook.com/harold.florendo.777"
+                      color="green-darken-4"
+                      icon="mdi-facebook"
+                      variant="text"
+                      target="_blank"
+                    ></v-btn>
+                  </div>
+                </v-col>
+              </v-row>
+            </v-card-text>
+          </v-card>
         </v-col>
       </v-row>
     </v-container>
-    <v-container id="aboutus" class="py-16 text-center">
-      <h2>Developers</h2>
-      <v-row>
-        <v-col cols="12" md="4">
-          <v-card class="pa-5">
-            <v-avatar size="80px" class="mx-auto">
-              <img
-                src="@/assets/ainor.png"
-                alt="avatar"
-                max-width="100%"
-                height="100%"
-              >
-            </v-avatar>
-            <h4 class="mt-3">Ainor Jamal</h4>
-            <v-btn fab icon href="facebook.com/ainor.jamal/9" target="_blank">
-              <v-icon >
-                mdi-facebook </v-icon>
-            </v-btn>
 
-          </v-card>
-        </v-col>
-        <v-col cols="12" md="4">
-          <v-card class="pa-5">
-            <v-avatar size="80px" class="mx-auto">
-              <img
-                src="@/assets/kurt.png"
-                alt="avatar"
-                max-width="100%"
-                height="100%"
-                    
-              >
-            </v-avatar>
-            <h4 class="mt-3">Kurt Mauri Lumapak</h4>
-            <v-btn fab icon href="facebook.com/kurtniezas01" target="_blank">
-              <v-icon >
-                mdi-facebook </v-icon>
-            </v-btn>
-
-          </v-card>
-        </v-col>
-        <v-col cols="12" md="4">
-          <v-card class="pa-5">
-            <v-avatar size="80px" class="mx-auto">
-              <img
-                src="@/assets/harold.png"
-                alt="avatar"
-                cover
-                max-width="100%"
-                height="100%"
-              >
-            </v-avatar>
-            <h4 class="mt-3">Harold Florendo</h4>
-            <v-btn fab icon href="facebook.com/harold.florendo.777" target="_blank">
-              <v-icon >
-                mdi-facebook </v-icon>
-            </v-btn>
-
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-container>
-
+    <v-divider></v-divider>
     <!-- Footer -->
-    <v-footer dark>
-      <v-container class="text-center">
-        <p class="mb-0"></p>
-      </v-container>
+    <v-footer class="bg-green-lighten-5">
+      <div class="text-center w-100">
+        <p>© 2024 StaySearch. All rights reserved.</p>
+      </div>
     </v-footer>
   </v-app>
 </template>
 
 <style scoped>
-.hero {
-  background-image: url('https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExZDF1YjNzZjFsemVubDV3OW15aWRjOHdvN21zZ2dxaTQzZGFhdjNuaiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/82jROlcRerLJeBni9u/giphy.gif');
-height: 100vh;
-background-size: cover;
-background-position: center;
-
-}
-
-#gallery {
-  background-color: #388e3c;
-}
 .gallery h2 {
   color: rgba(0, 0, 0, 0.5);
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -367,25 +420,8 @@ background-position: center;
   background-color: #B9F6CA;
   color: black;
 }
-.v-card {
-  transition: opacity .3s ease-in-out;
-}
-
-.v-card:not(.on-hover) {
-  opacity: 0.7;
-}
 .clear-modal-image {
 opacity: 1 !important; /* Ensure full opacity */
 }
 
-.v-dialog__content {
-background-color: rgba(255, 255, 255, 1); /* Ensure modal background is solid */
-}
-
-.show-btns {
-  color: rgba(255, 255, 255, 1) !important;
-}
-#aboutus .v-btn {
-  border-radius: 50%;
-}
 </style>
