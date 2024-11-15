@@ -99,14 +99,14 @@ onMounted(() => {
 
     <!-- Hero Section -->
     <!-- Hero Section -->
-<v-container fluid class="bg-green d-flex justify-center align-center" style="min-height: 100vh;" id="home">
+<v-container fluid class="bg-green d-flex justify-center align-center overflow-x-hidden" style="min-height: 100vh;" id="home">
   <v-row class="d-flex justify-center align-center">
     <!-- Text Column -->
     <v-col cols="12" md="6" class="text-center text-md-right d-flex flex-column justify-center px-4">
       <h1 class="display-2 font-weight-bold mb-3 text-h3 text-md-h2 py-10">
         Find Your Perfect Campus Home
       </h1>
-      <p class="text-white text-h5 text-md-subtitle-1">
+      <p class="text-white text-h5">
         Connecting students with the best boarding houses near campus. <br />
         Owners, list your properties and reach thousands of students!
       </p>
@@ -313,7 +313,7 @@ onMounted(() => {
     </v-container>
     <v-container fluid id="aboutus" class="py-16 text-center bg-green-lighten-5" data-aos="fade-right">
       <h1 class="text-green-darken-4 text-h3 font-weight-bold mb-10">About Us</h1>
-      <v-row class="mx-16">
+      <v-row class="mx-lg-16">
         <v-col cols="12" md="8">
           <v-card class="pa-5 text-left" height="100%">
             <v-card-title>

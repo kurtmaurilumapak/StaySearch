@@ -5,11 +5,13 @@ import AppLayout from '@/components/layout/AppLayout.vue'
 import { usePostStore } from '@/stores/postStore'
 import { useAuthStore } from '@/stores/authStore'
 import { useTheme } from 'vuetify'
+import { useUserStore } from '@/stores/userStore'
 
 const router = useRouter()
 const theme = useTheme()
 const useAuth = useAuthStore()
 const postStore = usePostStore()
+const userStore = useUserStore()
 
 
 const rating = ref(0)
@@ -185,30 +187,52 @@ const logout = async () => {
           <v-col cols="6" class="d-flex align-center justify-end pr-10">
             <v-menu location="bottom">
               <template v-slot:activator="{ props }">
-                <v-avatar
-                  image="https://cdn.vuetifyjs.com/images/john.jpg"
-                  size="40"
+                <v-btn
+                  icon
                   v-bind="props"
                 >
-                </v-avatar>
+                  <v-avatar
+                    color="brown"
+                    size="large"
+                  >
+                  </v-avatar>
+                </v-btn>
               </template>
-              <v-list
-                style="margin-left: 35px; width: 200px"
-              >
-                <v-list-item
-                  class="text-center"
-                  @click="$router.push('/settings')"
-                >
-                  SETTINGS
-                </v-list-item>
-                <v-list-item
-                  class="text-center"
-                  style="color: red;"
-                  @click="logout"
-                >
-                  LOGOUT
-                </v-list-item>
-              </v-list>
+              <v-card>
+                <v-card-text>
+                  <div class="mx-auto text-center">
+                    <v-avatar
+                      color="brown"
+                    >
+                    </v-avatar>
+                    <h3>{{ userStore.userData.firstname }}</h3>
+                    <p class="text-caption mt-1">
+                      {{ userStore.userData.email }}
+                    </p>
+                    <v-divider class="my-3"></v-divider>
+                    <v-btn
+                      class="text-none font-weight-bold"
+                      variant="text"
+                      rounded
+                      block
+                      @click="$router.push('/settings')"
+                    >
+                      Edit Account
+                    </v-btn>
+                    <v-divider class="my-3"></v-divider>
+                    <v-btn
+                      class="text-none font-weight-bold"
+                      variant="text"
+                      color="red"
+                      rounded
+                      block
+                      @click="logout"
+                    >
+                      Logout
+                    </v-btn>
+                  </div>
+                </v-card-text>
+              </v-card>
             </v-menu>
           </v-col>
         </v-row>
