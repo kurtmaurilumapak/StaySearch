@@ -172,51 +172,46 @@ onMounted(async () => {
                         </v-chip>
                       </div>
                     </v-card-text>
-                    <v-card-actions class="px-7 pb-7">
-                      <v-row>
-                        <v-col cols="6">
-                          <v-btn
-                            size="large"
-                            class="rounded-lg font-weight-bold bg-green text-body-2"
-                            block
-                            @click="openDialog(post)"
+                    <v-card-actions class="pl-7 pr-13 pb-7">
+                      <v-btn
+                        size="large"
+                        class="rounded-lg font-weight-bold bg-green text-body-2"
+                        block
+                        @click="openDialog(post)"
+                      >
+                        View Details
+                      </v-btn>
+                      <v-spacer></v-spacer>
+                      <v-menu location="start" width="175">
+                        <template v-slot:activator="{ props }">
+                          <v-icon
+                            v-bind="props"
                           >
-                            View Details
-                          </v-btn>
-                        </v-col>
-                        <v-col cols="6" class="d-flex justify-end align-center0">
-                          <v-menu location="start" width="175">
-                            <template v-slot:activator="{ props }">
-                              <v-icon
-                                v-bind="props"
-                              >
-                                mdi-dots-vertical
-                              </v-icon>
-                            </template>
+                            mdi-dots-vertical
+                          </v-icon>
+                        </template>
 
-                            <v-list>
-                              <v-list-item>
-                                <v-list-item-title class="font-weight-bold">Actions</v-list-item-title>
-                              </v-list-item>
-                              <v-list-item
-                                density="compact"
-                                @click=""
-                              >
-                                <v-icon class="mr-5">mdi-pencil</v-icon>
-                                Edit
-                              </v-list-item>
-                              <v-divider class="mt-5"></v-divider>
-                              <v-list-item
-                                density="compact"
-                                @click=""
-                              >
-                                <p class="text-red"><v-icon class="mr-5">mdi-delete-variant</v-icon>Delete</p>
+                        <v-list>
+                          <v-list-item>
+                            <v-list-item-title class="font-weight-bold">Actions</v-list-item-title>
+                          </v-list-item>
+                          <v-list-item
+                            density="compact"
+                            @click=""
+                          >
+                            <v-icon class="mr-5">mdi-pencil</v-icon>
+                            Edit
+                          </v-list-item>
+                          <v-divider class="mt-5"></v-divider>
+                          <v-list-item
+                            density="compact"
+                            @click=""
+                          >
+                            <p class="text-red"><v-icon class="mr-5">mdi-delete-variant</v-icon>Delete</p>
 
-                              </v-list-item>
-                            </v-list>
-                          </v-menu>
-                        </v-col>
-                      </v-row>
+                          </v-list-item>
+                        </v-list>
+                      </v-menu>
                     </v-card-actions>
                   </v-card>
                 </v-col>
