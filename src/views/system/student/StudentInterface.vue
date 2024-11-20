@@ -156,9 +156,7 @@ const logout = async () => {
 
 
 <template>
-  <AppLayout
-    class="bg-green-lighten-5"
-  >
+  <AppLayout>
     <template #content>
       <v-app-bar
         color="green"
@@ -269,12 +267,12 @@ const logout = async () => {
             <v-expansion-panel>
               <v-expansion-panel-title
                 expand-icon="mdi-menu-down"
-                class="px-5 py-5 font-weight-bold text-green-darken-4"
+                class="px-5 py-5 font-weight-bold"
               >
                 Filters
               </v-expansion-panel-title>
               <v-expansion-panel-text
-                class="text-green-darken-4 font-weight-bold"
+                class="font-weight-bold"
               >
                 <div>
                   <p>Price Range</p>
@@ -302,7 +300,6 @@ const logout = async () => {
 
                 <p>Amenities</p>
                 <v-checkbox
-                  class="text-black"
                   v-model="filter"
                   :label="label"
                   :value="label"
@@ -324,7 +321,7 @@ const logout = async () => {
               cols="12" sm="6" lg="4"
               class="d-flex justify-center align-center">
               <v-card
-                class="rounded-lg"
+                class="rounded-lg border"
                 :elevation="7"
                 width="100%"
               >

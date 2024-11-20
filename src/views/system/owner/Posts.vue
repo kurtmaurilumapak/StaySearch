@@ -83,8 +83,6 @@ const onDelete = (post) => {
           <v-card
             :elevation="7"
             style="border-radius: 0; height: 100vh; width: 100%; overflow-y: auto"
-            class="bg-green-lighten-5"
-
           >
 
             <v-card-title
@@ -139,7 +137,7 @@ const onDelete = (post) => {
                 <!-- CARD POSTS -->
                 <v-col  v-for="post in posts" :key="post.id" cols="12" sm="6" md="4" lg="3" class="d-flex justify-center align-center">
                   <v-card
-                    class="rounded-lg"
+                    class="rounded-lg border"
                     :elevation="7"
                     width="100%"
                   >
