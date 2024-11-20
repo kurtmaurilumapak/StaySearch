@@ -119,20 +119,13 @@ onMounted(async () => {
                   </v-btn>
                 </v-col>
                 <!-- CARD POSTS -->
-                <v-col  v-for="post in posts" :key="post.id" cols="12" sm="6" lg="4" class="d-flex justify-center align-center">
+                <v-col  v-for="post in posts" :key="post.id" cols="12" sm="6" md="4" lg="3" class="d-flex justify-center align-center">
                   <v-card
+                    class="rounded-lg"
                     :elevation="7"
-                    style="border-radius: 17px"
-                    width="95%"
+                    width="100%"
                   >
-                    <v-card-title
-                      class="py-6"
-                    >
-                      <p class="px-4 text-h5 font-weight-bold text-green-darken-3">{{ post.name }}</p>
-                      <p class="px-4 text-subtitle-2 text-disabled truncate">{{ post.address }}</p>
-
-                    </v-card-title>
-                    <v-card-text class="d-flex flex-column px-7">
+                    <v-card-text class="d-flex flex-column">
                       <v-row>
                         <v-col cols="12" md="8">
                           <v-img
@@ -153,6 +146,8 @@ onMounted(async () => {
                           ></v-img>
                         </v-col>
                       </v-row>
+                      <p class="text-h5 font-weight-bold text-green-darken-3">{{ post.name }}</p>
+                      <p class="text-subtitle-2 text-disabled truncate">{{ post.address }}</p>
                       <p class="text-h5 font-weight-bold text-green mb-2 px-1">₱{{ post.price }}.00/month</p>
                       <div class="d-flex flex-wrap">
                         <v-chip
@@ -172,7 +167,7 @@ onMounted(async () => {
                         </v-chip>
                       </div>
                     </v-card-text>
-                    <v-card-actions class="pl-7 pr-13 pb-7">
+                    <v-card-actions class="pl-3 pr-13 pb-7">
                       <v-btn
                         size="large"
                         class="rounded-lg font-weight-bold bg-green text-body-2"
