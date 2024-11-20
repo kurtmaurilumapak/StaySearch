@@ -34,7 +34,16 @@ const openDialog = (post) => {
   postDialog.value.price = post.price
   postDialog.value.name = post.name
   postDialog.value.description = post.description
+  postDialog.value.reviews = post.reviews || []
 };
+
+const averageRating = computed(() => {
+  if (postDialog.value.reviews && postDialog.value.reviews.length > 0) {
+    const totalRating = postDialog.value.reviews.reduce((acc, review) => acc + review.rating, 0)
+    return totalRating / postDialog.value.reviews.length
+  }
+  return 0
+})
 
 const posts = ref([]);
 onMounted(async () => {
@@ -250,7 +259,7 @@ const onDelete = (post) => {
               ></v-btn>
             </v-card-title>
             <v-divider></v-divider>
-            <v-card-text>
+            <v-card-text class="overflow-x-hidden">
               <v-row>
                 <v-col cols="12" class="text-center">
                   <h2>{{ postDialog.name }}</h2>
@@ -322,8 +331,51 @@ const onDelete = (post) => {
                   <h2 class="text-h6">{{ postDialog.description }}</h2>
                 </v-col>
                 <v-divider class="mb-2"></v-divider>
-                <v-col cols="12" class="text-center">
-                  <span>REVIEWS</span>
+                <v-col cols="12">
+
+                  <div class="d-flex align-center px-5">
+                    <h3 class="pr-5">REVIEWS ({{ postDialog.reviews.length }})</h3>
+                    <v-spacer></v-spacer>
+                    <h3>{{ averageRating.toFixed(1) }}</h3>
+                    <v-rating
+                      :size="21"
+                      :model-value="averageRating.toFixed(1)"
+                      color="yellow-darken-3"
+                      half-increments
+                    ></v-rating>
+                  </div>
+                  <div
+                    class="d-flex flex-column text-start py-5 px-5"
+                  >
+                    <div
+                      v-for="(review, index) in postDialog.reviews"
+                      :key="index"
+                      class="mb-3 py-5"
+                      style="background-color: ghostwhite; border-radius: 15px"
+                    >
+                      <v-row>
+                        <v-col cols="12" class="d-flex align-center ga-5 ml-5">
+                          <v-avatar
+                            image="https://cdn.vuetifyjs.com/images/john.jpg"
+                            size="50"
+                          >
+                          </v-avatar>
+                          <h3 class="font-weight-bold">{{ review.name }}</h3>
+                        </v-col>
+                        <v-col cols="12" class="ml-5">
+                          <v-rating
+                            size="small"
+                            :model-value="review.rating"
+                            color="yellow-darken-3"
+                            half-increments
+                          ></v-rating>
+                        </v-col>
+                        <v-col cols="12" class="px-10">
+                          <span style="font-size: 17px">{{ review.comment }}</span>
+                        </v-col>
+                      </v-row>
+                    </div>
+                  </div>
                 </v-col>
               </v-row>
             </v-card-text>
