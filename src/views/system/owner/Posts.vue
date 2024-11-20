@@ -6,6 +6,8 @@ import { usePostStore } from '@/stores/postStore.js'
 
 
 const drawer = ref(true)
+const deleteDialog = ref(false)
+const deletePostId = ref(null)
 const postStore = usePostStore()
 
 const postDialog = ref({
@@ -43,7 +45,22 @@ onMounted(async () => {
   } catch (error) {
     console.error('Error fetching posts:', error);
   }
-});
+})
+
+const deletePost = async () => {
+  try {
+    await postStore.deletePost(deletePostId.value)
+    posts.value = posts.value.filter(post => post.id !== deletePostId.value)
+  } catch (error) {
+    console.error('Error deleting post:', error)
+  }
+  deleteDialog.value = false;
+};
+
+const onDelete = (post) => {
+  deletePostId.value = post.id;
+  deleteDialog.value = true;
+}
 
 </script>
 
@@ -66,6 +83,7 @@ onMounted(async () => {
           <v-card
             :elevation="7"
             style="border-radius: 0; height: 100vh; width: 100%; overflow-y: auto"
+            class="bg-green-lighten-5"
 
           >
 
@@ -192,7 +210,6 @@ onMounted(async () => {
                           </v-list-item>
                           <v-list-item
                             density="compact"
-                            @click=""
                           >
                             <v-icon class="mr-5">mdi-pencil</v-icon>
                             Edit
@@ -200,7 +217,7 @@ onMounted(async () => {
                           <v-divider class="mt-5"></v-divider>
                           <v-list-item
                             density="compact"
-                            @click=""
+                            @click="onDelete(post)"
                           >
                             <p class="text-red"><v-icon class="mr-5">mdi-delete-variant</v-icon>Delete</p>
 
@@ -328,6 +345,20 @@ onMounted(async () => {
           </v-carousel-item>
         </v-carousel>
       </v-dialog>
+
+      <v-dialog v-model="deleteDialog" max-width="500px" persistent>
+        <v-card>
+          <v-card-title class="text-h5">Confirm Deletion</v-card-title>
+          <v-card-text>
+            <p>Are you sure you want to delete this post? This action cannot be undone.</p>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn @click="deleteDialog = false">Cancel</v-btn>
+            <v-btn @click="deletePost" color="red">Delete</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
     </template>
   </AppLayout>
 </template>

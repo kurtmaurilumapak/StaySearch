@@ -189,6 +189,14 @@ export const usePostStore = defineStore('post', {
       }
 
       this.posts = posts
+    },
+    async deletePost(postID) {
+      const { error } = await supabase
+        .from('boarding_houses')
+        .delete()
+        .eq('id', postID)
+
+      if (error) throw error
     }
 
   }

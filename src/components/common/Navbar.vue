@@ -32,6 +32,7 @@ const logout = async () => {
 <template>
   <v-navigation-drawer
     :width="80"
+    class="bg-green-lighten-5"
   >
     <v-list
 
