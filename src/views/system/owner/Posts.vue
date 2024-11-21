@@ -3,11 +3,14 @@ import { ref, computed, onMounted  } from 'vue'
 import Navbar from '@/components/common/Navbar.vue'
 import AppLayout from '@/components/layout/AppLayout.vue'
 import { usePostStore } from '@/stores/postStore.js'
-
+import UpdatePost from "@/components/system/owner/UpdatePost.vue";
 
 const drawer = ref(true)
 const deleteDialog = ref(false)
 const deletePostId = ref(null)
+const selectedPost = ref(null);
+const isUpdateDialogOpen = ref(false);
+
 const postStore = usePostStore()
 
 const postDialog = ref({
@@ -35,6 +38,11 @@ const openDialog = (post) => {
   postDialog.value.name = post.name
   postDialog.value.description = post.description
   postDialog.value.reviews = post.reviews || []
+};
+
+const onUpdate = (post) => {
+  selectedPost.value = post;
+  isUpdateDialogOpen.value = true;
 };
 
 const averageRating = computed(() => {
@@ -217,6 +225,7 @@ const onDelete = (post) => {
                           </v-list-item>
                           <v-list-item
                             density="compact"
+                            @click="onUpdate(post)"
                           >
                             <v-icon class="mr-5">mdi-pencil</v-icon>
                             Edit
@@ -382,6 +391,13 @@ const onDelete = (post) => {
           </div>
         </v-card>
       </v-dialog>
+
+      <UpdatePost
+        :post="selectedPost"
+        :isOpen="isUpdateDialogOpen"
+        @close="isUpdateDialogOpen = false"
+        @updated="handlePostUpdate"
+      />
 
       <v-dialog v-model="postDialog.carouselOpen" max-width="600">
         <v-carousel v-if="postDialog.carouselOpen" hide-delimiters v-model="postDialog.carouselIndex">
