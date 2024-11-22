@@ -490,12 +490,27 @@ const submitPost = async () => {
                       <v-chip class="ma-1" color="grey" label>No Tags Added</v-chip>
                     </div>
                   </v-col>
+                  <v-col cols="12">
+                    <div class="d-flex flex-wrap mt-4 text-center" style="height: 300px; width: 100%; border-radius: 10px;">
+                      <l-map
+                        ref="map"
+                        zoom="15"
+                        :center="[8.9559, 125.59715]"
+                        minZoom="15"
+                      >
+                        <l-tile-layer
+                          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                          layer-type="base"
+                          name="OpenStreetMap"
+                        ></l-tile-layer>
+                        <l-marker v-if="create.latitude && create.longitude" :lat-lng="[create.latitude, create.longitude]"></l-marker>
+
+                      </l-map>
+                    </div>
+                  </v-col>
                   <v-col cols="12" class="d-block">
                     <div class="d-flex justify-space-between">
                       <h2 class="text-subtitle-1"><v-icon>mdi-map-marker</v-icon>{{ create.address || 'Address' }}</h2>
-                      <p v-if="finalizedPosition">
-                          Finalized Position: {{ finalizedPosition.lat }}, {{ finalizedPosition.lng }}
-                        </p>
                     </div>
                     <br>
                     <h2 class="text-h6"><v-icon color="green" class="mr-5">mdi-tag</v-icon>{{ create.price || 'Price' }}/month</h2>
