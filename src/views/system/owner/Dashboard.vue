@@ -1,11 +1,17 @@
 <script setup>
 import Navbar from '@/components/common/Navbar.vue'
 import AppLayout from '@/components/layout/AppLayout.vue'
-import { ref } from 'vue'
+import { ref, onMounted} from 'vue'
+import { useUserStore } from '@/stores/userStore.js'
 
+
+const userStore = useUserStore()
 
 const drawer = ref(true);
-
+onMounted(async () => {
+  await userStore.fetchUserData()
+  theme.global.name.value = userStore.userData.theme
+})
 
 </script>
 
@@ -61,7 +67,7 @@ const drawer = ref(true);
             <v-card-text>
               <v-row class="px-sm-15">
                 <v-col cols="12">
-                  <h1>Hi owners name</h1>
+                  <h1>Hi, {{ userStore.userData.firstname }}</h1>
                 </v-col>
                 <v-col cols="12" md="4" class="py-7">
                   <div class="border pa-10 rounded-lg">
