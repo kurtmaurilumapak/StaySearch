@@ -190,6 +190,51 @@ export const usePostStore = defineStore('post', {
 
       this.posts = posts
     },
+    async updatePost(postId, updatedData) {
+      try {
+        const { data, error } = await supabase
+          .from('boarding_houses')
+          .update(updatedData)
+          .eq('id', postId)
+          .select()
+          .single();
+
+        if (error) {
+          throw new Error("Failed to update post: " + error.message);
+        }
+
+        // Optional: Update local posts state if necessary
+        const postIndex = this.posts.findIndex(post => post.id === postId);
+        if (postIndex !== -1) {
+          this.posts[postIndex] = { ...this.posts[postIndex], ...updatedData };
+        }
+
+        return data;
+      } catch (err) {
+        console.error("Update Post Error:", err);
+        throw err;
+      }
+    },
+    async removeImageFromPost(postID, imageUrl) {
+      try {
+        // Remove from database
+        const { data: imageToDelete, error } = await supabase
+          .from("boarding_house_images")
+          .delete()
+          .eq("boarding_house_id", postID)
+          .eq("image_url", imageUrl);
+
+        if (error) {
+          console.error("Error removing image from DB:", error.message);
+          throw error;
+        }
+
+        console.log("Image removed successfully:", imageToDelete);
+      } catch (error) {
+        console.error("Error in removeImageFromPost:", error.message);
+        throw error;
+      }
+    },
     async deletePost(postID) {
       const { error } = await supabase
         .from('boarding_houses')
