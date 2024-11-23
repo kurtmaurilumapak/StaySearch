@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import dashboardIcon from '@/assets/navbar/dashboard.png';
 import postsIcon from '@/assets/navbar/post.png';
@@ -12,10 +12,6 @@ const router = useRouter()
 const theme = useTheme()
 const useAuth = useAuthStore()
 const userStore = useUserStore()
-
-onMounted(async () => {
-  await userStore.fetchUserData()
-})
 
 const nav = ref({
   navItems: [
