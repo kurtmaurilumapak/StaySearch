@@ -16,7 +16,7 @@ const postStore = usePostStore()
 const userStore = useUserStore()
 
 
-const rating = ref(0)
+const rating = ref(1)
 const comment = ref('')
 const sheet = ref(false)
 const filterValue = ['Free Electricity', 'Free Water', 'Free Wifi']
@@ -131,7 +131,7 @@ const addReview = async () => {
     });
 
     sheet.value = false
-    rating.value = 0
+    rating.value = 1
     comment.value = ''
   } catch (error) {
     console.error('Error adding review:', error)
