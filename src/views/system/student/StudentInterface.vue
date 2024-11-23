@@ -6,6 +6,8 @@ import { usePostStore } from '@/stores/postStore'
 import { useAuthStore } from '@/stores/authStore'
 import { useTheme } from 'vuetify'
 import { useUserStore } from '@/stores/userStore'
+import { LMap, LTileLayer, LMarker } from "@vue-leaflet/vue-leaflet";
+import "leaflet/dist/leaflet.css"
 
 const router = useRouter()
 const theme = useTheme()
@@ -97,6 +99,8 @@ const openDialog = (post) => {
   postDialog.value.tags = post.boarding_house_tags?.map(tag => tag.tags.name)
   postDialog.value.images = post.boarding_house_images.map(image => image.image_url)
   postDialog.value.address = post.address
+  postDialog.value.latitude = post.latitude
+  postDialog.value.longitude = post.longitude
   postDialog.value.price = post.price
   postDialog.value.name = post.name
   postDialog.value.description = post.description
@@ -108,6 +112,8 @@ const openDialog = (post) => {
 onMounted(async () => {
   try {
     await postStore.allPost()
+    await userStore.fetchUserData()
+  theme.global.name.value = userStore.userData.theme
   } catch (error) {
     console.error('Error fetching posts:', error);
   }
@@ -461,6 +467,24 @@ const logout = async () => {
                       </v-chip>
                     </div>
                   </div>
+                </v-col>
+                <v-col cols="12">
+                  <div class="d-flex flex-wrap mt-4 text-center" style="height: 300px; width: 100%; border-radius: 10px;">
+                      <l-map
+                        ref="map"
+                        zoom="15"
+                        :center="[8.9559, 125.59715]"
+                        minZoom="15"
+                      >
+                        <l-tile-layer
+                          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                          layer-type="base"
+                          name="OpenStreetMap"
+                        ></l-tile-layer>
+                        <l-marker :lat-lng="[postDialog.latitude, postDialog.longitude]"></l-marker>
+
+                      </l-map>
+                    </div>
                 </v-col>
                 <v-col cols="12" class="d-block">
                   <div class="d-flex justify-space-between">

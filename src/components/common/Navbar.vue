@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted} from 'vue'
 import { useRouter } from 'vue-router'
 import dashboardIcon from '@/assets/navbar/dashboard.png';
 import postsIcon from '@/assets/navbar/post.png';
@@ -26,6 +26,11 @@ const logout = async () => {
   theme.global.name.value = 'light'
   await router.push('/login')
 }
+
+onMounted(async () => {
+  await userStore.fetchUserData()
+  theme.global.name.value = userStore.userData.theme
+})
 
 </script>
 
