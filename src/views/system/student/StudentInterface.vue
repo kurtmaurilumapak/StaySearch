@@ -373,7 +373,7 @@ const logout = async () => {
                       class="mr-1 mb-1 px-3"
                       color="green"
                     >
-                      {{ tag }}
+                      {{ tag || 'no tags' }}
                     </v-chip>
                   </div>
                 </v-card-text>
