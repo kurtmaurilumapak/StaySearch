@@ -536,27 +536,27 @@ const logout = async () => {
                       style="background-color: ghostwhite; border-radius: 15px"
                     >
                       <v-card-text>
-                        <v-row>
-                          <v-col cols="2" sm="1">
-                            <v-avatar
-                              image="https://cdn.vuetifyjs.com/images/john.jpg"
-                              size="40"
-                            >
-                            </v-avatar>
-                          </v-col>
-                          <v-col cols="10" sm="11">
-                            <div class="d-flex flex-column">
-                              <h3 class="font-weight-bold pl-4">{{ review.reviewer_name }}</h3>
-                              <v-rating
-                                size="small"
-                                :model-value="review.rating"
-                                color="yellow-darken-3"
-                                half-increments
-                              ></v-rating>
-                              <span style="font-size: 14px" class="pl-4">{{ review.comment }}</span>
-                            </div>
-                          </v-col>
-                        </v-row>
+                        <div class="d-flex">
+                          <v-avatar
+                            image="https://cdn.vuetifyjs.com/images/john.jpg"
+                            size="40"
+                          >
+                          </v-avatar>
+                          <h3 class="font-weight-bold pl-4">{{ review.reviewer_name }}</h3>
+                        </div>
+                        <v-divider class="mt-3"></v-divider>
+                        <div class="d-flex flex-column">
+                          <v-rating
+                            size="small"
+                            :model-value="review.rating"
+                            color="yellow-darken-3"
+                            half-increments
+                          ></v-rating>
+                          <div class="mx-3">
+                            <span style="font-size: 14px">{{ review.comment }}</span>
+                          </div>
+
+                        </div>
                       </v-card-text>
                     </v-card>
                   </div>
