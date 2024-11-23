@@ -368,12 +368,21 @@ const logout = async () => {
                   <p class="text-h5 font-weight-bold text-green mb-2 px-1">₱{{ post.price }}.00/month</p>
                   <div class="d-flex flex-wrap">
                     <v-chip
-                      v-for="(tag, index) in post.tags"
-                      :key="index"
+                      size="small"
+                      v-if="post.tags.length > 0"
                       class="mr-1 mb-1 px-3"
                       color="green"
                     >
-                      {{ tag || 'no tags' }}
+                      {{ post.tags[0] || 'No tags' }}
+                    </v-chip>
+
+                    <v-chip
+                      size="small"
+                      v-if="post.tags.length > 1"
+                      class="mr-1 mb-1 px-3"
+                      color="green"
+                    >
+                      +{{ post.tags.length - 1 }} more
                     </v-chip>
                   </div>
                 </v-card-text>
@@ -462,6 +471,7 @@ const logout = async () => {
                   <div v-if="postDialog.tags.length > 0">
                     <div class="d-flex flex-wrap">
                       <v-chip
+                        size="small"
                         v-for="(tag, index) in postDialog.tags"
                         :key="index"
                         color="green-darken-2"
