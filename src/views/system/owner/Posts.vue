@@ -31,7 +31,7 @@ const openCarousel = (index) => {
 
 const openDialog = (post) => {
   postDialog.value.PostContent = true
-  postDialog.value.tags = post.boarding_house_tags?.map(tag => tag.tags.name)
+  postDialog.value.tags = post.boarding_house_tags?.map(tag => tag.tags.tag_name)
   postDialog.value.images = post.boarding_house_images.map(image => image.image_url)
   postDialog.value.address = post.address
   postDialog.value.latitude = post.latitude
@@ -190,7 +190,7 @@ const onDelete = (post) => {
                           class="mr-1 mb-1 px-3"
                           color="green"
                         >
-                          {{ post.boarding_house_tags[0].tags.name }}
+                          {{ post.boarding_house_tags[0].tags.tag_name }}
                         </v-chip>
 
                         <v-chip
@@ -377,34 +377,36 @@ const onDelete = (post) => {
                   <div
                     class="d-flex flex-column text-start py-5 px-5"
                   >
-                    <div
+                    <v-card
                       v-for="(review, index) in postDialog.reviews"
                       :key="index"
                       class="mb-3 py-5"
                       style="background-color: ghostwhite; border-radius: 15px"
                     >
-                      <v-row>
-                        <v-col cols="12" class="d-flex align-center ga-5 ml-5">
+                      <v-card-text>
+                        <div class="d-flex">
                           <v-avatar
                             image="https://cdn.vuetifyjs.com/images/john.jpg"
-                            size="50"
+                            size="40"
                           >
                           </v-avatar>
-                          <h3 class="font-weight-bold">{{ review.name }}</h3>
-                        </v-col>
-                        <v-col cols="12" class="ml-5">
+                          <h3 class="font-weight-bold pl-4">{{ review.reviewer_name }}</h3>
+                        </div>
+                        <v-divider class="mt-3"></v-divider>
+                        <div class="d-flex flex-column">
                           <v-rating
                             size="small"
                             :model-value="review.rating"
                             color="yellow-darken-3"
                             half-increments
                           ></v-rating>
-                        </v-col>
-                        <v-col cols="12" class="px-10">
-                          <span style="font-size: 17px">{{ review.comment }}</span>
-                        </v-col>
-                      </v-row>
-                    </div>
+                          <div class="mx-3">
+                            <span style="font-size: 14px">{{ review.comment }}</span>
+                          </div>
+
+                        </div>
+                      </v-card-text>
+                    </v-card>
                   </div>
                 </v-col>
               </v-row>
