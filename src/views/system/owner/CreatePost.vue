@@ -8,7 +8,7 @@ import "leaflet/dist/leaflet.css"
 
 const dialog = ref(false)
 const postStore = usePostStore()
-const router = useRouter()
+const router = useRouter()  
 const form = ref()
 
 
@@ -56,6 +56,13 @@ const finalizeMarker = () => {
   } else {
     alert("Please place a marker first!");
   }
+};
+const cancelMarker = () => {
+  marker.value = null; 
+  finalizedPosition.value = null; 
+  isFinalized.value = false; 
+  create.value.latitude = ""; 
+  create.value.longitude = ""; 
 };
 // FORMAT THE INPUTTED PRICE TO CURRENCY
 const formatPrice = (value) => {
@@ -277,13 +284,14 @@ const submitPost = async () => {
                           name="OpenStreetMap"
                         ></l-tile-layer>
                         <l-marker v-if="marker" :lat-lng="marker"></l-marker>
-                        <v-btn @click="finalizeMarker" style="margin-top: 10px;">
+                      </l-map>
+                      <v-btn @click="finalizeMarker" class="text-none mx-2 my-2"
+                      color="green-darken-2">
                           Finalize Marker
                         </v-btn>
-                      </l-map>
-                      <v-btn @click="finalizeMarker" class="text-none"
-                      color="green-darken-2" style="margin-top: 5px; margin-left: 5px">
-                          Finalize Marker
+                        <v-btn @click="cancelMarker" class="text-none mx-2 my-2"
+                      color="red">
+                          Clear Marker
                         </v-btn>
                       </div>
                       
@@ -496,7 +504,7 @@ const submitPost = async () => {
                       :use-global-leaflet="false"
                         ref="map"
                         zoom="15"
-                        :center="[8.9559, 125.59715]"
+                        :center="[create.latitude, create.longitude]"
                         minZoom="15"
                       >
                         <l-tile-layer
