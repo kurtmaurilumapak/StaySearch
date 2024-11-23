@@ -471,6 +471,7 @@ const logout = async () => {
                 <v-col cols="12">
                   <div class="d-flex flex-wrap mt-4 text-center" style="height: 300px; width: 100%; border-radius: 10px;">
                       <l-map
+                     :use-global-leaflet="false"
                         ref="map"
                         zoom="15"
                         :center="[8.9559, 125.59715]"
