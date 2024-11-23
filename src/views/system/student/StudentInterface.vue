@@ -219,6 +219,15 @@ const logout = async () => {
                       variant="text"
                       rounded
                       block
+                    >
+                      My Reservations
+                    </v-btn>
+                    <v-divider class="my-3"></v-divider>
+                    <v-btn
+                      class="text-none font-weight-bold"
+                      variant="text"
+                      rounded
+                      block
                       @click="$router.push('/settings')"
                     >
                       Edit Account
