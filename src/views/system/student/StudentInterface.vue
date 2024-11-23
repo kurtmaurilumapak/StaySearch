@@ -49,27 +49,20 @@ const filteredPosts = computed(() => {
     }
 
     // Filter by boarding house type
-    if (selectedType.value && selectedType.value !== '') {
-      const postTags = post.boarding_house_tags.map(tag => tag.tags.name);
-      if (!postTags.includes(selectedType.value)) {
-        return false; // Exclude posts that don't match the selected type
-      }
+    if (selectedType.value && !post.tag_name?.includes(selectedType.value)) {
+      return false;
     }
 
     // Filter by amenities (checkboxes)
-    if (filter.value.length > 0) {
-      const postTags = post.boarding_house_tags.map(tag => tag.tags.name);
-      const hasRequiredAmenities = filter.value.every(amenity => postTags.includes(amenity));
-      if (!hasRequiredAmenities) {
-        return false;
-      }
+    if (filter.value.length > 0 && !filter.value.every(amenity => post.tag_name?.includes(amenity))) {
+      return false;
     }
 
     if (searchQuery.value) {
       const lowerCaseQuery = searchQuery.value.toLowerCase();
-      if (!(post.name.toLowerCase().includes(lowerCaseQuery) || post.description.toLowerCase().includes(lowerCaseQuery) || post.address.toLowerCase().includes(lowerCaseQuery))) {
-        return false;
-      }
+      return [post.name, post.description, post.address].some(field =>
+        field?.toLowerCase().includes(lowerCaseQuery)
+      );
     }
 
     return true;
@@ -96,8 +89,8 @@ const openCarousel = (index) => {
 
 const openDialog = (post) => {
   postDialog.value.PostContent = true
-  postDialog.value.tags = post.boarding_house_tags?.map(tag => tag.tags.name)
-  postDialog.value.images = post.boarding_house_images.map(image => image.image_url)
+  postDialog.value.tags = post.tags || []
+  postDialog.value.images = post.images || []
   postDialog.value.address = post.address
   postDialog.value.latitude = post.latitude
   postDialog.value.longitude = post.longitude
@@ -105,6 +98,7 @@ const openDialog = (post) => {
   postDialog.value.name = post.name
   postDialog.value.description = post.description
   postDialog.value.reviews = post.reviews || []
+  postDialog.value.owner_name = post.owner_name
 
   postDialog.value.boardingHouseId = post.id
 };
@@ -133,7 +127,7 @@ const addReview = async () => {
     postDialog.value.reviews.push({
       rating: newReview.rating,
       comment: newReview.comment,
-      name: newReview.name,
+      reviewer_name: newReview.name,
     });
 
     sheet.value = false
@@ -145,12 +139,23 @@ const addReview = async () => {
 }
 
 const averageRating = computed(() => {
-  if (postDialog.value.reviews && postDialog.value.reviews.length > 0) {
-    const totalRating = postDialog.value.reviews.reduce((acc, review) => acc + review.rating, 0)
-    return totalRating / postDialog.value.reviews.length
+  // Ensure reviews is a valid array
+  const reviews = postDialog.value.reviews || [];
+
+  if (reviews.length > 0) {
+    // Safely extract ratings from valid reviews
+    const validRatings = reviews
+      .filter(review => review && review.rating != null) // Ensure review exists and has a rating
+      .map(review => review.rating); // Extract ratings
+
+    if (validRatings.length > 0) {
+      const totalRating = validRatings.reduce((acc, rating) => acc + rating, 0);
+      return totalRating / validRatings.length; // Calculate the average
+    }
   }
-  return 0
-})
+
+  return 0; // Default to 0 if no valid ratings
+});
 
 
 const logout = async () => {
@@ -345,7 +350,7 @@ const logout = async () => {
                     <v-col cols="12" md="8">
                       <v-img
                         class="bg-grey rounded-lg mb-5"
-                        :src="post.boarding_house_images?.[0]?.image_url"
+                        :src="post.images[0]"
                         width="100%"
                         height="200"
                         cover
@@ -354,7 +359,7 @@ const logout = async () => {
                     <v-col cols="4" class="d-none d-md-block">
                       <v-img
                         class="bg-grey rounded-lg mb-5"
-                        :src="post.boarding_house_images?.[1]?.image_url"
+                        :src="post.images[1]"
                         width="100%"
                         height="200"
                         cover
@@ -366,19 +371,12 @@ const logout = async () => {
                   <p class="text-h5 font-weight-bold text-green mb-2 px-1">₱{{ post.price }}.00/month</p>
                   <div class="d-flex flex-wrap">
                     <v-chip
-                      v-if="post.boarding_house_tags.length > 0"
+                      v-for="(tag, index) in post.tags"
+                      :key="index"
                       class="mr-1 mb-1 px-3"
                       color="green"
                     >
-                      {{ post.boarding_house_tags[0].tags.name }}
-                    </v-chip>
-
-                    <v-chip
-                      v-if="post.boarding_house_tags.length > 1"
-                      class="mr-1 mb-1 px-3"
-                      color="green"
-                    >
-                      +{{ post.boarding_house_tags.length - 1 }} more
+                      {{ tag }}
                     </v-chip>
                   </div>
                 </v-card-text>
@@ -407,7 +405,7 @@ const logout = async () => {
             <v-card-title class="d-flex align-center justify-center font-weight-bold"
             >
               <v-spacer class="px-4"></v-spacer>
-              <h4>Your Post</h4>
+              <h4>{{ postDialog.owner_name }}'s Post</h4>
               <v-spacer></v-spacer>
               <v-btn
                 class="ma-2"
@@ -547,7 +545,7 @@ const logout = async () => {
                             size="50"
                           >
                           </v-avatar>
-                          <h3 class="font-weight-bold">{{ review.name }}</h3>
+                          <h3 class="font-weight-bold">{{ review.reviewer_name }}</h3>
                         </v-col>
                         <v-col cols="12" class="ml-5">
                           <v-rating

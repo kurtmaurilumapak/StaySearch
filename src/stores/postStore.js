@@ -144,7 +144,7 @@ export const usePostStore = defineStore('post', {
 
         const { data: review, error: reviewError } = await supabase
           .from('reviews')
-          .insert([{ ...reviewData, boarding_house_id: boardingHouseId, user_id: this.id, name: this.name }])
+          .insert([{ ...reviewData, boarding_house_id: boardingHouseId, user_id: this.id, reviewer_name: this.name }])
           .select()
           .single()
 
@@ -165,7 +165,7 @@ export const usePostStore = defineStore('post', {
 
         const { data: posts, error: postError } = await supabase
           .from('boarding_houses')
-          .select('*, boarding_house_images(image_url), boarding_house_tags(tag_id, tags(name)), reviews(comment, rating, name)')
+          .select('*, boarding_house_images(image_url), boarding_house_tags(tag_id, tags(tag_name)), reviews(comment, rating, name)')
           .eq('user_id', this.id)
 
 
@@ -181,8 +181,8 @@ export const usePostStore = defineStore('post', {
 
     async allPost() {
       const { data: posts, error: postError } = await supabase
-        .from('boarding_houses')
-        .select('*, boarding_house_images(image_url), boarding_house_tags(tag_id, tags(name)), reviews(comment, rating, name)')
+        .from('posts_data')
+        .select('*')
 
       if (postError) {
         throw postError
