@@ -107,11 +107,10 @@ onMounted(async () => {
   try {
     await postStore.allPost()
     await userStore.fetchUserData()
-  theme.global.name.value = userStore.userData.theme
   } catch (error) {
-    console.error('Error fetching posts:', error);
+    console.error('Error fetching posts:', error)
   }
-});
+})
 
 
 const addReview = async () => {
@@ -139,23 +138,21 @@ const addReview = async () => {
 }
 
 const averageRating = computed(() => {
-  // Ensure reviews is a valid array
-  const reviews = postDialog.value.reviews || [];
+  const reviews = postDialog.value.reviews || []
 
   if (reviews.length > 0) {
-    // Safely extract ratings from valid reviews
     const validRatings = reviews
-      .filter(review => review && review.rating != null) // Ensure review exists and has a rating
-      .map(review => review.rating); // Extract ratings
+      .filter(review => review && review.rating != null)
+      .map(review => review.rating)
 
     if (validRatings.length > 0) {
-      const totalRating = validRatings.reduce((acc, rating) => acc + rating, 0);
-      return totalRating / validRatings.length; // Calculate the average
+      const totalRating = validRatings.reduce((acc, rating) => acc + rating, 0)
+      return totalRating / validRatings.length
     }
   }
 
-  return 0; // Default to 0 if no valid ratings
-});
+  return 0
+})
 
 
 const logout = async () => {
@@ -532,34 +529,36 @@ const logout = async () => {
                   <div
                     class="d-flex flex-column text-start py-5 px-5"
                   >
-                    <div
+                    <v-card
                       v-for="(review, index) in postDialog.reviews"
                       :key="index"
                       class="mb-3 py-5"
                       style="background-color: ghostwhite; border-radius: 15px"
                     >
-                      <v-row>
-                        <v-col cols="12" class="d-flex align-center ga-5 ml-5">
-                          <v-avatar
-                            image="https://cdn.vuetifyjs.com/images/john.jpg"
-                            size="50"
-                          >
-                          </v-avatar>
-                          <h3 class="font-weight-bold">{{ review.reviewer_name }}</h3>
-                        </v-col>
-                        <v-col cols="12" class="ml-5">
-                          <v-rating
-                            size="small"
-                            :model-value="review.rating"
-                            color="yellow-darken-3"
-                            half-increments
-                          ></v-rating>
-                        </v-col>
-                        <v-col cols="12" class="px-10">
-                          <span style="font-size: 17px">{{ review.comment }}</span>
-                        </v-col>
-                      </v-row>
-                    </div>
+                      <v-card-text>
+                        <v-row>
+                          <v-col cols="2" sm="1">
+                            <v-avatar
+                              image="https://cdn.vuetifyjs.com/images/john.jpg"
+                              size="40"
+                            >
+                            </v-avatar>
+                          </v-col>
+                          <v-col cols="10" sm="11">
+                            <div class="d-flex flex-column">
+                              <h3 class="font-weight-bold pl-4">{{ review.reviewer_name }}</h3>
+                              <v-rating
+                                size="small"
+                                :model-value="review.rating"
+                                color="yellow-darken-3"
+                                half-increments
+                              ></v-rating>
+                              <span style="font-size: 14px" class="pl-4">{{ review.comment }}</span>
+                            </div>
+                          </v-col>
+                        </v-row>
+                      </v-card-text>
+                    </v-card>
                   </div>
                 </v-col>
               </v-row>
