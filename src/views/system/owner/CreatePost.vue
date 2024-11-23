@@ -264,6 +264,7 @@ const submitPost = async () => {
                     <v-card>
                       <div style="height: 500px; width: 100%">
                         <l-map
+                        :use-global-leaflet="false"
                         ref="map"
                         zoom="15"
                         :center="[8.9559, 125.59715]"
@@ -279,7 +280,6 @@ const submitPost = async () => {
                         <v-btn @click="finalizeMarker" style="margin-top: 10px;">
                           Finalize Marker
                         </v-btn>
-                        
                       </l-map>
                       <v-btn @click="finalizeMarker" class="text-none"
                       color="green-darken-2" style="margin-top: 5px; margin-left: 5px">
@@ -493,6 +493,7 @@ const submitPost = async () => {
                   <v-col cols="12">
                     <div class="d-flex flex-wrap mt-4 text-center" style="height: 300px; width: 100%; border-radius: 10px;">
                       <l-map
+                      :use-global-leaflet="false"
                         ref="map"
                         zoom="15"
                         :center="[8.9559, 125.59715]"
