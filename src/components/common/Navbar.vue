@@ -29,7 +29,6 @@ const logout = async () => {
 
 onMounted(async () => {
   await userStore.fetchUserData()
-  theme.global.name.value = userStore.userData.theme
 })
 
 </script>
