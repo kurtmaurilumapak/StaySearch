@@ -4,7 +4,7 @@ import Navbar from '@/components/common/Navbar.vue'
 import AppLayout from '@/components/layout/AppLayout.vue'
 import { usePostStore } from '@/stores/postStore.js'
 import UpdatePost from "@/components/system/owner/UpdatePost.vue";
-
+import { LMap, LTileLayer, LMarker } from "@vue-leaflet/vue-leaflet";
 const drawer = ref(true)
 const deleteDialog = ref(false)
 const deletePostId = ref(null)
@@ -34,6 +34,8 @@ const openDialog = (post) => {
   postDialog.value.tags = post.boarding_house_tags?.map(tag => tag.tags.name)
   postDialog.value.images = post.boarding_house_images.map(image => image.image_url)
   postDialog.value.address = post.address
+  postDialog.value.latitude = post.latitude
+  postDialog.value.longitude = post.longitude
   postDialog.value.price = post.price
   postDialog.value.name = post.name
   postDialog.value.description = post.description
@@ -327,6 +329,25 @@ const onDelete = (post) => {
                       </v-chip>
                     </div>
                   </div>
+                </v-col>
+                <v-col cols="12">
+                  <div class="d-flex flex-wrap mt-4 text-center" style="height: 300px; width: 100%; border-radius: 10px;">
+                      <l-map
+                     :use-global-leaflet="false"
+                        ref="map"
+                        zoom="15"
+                        :center="[postDialog.latitude, postDialog.longitude]"
+                        minZoom="15"
+                      >
+                        <l-tile-layer
+                          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                          layer-type="base"
+                          name="OpenStreetMap"
+                        ></l-tile-layer>
+                        <l-marker :lat-lng="[postDialog.latitude, postDialog.longitude]"></l-marker>
+
+                      </l-map>
+                    </div>
                 </v-col>
                 <v-col cols="12" class="d-block">
                   <div class="d-flex justify-space-between">
