@@ -183,6 +183,7 @@ export const usePostStore = defineStore('post', {
       const { data: posts, error: postError } = await supabase
         .from('posts_data')
         .select('*')
+        .order('created_at', { ascending: false });
 
       if (postError) {
         throw postError
