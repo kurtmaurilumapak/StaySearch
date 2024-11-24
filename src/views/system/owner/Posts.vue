@@ -5,6 +5,9 @@ import AppLayout from '@/components/layout/AppLayout.vue'
 import { usePostStore } from '@/stores/postStore.js'
 import UpdatePost from "@/components/system/owner/UpdatePost.vue";
 import { LMap, LTileLayer, LMarker } from "@vue-leaflet/vue-leaflet";
+import "leaflet/dist/leaflet.css"
+
+
 const drawer = ref(true)
 const deleteDialog = ref(false)
 const deletePostId = ref(null)
@@ -335,22 +338,22 @@ const onDelete = (post) => {
                 </v-col>
                 <v-col cols="12">
                   <div class="d-flex flex-wrap mt-4 text-center" style="height: 300px; width: 100%; border-radius: 10px;">
-                      <l-map
-                     :use-global-leaflet="false"
-                        ref="map"
-                        zoom="15"
-                        :center="[postDialog.latitude, postDialog.longitude]"
-                        minZoom="15"
-                      >
-                        <l-tile-layer
-                          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                          layer-type="base"
-                          name="OpenStreetMap"
-                        ></l-tile-layer>
-                        <l-marker :lat-lng="[postDialog.latitude, postDialog.longitude]"></l-marker>
+                    <l-map
+                      :use-global-leaflet="false"
+                      ref="map"
+                      zoom="15"
+                      :center="[postDialog.latitude, postDialog.longitude]"
+                      minZoom="15"
+                    >
+                      <l-tile-layer
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        layer-type="base"
+                        name="OpenStreetMap"
+                      ></l-tile-layer>
+                      <l-marker :lat-lng="[postDialog.latitude, postDialog.longitude]"></l-marker>
 
-                      </l-map>
-                    </div>
+                    </l-map>
+                  </div>
                 </v-col>
                 <v-col cols="12" class="d-block">
                   <div class="d-flex justify-space-between">

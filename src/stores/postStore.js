@@ -203,7 +203,6 @@ export const usePostStore = defineStore('post', {
           throw new Error("Failed to update post: " + error.message);
         }
 
-        // Optional: Update local posts state if necessary
         const postIndex = this.posts.findIndex(post => post.id === postId);
         if (postIndex !== -1) {
           this.posts[postIndex] = { ...this.posts[postIndex], ...updatedData };
