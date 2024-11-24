@@ -8,6 +8,7 @@ import { useTheme } from 'vuetify'
 import { useUserStore } from '@/stores/userStore'
 import { LMap, LTileLayer, LMarker } from "@vue-leaflet/vue-leaflet";
 import "leaflet/dist/leaflet.css"
+import { formatDistanceToNow } from 'date-fns'
 
 const router = useRouter()
 const theme = useTheme()
@@ -35,7 +36,15 @@ const searchQuery = ref('')
 const selectedType = ref('')
 
 const filteredPosts = computed(() => {
-  return postStore.posts.filter(post => {
+  return postStore.posts.map(post => {
+    const postTime = new Date(post.created_at);
+    const timeAgo = formatDistanceToNow(postTime, { addSuffix: true });
+
+    return {
+      ...post,
+      timeAgo,
+    };
+  }).filter(post => {
     const priceRange = priceRanges[priceRangeIndex.value].range;
     const postPrice = post.price;
 
@@ -363,6 +372,7 @@ const logout = async () => {
                       ></v-img>
                     </v-col>
                   </v-row>
+                  <p class="text-h7 font-weight-light text-disabled">{{ post.timeAgo }}</p>
                   <p class="text-h5 font-weight-bold text-green-darken-3">{{ post.name }}</p>
                   <p class="text-subtitle-2 text-disabled truncate">{{ post.address }}</p>
                   <p class="text-h5 font-weight-bold text-green mb-2 px-1">₱{{ post.price }}.00/month</p>
