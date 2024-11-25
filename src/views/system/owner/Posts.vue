@@ -6,6 +6,7 @@ import { usePostStore } from '@/stores/postStore.js'
 import UpdatePost from "@/components/system/owner/UpdatePost.vue";
 import { LMap, LTileLayer, LMarker } from "@vue-leaflet/vue-leaflet";
 import "leaflet/dist/leaflet.css"
+import { formatDistanceToNow } from 'date-fns'
 
 
 const drawer = ref(true)
@@ -42,7 +43,16 @@ const openDialog = (post) => {
   postDialog.value.price = post.price
   postDialog.value.name = post.name
   postDialog.value.description = post.description
-  postDialog.value.reviews = post.reviews || []
+
+  postDialog.value.reviews = (post.reviews || []).map(review => {
+    const reviewTime = new Date(review.created_at);
+    const timeAgo = formatDistanceToNow(reviewTime, { addSuffix: true });
+
+    return {
+      ...review,
+      timeAgo,
+    };
+  });
 };
 
 const onUpdate = (post) => {
@@ -61,8 +71,16 @@ const averageRating = computed(() => {
 const posts = ref([]);
 onMounted(async () => {
   try {
-    await postStore.ownerPost(); // Fetch posts of the logged-in user
-    posts.value = postStore.posts; // Assign fetched posts to local variable
+    await postStore.ownerPost()
+    posts.value = postStore.posts.map(post => {
+      const postTime = new Date(post.created_at)
+      const timeAgo = formatDistanceToNow(postTime, { addSuffix: true })
+
+      return {
+        ...post,
+        timeAgo,
+      }
+    })
 
   } catch (error) {
     console.error('Error fetching posts:', error);
@@ -184,6 +202,7 @@ const onDelete = (post) => {
                           ></v-img>
                         </v-col>
                       </v-row>
+                      <p class="text-h7 font-weight-light text-disabled">{{ post.timeAgo }}</p>
                       <p class="text-h5 font-weight-bold text-green-darken-3">{{ post.name }}</p>
                       <p class="text-subtitle-2 text-disabled truncate">{{ post.address }}</p>
                       <p class="text-h5 font-weight-bold text-green mb-2 px-1">₱{{ post.price }}.00/month</p>
@@ -397,6 +416,8 @@ const onDelete = (post) => {
                           >
                           </v-avatar>
                           <h3 class="font-weight-bold pl-4">{{ review.reviewer_name }}</h3>
+                          <v-spacer></v-spacer>
+                          <p class="text-caption text-muted">{{ review.timeAgo }}</p>
                         </div>
                         <v-divider class="mt-3"></v-divider>
                         <div class="d-flex flex-column">
