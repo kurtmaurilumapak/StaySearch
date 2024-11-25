@@ -572,7 +572,7 @@ const logout = async () => {
                     <v-card
                       v-for="(review, index) in postDialog.reviews"
                       :key="index"
-                      class="mb-3"
+                      class="mb-3 border border-b-lg"
                       style="background-color: ghostwhite; border-radius: 15px"
                     >
                       <v-card-text>
