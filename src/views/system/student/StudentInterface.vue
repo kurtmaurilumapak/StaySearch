@@ -23,7 +23,9 @@ const openReservationsDialog = () => {
   reservationsDialogOpen.value = true;
 }
 const addReservationDialogOpen = ref(false)
+const boardingHouseId = ref(null)
 const openAddReservationDialog = () => {
+  boardingHouseId.value = postDialog.value.boardingHouseId
   addReservationDialogOpen.value = true;
 };
 
@@ -655,6 +657,7 @@ const logout = async () => {
 
       <AddReservation
         :isOpen="addReservationDialogOpen"
+        :boardingHouseId="boardingHouseId"
         @update:isOpen="addReservationDialogOpen = $event"
       />
 

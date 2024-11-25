@@ -144,7 +144,7 @@ const saveChanges = async () => {
       </v-card-text>
       <v-card-actions>
         <v-btn color="primary" @click="saveChanges">Save</v-btn>
-        <v-btn text @click="closeDialog">Cancel</v-btn>
+        <v-btn @click="closeDialog">Cancel</v-btn>
       </v-card-actions>
     </v-card>
 

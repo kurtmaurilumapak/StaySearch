@@ -1,9 +1,15 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { format } from 'date-fns'
+import { usePostStore } from '@/stores/postStore.js'
+
+
+const postStore = usePostStore();
+
 
 const props = defineProps({
   isOpen: Boolean,
+  boardingHouseId: Number,
 })
 
 const emit = defineEmits(['update:isOpen'])
@@ -25,10 +31,15 @@ const closeDialog = () => {
   emit('update:isOpen', false)
 }
 
-const submitReservation = () => {
+const submitReservation = async () => {
   const formattedDate = format(reservationDate.value, 'yyyy-MM-dd')
   console.log('Reservation submitted', formattedDate)
-  closeDialog();
+  try {
+    await postStore.addReservation(props.boardingHouseId, formattedDate)
+    closeDialog();
+  }catch (error) {
+    console.error("Failed to add reservation:", error);
+  }
 }
 
 </script>
