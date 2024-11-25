@@ -24,12 +24,9 @@ const updatePostData = ref({
   images: [],
 })
 
-watch(
-  () => props.isOpen,
-  (newVal) => {
-    localIsOpen.value = newVal;
-  }
-);
+watch(() => props.isOpen, (newVal) => {
+  localIsOpen.value = newVal;
+});
 
 watch(
   () => props.post,

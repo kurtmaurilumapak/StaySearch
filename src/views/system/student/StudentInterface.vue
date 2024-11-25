@@ -9,6 +9,8 @@ import { useUserStore } from '@/stores/userStore'
 import { LMap, LTileLayer, LMarker } from "@vue-leaflet/vue-leaflet";
 import "leaflet/dist/leaflet.css"
 import { formatDistanceToNow } from 'date-fns'
+import ReservationsPage from '@/components/system/student/ReservationsPage.vue'
+import AddReservation from '@/components/system/student/AddReservation.vue'
 
 const router = useRouter()
 const theme = useTheme()
@@ -16,6 +18,14 @@ const useAuth = useAuthStore()
 const postStore = usePostStore()
 const userStore = useUserStore()
 
+const reservationsDialogOpen = ref(false)
+const openReservationsDialog = () => {
+  reservationsDialogOpen.value = true;
+}
+const addReservationDialogOpen = ref(false)
+const openAddReservationDialog = () => {
+  addReservationDialogOpen.value = true;
+};
 
 const rating = ref(1)
 const comment = ref('')
@@ -230,6 +240,7 @@ const logout = async () => {
                       variant="text"
                       rounded
                       block
+                      @click="openReservationsDialog"
                     >
                       My Reservations
                     </v-btn>
@@ -289,7 +300,7 @@ const logout = async () => {
         </v-col>
 
         <v-col cols="12" md="3" lg="2">
-          <v-expansion-panels class="mb-6">
+          <v-expansion-panels class="mb-6 border">
             <v-expansion-panel>
               <v-expansion-panel-title
                 expand-icon="mdi-menu-down"
@@ -477,7 +488,7 @@ const logout = async () => {
                     </v-col>
                   </v-row>
                 </v-col>
-                <v-col cols="12">
+                <v-col cols="12" class="d-flex justify-space-between">
                   <div v-if="postDialog.tags.length > 0">
                     <div class="d-flex flex-wrap">
                       <v-chip
@@ -491,6 +502,13 @@ const logout = async () => {
                       </v-chip>
                     </div>
                   </div>
+                  <v-btn
+                    class="text-none"
+                    color="green"
+                    @click="openAddReservationDialog"
+                  >
+                    Reservation
+                  </v-btn>
                 </v-col>
                 <v-col cols="12">
                   <div class="d-flex flex-wrap mt-4 text-center" style="height: 300px; width: 100%; border-radius: 10px;">
@@ -634,6 +652,16 @@ const logout = async () => {
           </v-carousel-item>
         </v-carousel>
       </v-dialog>
+
+      <AddReservation
+        :isOpen="addReservationDialogOpen"
+        @update:isOpen="addReservationDialogOpen = $event"
+      />
+
+      <ReservationsPage
+        :isOpen="reservationsDialogOpen"
+        @update:isOpen="reservationsDialogOpen = $event"
+      />
 
     </template>
   </AppLayout>
