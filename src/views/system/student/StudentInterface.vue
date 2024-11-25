@@ -118,10 +118,20 @@ const openDialog = (post) => {
   postDialog.value.price = post.price
   postDialog.value.name = post.name
   postDialog.value.description = post.description
-  postDialog.value.reviews = post.reviews || []
   postDialog.value.owner_name = post.owner_name
 
   postDialog.value.boardingHouseId = post.id
+
+  postDialog.value.reviews = (post.reviews || []).map(review => {
+    const reviewTime = new Date(review.created_at); // Assuming each review has a created_at timestamp
+    const timeAgo = formatDistanceToNow(reviewTime, { addSuffix: true });
+
+    return {
+      ...review,
+      timeAgo, // Add the timeAgo property
+    };
+  });
+
 };
 
 onMounted(async () => {
@@ -583,6 +593,8 @@ const logout = async () => {
                           >
                           </v-avatar>
                           <h3 class="font-weight-bold pl-4">{{ review.reviewer_name }}</h3>
+                          <v-spacer></v-spacer>
+                          <p class="text-caption text-muted">{{ review.timeAgo }}</p>
                         </div>
                         <v-divider class="mt-3"></v-divider>
                         <div class="d-flex flex-column">
