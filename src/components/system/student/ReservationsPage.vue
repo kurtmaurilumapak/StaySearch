@@ -1,5 +1,8 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted } from 'vue'
+import { usePostStore } from '@/stores/postStore.js'
+
+const postStore = usePostStore();
 
 const props = defineProps({
   isOpen: Boolean,
@@ -16,6 +19,14 @@ watch(() => props.isOpen, (newVal) => {
 const closeDialog = () => {
   emit('update:isOpen', false)
 }
+
+onMounted(async () => {
+  try {
+    await postStore.showReservations()
+  } catch (error) {
+    console.error('Error fetching posts:', error)
+  }
+})
 
 
 </script>
@@ -36,11 +47,16 @@ const closeDialog = () => {
 
       <v-card-text>
         <v-row no-gutters>
-          <v-col cols="12" class="d-flex justify-space-between border pa-3 mb-2 rounded-lg border-b-lg">
+          <v-col
+            v-for="reservation in postStore.reservations"
+            :key="reservation.id"
+            cols="12"
+            class="d-flex justify-space-between border pa-3 mb-2 rounded-lg border-b-lg"
+          >
             <div>
-              <h4>yyyy/mm/dd</h4>
-              <h3>Boarding House Name</h3>
-              <p>address</p>
+              <h4>{{ reservation.checkin_date }}</h4>
+              <h3>{{ reservation.boarding_houses?.name }}</h3>
+              <p class="text-disabled" style="font-size: 14px">{{ reservation.boarding_houses?.address }}</p>
             </div>
             <div class="text-center">
               <p>status</p>
