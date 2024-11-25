@@ -70,12 +70,12 @@ const filteredPosts = computed(() => {
     }
 
     // Filter by boarding house type
-    if (selectedType.value && !post.tag_name?.includes(selectedType.value)) {
+    if (selectedType.value && !post.tags?.includes(selectedType.value)) {
       return false;
     }
 
     // Filter by amenities (checkboxes)
-    if (filter.value.length > 0 && !filter.value.every(amenity => post.tag_name?.includes(amenity))) {
+    if (filter.value.length > 0 && !filter.value.every(amenity => post.tags?.includes(amenity))) {
       return false;
     }
 
