@@ -47,6 +47,13 @@ onMounted(async () => {
 
       <v-card-text>
         <v-row no-gutters>
+
+          <template v-if="postStore.reservations.length === 0">
+            <v-col cols="12" class="d-flex justify-center">
+              <p class="text-center text-disabled">No Reservations</p>
+            </v-col>
+          </template>
+
           <v-col
             v-for="reservation in postStore.reservations"
             :key="reservation.id"

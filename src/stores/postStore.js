@@ -89,7 +89,7 @@ export const usePostStore = defineStore('post', {
       const { data: typeIds, error: typeError } = await supabase
         .from('tags')
         .select('id')
-        .eq('name', selectedTypes)
+        .eq('tag_name', selectedTypes)
 
 
       if (typeError) {
@@ -99,7 +99,7 @@ export const usePostStore = defineStore('post', {
       const { data: inclusionIds, error: inclusionError } = await supabase
         .from('tags')
         .select('id')
-        .in('name', selectedInclusions)
+        .in('tag_name', selectedInclusions)
 
       if (inclusionError) {
         throw inclusionError
