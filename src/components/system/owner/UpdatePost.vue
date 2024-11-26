@@ -5,7 +5,7 @@ import { usePostStore } from "@/stores/postStore";
 const props = defineProps({
   post: Object,
   isOpen: Boolean,
-})
+});
 
 const emit = defineEmits(["close", "updated"]);
 
@@ -14,6 +14,7 @@ const confirmDeleteImage = ref(false);
 const selectedImageIndex = ref(null);
 const selectedImageUrl = ref(null);
 const localIsOpen = ref(props.isOpen);
+const newImages = ref([]); // New images to be added
 
 const updatePostData = ref({
   id: null,
@@ -22,11 +23,14 @@ const updatePostData = ref({
   price: "",
   description: "",
   images: [],
-})
-
-watch(() => props.isOpen, (newVal) => {
-  localIsOpen.value = newVal;
 });
+
+watch(
+  () => props.isOpen,
+  (newVal) => {
+    localIsOpen.value = newVal;
+  }
+);
 
 watch(
   () => props.post,
@@ -43,7 +47,7 @@ watch(
     }
   },
   { immediate: true }
-)
+);
 
 const closeDialog = () => {
   emit("close");
@@ -53,7 +57,7 @@ const confirmImageRemoval = (index, imageUrl) => {
   selectedImageIndex.value = index;
   selectedImageUrl.value = imageUrl;
   confirmDeleteImage.value = true;
-}
+};
 
 const removeImage = async () => {
   try {
@@ -69,16 +73,27 @@ const removeImage = async () => {
   } catch (error) {
     console.error("Failed to remove image:", error);
   }
-}
+};
+
+const handleFileChange = (event) => {
+  const files = event.target.files;
+  for (let i = 0; i < files.length; i++) {
+    newImages.value.push({ file: files[i], preview: URL.createObjectURL(files[i]) });
+  }
+};
 
 const saveChanges = async () => {
   try {
-    await postStore.updatePost(updatePostData.value.id, {
-      name: updatePostData.value.name,
-      address: updatePostData.value.address,
-      price: updatePostData.value.price,
-      description: updatePostData.value.description,
-    });
+    await postStore.updatePost(
+      updatePostData.value.id,
+      {
+        name: updatePostData.value.name,
+        address: updatePostData.value.address,
+        price: updatePostData.value.price,
+        description: updatePostData.value.description,
+      },
+      newImages.value // Pass new images to the store
+    );
 
     emit("updated", updatePostData.value); // Notify parent about the update
     closeDialog();
@@ -86,8 +101,8 @@ const saveChanges = async () => {
     console.error("Failed to save changes:", error);
   }
 };
-
 </script>
+
 
 <template>
   <v-dialog v-model="localIsOpen" max-width="800px" persistent>
@@ -101,23 +116,11 @@ const saveChanges = async () => {
       </v-card-title>
       <v-card-text>
         <v-form>
-          <v-text-field
-            v-model="updatePostData.name"
-            label="Name"
-          ></v-text-field>
-          <v-text-field
-            v-model="updatePostData.address"
-            label="Address"
-          ></v-text-field>
-          <v-text-field
-            v-model="updatePostData.price"
-            label="Price"
-            type="number"
-          ></v-text-field>
-          <v-textarea
-            v-model="updatePostData.description"
-            label="Description"
-          ></v-textarea>
+          <v-text-field v-model="updatePostData.name" label="Name"></v-text-field>
+          <v-text-field v-model="updatePostData.address" label="Address"></v-text-field>
+          <v-text-field v-model="updatePostData.price" label="Price" type="number"></v-text-field>
+          <v-textarea v-model="updatePostData.description" label="Description"></v-textarea>
+
           <div>
             <h4>Images</h4>
             <v-row>
@@ -139,6 +142,40 @@ const saveChanges = async () => {
                 </v-btn>
               </v-col>
             </v-row>
+
+            <!-- Display new image previews -->
+            <h5>New Images</h5>
+            <v-row>
+              <v-col
+                v-for="(image, index) in newImages"
+                :key="'new-' + index"
+                cols="4"
+                class="position-relative"
+              >
+                <v-img :src="image.preview" aspect-ratio="1" class="mb-2"></v-img>
+              </v-col>
+            </v-row>
+
+            <!-- File input for adding new images -->
+        
+            <v-btn
+                      class="text-none"
+                      color="green-darken-2"
+                      @click="$refs.fileInput.$el.querySelector('input').click()"
+                    >
+                      <v-icon>mdi-upload</v-icon>
+                      Add more images
+                    </v-btn>
+                    <v-file-input
+                      ref="fileInput"
+                      accept=".jpg, .jpeg, .png"
+                      prepend-icon=false
+                      multiple
+                      hide-input
+                      @change="handleFileChange"
+                    >
+                    </v-file-input>
+            
           </div>
         </v-form>
       </v-card-text>
