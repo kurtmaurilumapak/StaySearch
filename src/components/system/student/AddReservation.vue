@@ -36,6 +36,7 @@ const submitReservation = async () => {
   console.log('Reservation submitted', formattedDate)
   try {
     await postStore.addReservation(props.boardingHouseId, formattedDate)
+    window.location.reload();
     closeDialog();
   }catch (error) {
     console.error("Failed to add reservation:", error);
