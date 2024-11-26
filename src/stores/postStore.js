@@ -192,30 +192,81 @@ export const usePostStore = defineStore('post', {
 
       this.posts = posts
     },
-    async updatePost(postId, updatedData) {
+    async updatePost(postId, updatedData, newImages = []) {
       try {
+        // Update the post data in the database
         const { data, error } = await supabase
           .from('boarding_houses')
           .update(updatedData)
           .eq('id', postId)
           .select()
           .single();
-
+    
         if (error) {
           throw new Error("Failed to update post: " + error.message);
         }
-
+    
+        // If new images are provided, handle their upload
+        const imageUrls = [];
+        for (let i = 0; i < newImages.length; i++) {
+          const { file } = newImages[i];
+          const uniqueFileName = `updated_image${i + 1}_${file.name}`;
+    
+          // Upload image
+          const { data: uploadData, error: uploadError } = await supabase.storage
+            .from('user_images')
+            .upload(`owners/${this.id}/${postId}/${uniqueFileName}`, file);
+    
+          if (uploadError) {
+            console.error('Image Upload Error:', uploadError.message);
+            throw uploadError;
+          }
+    
+          // Retrieve public URL
+          const { data: publicUrlData, error: urlError } = supabase.storage
+            .from('user_images')
+            .getPublicUrl(uploadData.path);
+    
+          if (urlError || !publicUrlData?.publicUrl) {
+            console.error('Error getting public URL:', urlError?.message || 'No public URL found');
+          } else {
+            imageUrls.push(publicUrlData.publicUrl);
+          }
+        }
+    
+        // Insert new image URLs into the database
+        if (imageUrls.length > 0) {
+          const postImages = imageUrls.map((image_url) => ({
+            boarding_house_id: postId,
+            image_url,
+          }));
+    
+          const { error: imagesError } = await supabase
+            .from('boarding_house_images')
+            .insert(postImages);
+    
+          if (imagesError) {
+            console.error('Error adding new images:', imagesError.message);
+            throw imagesError;
+          }
+        }
+    
+        // Update the local state to reflect changes
         const postIndex = this.posts.findIndex(post => post.id === postId);
         if (postIndex !== -1) {
-          this.posts[postIndex] = { ...this.posts[postIndex], ...updatedData };
+          this.posts[postIndex] = {
+            ...this.posts[postIndex],
+            ...updatedData,
+          };
         }
-
+    
         return data;
       } catch (err) {
         console.error("Update Post Error:", err);
         throw err;
       }
     },
+    
     async removeImageFromPost(postID, imageUrl) {
       try {
         // Remove from database
@@ -234,6 +285,71 @@ export const usePostStore = defineStore('post', {
       } catch (error) {
         console.error("Error in removeImageFromPost:", error.message);
         throw error;
+      }
+    },
+    async updateTagsForPost(postId, selectedTypes, selectedInclusions) {
+      try {
+        // First, remove existing tags
+        const { error: removeError } = await supabase
+          .from('boarding_house_tags')
+          .delete()
+          .eq('boarding_house_id', postId)
+
+        if (removeError) {
+          throw removeError
+        }
+
+        // Insert new tags (types and inclusions)
+        const boardingHouseTags = []
+        const { data: typeIds, error: typeError } = await supabase
+          .from('tags')
+          .select('id')
+          .eq('tag_name', selectedTypes)
+
+        if (typeError) {
+          throw typeError
+        }
+
+        const { data: inclusionIds, error: inclusionError } = await supabase
+          .from('tags')
+          .select('id')
+          .in('tag_name', selectedInclusions)
+
+        if (inclusionError) {
+          throw inclusionError
+        }
+
+        if (typeIds) {
+          typeIds.forEach(tag => {
+            boardingHouseTags.push({
+              boarding_house_id: postId,
+              tag_id: tag.id,
+            })
+          })
+        }
+
+        if (inclusionIds) {
+          inclusionIds.forEach(tag => {
+            boardingHouseTags.push({
+              boarding_house_id: postId,
+              tag_id: tag.id,
+            })
+          })
+        }
+
+        // Insert new tags into boarding_house_tags
+        const { error: tagsError } = await supabase
+          .from('boarding_house_tags')
+          .insert(boardingHouseTags)
+
+        if (tagsError) {
+          throw tagsError
+        }
+
+        return true
+      } catch (error) {
+        console.error("Error updating tags:", error)
+        throw error
       }
     },
     async deletePost(postID) {
