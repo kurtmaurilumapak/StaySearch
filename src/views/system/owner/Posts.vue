@@ -43,7 +43,15 @@ const openDialog = (post) => {
   postDialog.value.price = post.price
   postDialog.value.name = post.name
   postDialog.value.description = post.description
-  postDialog.value.reviews = post.reviews || []
+  postDialog.value.reviews = (post.reviews || []).map(review => {
+    const reviewTime = new Date(review.created_at); // Assuming each review has a created_at timestamp
+    const timeAgo = formatDistanceToNow(reviewTime, { addSuffix: true });
+
+    return {
+      ...review,
+      timeAgo,
+    };
+  });
 };
 
 const onUpdate = (post) => {
@@ -87,7 +95,6 @@ const onDelete = (post) => {
   deletePostId.value = post.id;
   deleteDialog.value = true;
 }
-
 </script>
 
 
@@ -403,6 +410,7 @@ const onDelete = (post) => {
                           </v-avatar>
                           <h3 class="font-weight-bold pl-4">{{ review.reviewer_name }}</h3>
                           <v-spacer></v-spacer>
+                          <p class="text-caption">{{ review.timeAgo }}</p>
                         </div>
                         <v-divider class="mt-3"></v-divider>
                         <div class="d-flex flex-column">

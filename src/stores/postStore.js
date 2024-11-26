@@ -166,7 +166,7 @@ export const usePostStore = defineStore('post', {
 
         const { data: posts, error: postError } = await supabase
           .from('boarding_houses')
-          .select('*, boarding_house_images(image_url), boarding_house_tags(tag_id, tags(tag_name)), reviews(comment, rating, reviewer_name)')
+          .select('*, boarding_house_images(image_url), boarding_house_tags(tag_id, tags(tag_name)), reviews(created_at, comment, rating, reviewer_name)')
           .eq('user_id', this.id)
 
 
