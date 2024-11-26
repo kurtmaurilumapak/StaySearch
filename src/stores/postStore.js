@@ -287,6 +287,71 @@ export const usePostStore = defineStore('post', {
         throw error;
       }
     },
+    async updateTagsForPost(postId, selectedTypes, selectedInclusions) {
+      try {
+        // First, remove existing tags
+        const { error: removeError } = await supabase
+          .from('boarding_house_tags')
+          .delete()
+          .eq('boarding_house_id', postId)
+
+        if (removeError) {
+          throw removeError
+        }
+
+        // Insert new tags (types and inclusions)
+        const boardingHouseTags = []
+        const { data: typeIds, error: typeError } = await supabase
+          .from('tags')
+          .select('id')
+          .eq('tag_name', selectedTypes)
+
+        if (typeError) {
+          throw typeError
+        }
+
+        const { data: inclusionIds, error: inclusionError } = await supabase
+          .from('tags')
+          .select('id')
+          .in('tag_name', selectedInclusions)
+
+        if (inclusionError) {
+          throw inclusionError
+        }
+
+        if (typeIds) {
+          typeIds.forEach(tag => {
+            boardingHouseTags.push({
+              boarding_house_id: postId,
+              tag_id: tag.id,
+            })
+          })
+        }
+
+        if (inclusionIds) {
+          inclusionIds.forEach(tag => {
+            boardingHouseTags.push({
+              boarding_house_id: postId,
+              tag_id: tag.id,
+            })
+          })
+        }
+
+        // Insert new tags into boarding_house_tags
+        const { error: tagsError } = await supabase
+          .from('boarding_house_tags')
+          .insert(boardingHouseTags)
+
+        if (tagsError) {
+          throw tagsError
+        }
+
+        return true
+      } catch (error) {
+        console.error("Error updating tags:", error)
+        throw error
+      }
+    },
     async deletePost(postID) {
       const { error } = await supabase.from('boarding_houses').delete().eq('id', postID)
 

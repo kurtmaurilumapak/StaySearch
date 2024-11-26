@@ -15,6 +15,8 @@ const selectedImageIndex = ref(null);
 const selectedImageUrl = ref(null);
 const localIsOpen = ref(props.isOpen);
 const newImages = ref([]); // New images to be added
+const selectedTypes = ref([]); // Selected types
+const selectedInclusions = ref([]); // Selected inclusions
 
 const updatePostData = ref({
   id: null,
@@ -44,6 +46,13 @@ watch(
         description: newPost.description,
         images: newPost.boarding_house_images.map((image) => image.image_url),
       };
+      // Set selected types and inclusions based on current post tags
+      selectedTypes.value = newPost.boarding_house_tags
+        .filter(tag => tag.tag_name === "type")
+        .map(tag => tag.tag_name);
+      selectedInclusions.value = newPost.boarding_house_tags
+        .filter(tag => tag.tag_name === "inclusion")
+        .map(tag => tag.tag_name);
     }
   },
   { immediate: true }
@@ -84,6 +93,7 @@ const handleFileChange = (event) => {
 
 const saveChanges = async () => {
   try {
+    // Save changes to post
     await postStore.updatePost(
       updatePostData.value.id,
       {
@@ -95,6 +105,13 @@ const saveChanges = async () => {
       newImages.value // Pass new images to the store
     );
 
+    // Update tags for the post
+    await postStore.updateTagsForPost(
+      updatePostData.value.id,
+      selectedTypes.value, // Selected types
+      selectedInclusions.value // Selected inclusions
+    );
+
     emit("updated", updatePostData.value); // Notify parent about the update
     window.location.reload();
     closeDialog();
@@ -103,6 +120,7 @@ const saveChanges = async () => {
   }
 };
 </script>
+
 
 
 <template>
@@ -121,7 +139,38 @@ const saveChanges = async () => {
           <v-text-field v-model="updatePostData.address" label="Address"></v-text-field>
           <v-text-field v-model="updatePostData.price" label="Price" type="number"></v-text-field>
           <v-textarea v-model="updatePostData.description" label="Description"></v-textarea>
-
+          <v-col cols="6">
+                    <v-select
+                      v-model="selectedTypes"
+                      :items="['All Boys', 'All Girls', 'Mix']"
+                      label="Boarding House Type"
+                      color="green-darken-1"
+                      variant="outlined"
+                    />
+                  </v-col>
+                  <v-col cols="6">
+                    <span>Inclusion:</span>
+                    <v-checkbox
+                      color="green-darken-1"
+                      :value="'Free Wifi'"
+                      v-model="selectedInclusions"
+                      label="Free WiFi"
+                    ></v-checkbox>
+                    <v-checkbox
+                      color="green-darken-1"
+                      :value="'Free Water'"
+                      v-model="selectedInclusions"
+                      label="Free Water"
+                    ></v-checkbox>
+                    <v-checkbox
+                      color="green-darken-1"
+                      :value="'Free Electricity'"
+                      v-model="selectedInclusions"
+                      label="Free Electricity"
+                    ></v-checkbox>
+                  </v-col>
+         
+          
           <div>
             <h4>Images</h4>
             <v-row>
