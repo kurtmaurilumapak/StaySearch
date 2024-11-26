@@ -43,16 +43,7 @@ const openDialog = (post) => {
   postDialog.value.price = post.price
   postDialog.value.name = post.name
   postDialog.value.description = post.description
-
-  postDialog.value.reviews = (post.reviews || []).map(review => {
-    const reviewTime = new Date(review.created_at);
-    const timeAgo = formatDistanceToNow(reviewTime, { addSuffix: true });
-
-    return {
-      ...review,
-      timeAgo,
-    };
-  });
+  postDialog.value.reviews = post.reviews || []
 };
 
 const onUpdate = (post) => {
@@ -405,8 +396,8 @@ const onDelete = (post) => {
                     <v-card
                       v-for="(review, index) in postDialog.reviews"
                       :key="index"
-                      class="mb-3 py-5"
-                      style="background-color: ghostwhite; border-radius: 15px"
+                      class="mb-3 border border-b-lg"
+                      style="border-radius: 15px"
                     >
                       <v-card-text>
                         <div class="d-flex">
@@ -417,7 +408,6 @@ const onDelete = (post) => {
                           </v-avatar>
                           <h3 class="font-weight-bold pl-4">{{ review.reviewer_name }}</h3>
                           <v-spacer></v-spacer>
-                          <p class="text-caption text-muted">{{ review.timeAgo }}</p>
                         </div>
                         <v-divider class="mt-3"></v-divider>
                         <div class="d-flex flex-column">
