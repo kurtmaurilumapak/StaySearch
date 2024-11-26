@@ -72,6 +72,12 @@ const router = createRouter({
       name: 'approved',
       component: () => import('@/views/system/admin/Approved.vue')
     },
+    {
+      path: '/user/select',
+      name: 'select',
+      component: () => import('@/views/auth/RoleSelection.vue'),
+      meta: { requiresAuth: true},
+    },
   ]
 })
 
@@ -81,6 +87,13 @@ router.beforeEach(async (to, from, next) => {
   const userRole = session?.user?.user_metadata?.role;
 
   const isAuthenticated = !!session;
+  if (isAuthenticated && to.name === 'select') {
+    if (userRole === 'owner') {
+      return next({ name: 'dashboard' });
+    } else if (userRole === 'student') {
+      return next({ name: 'student' });
+    }
+  }
 
   if (isAuthenticated && (to.name === 'login' || to.name === 'signup' || to.name === 'landing')) {
     if (userRole === 'owner') {
@@ -88,7 +101,7 @@ router.beforeEach(async (to, from, next) => {
     } else if (userRole === 'student') {
       return next({ name: 'student' });
     } else {
-      return next({ name: 'landing' });
+      return next({ name: 'select' });
     }
   }
 
