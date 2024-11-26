@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 import { usePostStore } from "@/stores/postStore";
 
 const props = defineProps({
@@ -17,6 +17,7 @@ const localIsOpen = ref(props.isOpen);
 const newImages = ref([]); // New images to be added
 const selectedTypes = ref([]); // Selected types
 const selectedInclusions = ref([]); // Selected inclusions
+
 
 const updatePostData = ref({
   id: null,
@@ -90,7 +91,15 @@ const handleFileChange = (event) => {
     newImages.value.push({ file: files[i], preview: URL.createObjectURL(files[i]) });
   }
 };
-
+const isFormFilled = computed(() => {
+  return (
+    updatePostData.value.name.trim() &&
+    updatePostData.value.address.trim() &&
+    updatePostData.value.price &&
+    updatePostData.value.description.trim() && 
+    selectedTypes.value.length !== 0
+  );
+});
 const saveChanges = async () => {
   try {
     // Save changes to post
@@ -230,7 +239,7 @@ const saveChanges = async () => {
         </v-form>
       </v-card-text>
       <v-card-actions>
-        <v-btn color="primary" @click="saveChanges">Save</v-btn>
+        <v-btn :disabled="!isFormFilled" @click="saveChanges" style="background-color: green; color: white; font-weight: bold">Save Changes</v-btn>
         <v-btn @click="closeDialog">Cancel</v-btn>
       </v-card-actions>
     </v-card>
