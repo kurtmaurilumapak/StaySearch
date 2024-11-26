@@ -59,20 +59,15 @@ const averageRating = computed(() => {
   return 0
 })
 
-const posts = ref([]);
 onMounted(async () => {
   try {
     await postStore.ownerPost()
-    posts.value = postStore.posts.map(post => {
-      const postTime = new Date(post.created_at)
-      const timeAgo = formatDistanceToNow(postTime, { addSuffix: true })
 
-      return {
-        ...post,
-        timeAgo,
+    postStore.posts.forEach(post => {
+      if (post.created_at) {
+        post.timeAgo = formatDistanceToNow(new Date(post.created_at), { addSuffix: true });
       }
-    })
-
+    });
   } catch (error) {
     console.error('Error fetching posts:', error);
   }
@@ -81,7 +76,7 @@ onMounted(async () => {
 const deletePost = async () => {
   try {
     await postStore.deletePost(deletePostId.value)
-    posts.value = posts.value.filter(post => post.id !== deletePostId.value)
+    postStore.posts = postStore.posts.filter(post => post.id !== deletePostId.value)
   } catch (error) {
     console.error('Error deleting post:', error)
   }
@@ -166,7 +161,7 @@ const onDelete = (post) => {
                   </v-btn>
                 </v-col>
                 <!-- CARD POSTS -->
-                <v-col  v-for="post in posts" :key="post.id" cols="12" sm="6" md="4" lg="3" class="d-flex justify-center align-center">
+                <v-col  v-for="post in postStore.posts" :key="post.id" cols="12" sm="6" md="4" lg="3" class="d-flex justify-center align-center">
                   <v-card
                     class="rounded-lg border"
                     :elevation="7"

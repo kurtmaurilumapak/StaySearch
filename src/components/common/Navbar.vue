@@ -23,6 +23,7 @@ const nav = ref({
 
 const logout = async () => {
   await useAuth.signOut()
+  window.location.reload();
   theme.global.name.value = 'light'
   await router.push('/login')
 }

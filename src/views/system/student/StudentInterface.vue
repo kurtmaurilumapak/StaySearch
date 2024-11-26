@@ -188,6 +188,7 @@ const averageRating = computed(() => {
 
 const logout = async () => {
   await useAuth.signOut()
+  window.location.reload();
   theme.global.name.value = 'light'
   await router.push('/login')
 }
@@ -583,7 +584,7 @@ const logout = async () => {
                       v-for="(review, index) in postDialog.reviews"
                       :key="index"
                       class="mb-3 border border-b-lg"
-                      style="background-color: ghostwhite; border-radius: 15px"
+                      style="border-radius: 15px"
                     >
                       <v-card-text>
                         <div class="d-flex">

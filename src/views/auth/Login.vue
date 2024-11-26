@@ -15,7 +15,7 @@ const onLogin = async () => {
   authStore.formAction.formSuccessMessage = ''
 
   const { data, error } = await authStore.signIn()
-
+  window.location.reload();
   if (!error) {
     const role = data.user.user_metadata.role
 
