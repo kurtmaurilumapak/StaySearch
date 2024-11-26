@@ -96,6 +96,7 @@ const saveChanges = async () => {
     );
 
     emit("updated", updatePostData.value); // Notify parent about the update
+    window.location.reload();
     closeDialog();
   } catch (error) {
     console.error("Failed to save changes:", error);
