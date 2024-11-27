@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, onMounted } from 'vue'
+import { computed, ref, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router';
 import AppLayout from '@/components/layout/AppLayout.vue'
 import { usePostStore } from '@/stores/postStore'
@@ -47,49 +47,6 @@ const priceRangeIndex = ref(0);
 const searchQuery = ref('')
 const selectedType = ref('')
 
-const filteredPosts = computed(() => {
-  return postStore.posts.map(post => {
-    const postTime = new Date(post.created_at);
-    const timeAgo = formatDistanceToNow(postTime, { addSuffix: true });
-
-    return {
-      ...post,
-      timeAgo,
-    };
-  }).filter(post => {
-    const priceRange = priceRanges[priceRangeIndex.value].range;
-    const postPrice = post.price;
-
-    if (filter.value.length === 0 && selectedType.value === '' && priceRangeIndex.value === 0 && !searchQuery.value) {
-      return true;
-    }
-
-    // Filter by price range
-    if (priceRange && priceRangeIndex.value !== 0 && (postPrice < priceRange[0] || postPrice > priceRange[1])) {
-      return false;
-    }
-
-    // Filter by boarding house type
-    if (selectedType.value && !post.tags?.includes(selectedType.value)) {
-      return false;
-    }
-
-    // Filter by amenities (checkboxes)
-    if (filter.value.length > 0 && !filter.value.every(amenity => post.tags?.includes(amenity))) {
-      return false;
-    }
-
-    if (searchQuery.value) {
-      const lowerCaseQuery = searchQuery.value.toLowerCase();
-      return [post.name, post.description, post.address].some(field =>
-        field?.toLowerCase().includes(lowerCaseQuery)
-      );
-    }
-
-    return true;
-  });
-});
-
 const handleBrandClick = () => {
   window.location.reload();
 };
@@ -134,14 +91,34 @@ const openDialog = (post) => {
 
 };
 
-onMounted(async () => {
+const postsWithTimeAgo = ref([]);
+const fetchPosts = async () => {
   try {
-    await postStore.allPost()
+    await postStore.allPost({
+      priceRange: priceRanges[priceRangeIndex.value]?.range,
+      selectedType: selectedType.value,
+      filter: filter.value,
+      searchQuery: searchQuery.value,
+
+    });
+
+    postsWithTimeAgo.value = postStore.posts.map(post => {
+      const postTime = new Date(post.created_at);
+      const timeAgo = formatDistanceToNow(postTime, { addSuffix: true });
+
+      return {
+        ...post,
+        timeAgo,
+      };
+    });
     await userStore.fetchUserData()
   } catch (error) {
     console.error('Error fetching posts:', error)
   }
-})
+}
+onMounted(fetchPosts);
+watch([priceRangeIndex, selectedType, filter, searchQuery], fetchPosts);
+
 
 
 const addReview = async () => {
@@ -366,7 +343,7 @@ const logout = async () => {
         <v-col cols="12" md="9" lg="10">
           <v-row>
             <v-col
-              v-for="post in filteredPosts"
+              v-for="post in postsWithTimeAgo"
               :key="post.id"
               cols="12" sm="6" lg="4"
               class="d-flex justify-center align-center">

@@ -21,14 +21,16 @@ export const useAuthStore = defineStore('auth', {
       this.formAction.formProcess = true;
       await new Promise((resolve) => setTimeout(resolve, 1000))
 
+      const fullName = `${this.formData.firstname} ${this.formData.lastname}`
+
+
       const { data, error } = await supabase.auth.signUp({
         email: this.formData.email,
         password: this.formData.password,
         options: {
           data: {
             role: this.formData.role,
-            firstname: this.formData.firstname,
-            lastname: this.formData.lastname,
+            name: fullName
           },
         },
       });

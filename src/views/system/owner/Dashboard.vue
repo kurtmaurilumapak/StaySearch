@@ -14,7 +14,6 @@ const totalProperties = computed(() => postStore.posts.length);
 onMounted(async () => { 
   await userStore.fetchUserData()
   await postStore.ownerPost();
-  theme.global.name.value = userStore.userData.theme
 })
 
 </script>
@@ -71,7 +70,7 @@ onMounted(async () => {
             <v-card-text>
               <v-row class="px-sm-15">
                 <v-col cols="12">
-                  <h1>Hi, {{ userStore.userData.firstname }}</h1>
+                  <h1>Hi, {{ userStore.userData.firstname || userStore.userData.name }}</h1>
                 </v-col>
                 <v-col cols="12" md="4" class="py-7">
                   <div class="border pa-10 rounded-lg">

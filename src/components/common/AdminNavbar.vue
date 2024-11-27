@@ -24,6 +24,12 @@ const openDialog = () => {
 <template>
   <v-navigation-drawer>
     <v-toolbar-title>
+      <img
+                      src="@/assets/logo.png"
+                      alt="Logo"
+                      width="30"
+                      height="20"
+                    />
       <h2 class="font-weight-bold">StaySearch</h2>
     </v-toolbar-title>
 

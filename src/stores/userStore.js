@@ -22,6 +22,7 @@ export const useUserStore = defineStore('userData', {
         this.userData.id = session.user.id || ''
         this.userData.firstname = session.user.user_metadata.firstname || ''
         this.userData.lastname = session.user.user_metadata.lastname || ''
+        this.userData.name = session.user.user_metadata.name || ''
         this.userData.email = session.user.email || ''
         this.userData.role = session.user.user_metadata.role || ''
         this.userData.theme = session.user.user_metadata.theme || 'light'

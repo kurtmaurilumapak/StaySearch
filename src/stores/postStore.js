@@ -180,18 +180,43 @@ export const usePostStore = defineStore('post', {
       }
     },
 
-    async allPost() {
-      const { data: posts, error: postError } = await supabase
+    async allPost({ priceRange, selectedType, filter, searchQuery }) {
+      let query = supabase
         .from('posts_data')
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (postError) {
-        throw postError
+      // Apply price range filter
+      if (priceRange && priceRange.length > 0) {
+        query = query.gte('price', priceRange[0]).lte('price', priceRange[1]);
       }
 
-      this.posts = posts
+      // Apply type filter
+      if (selectedType) {
+        query = query.contains('tags', [selectedType]); // Use contains for array
+      }
+
+      // Apply amenities filter
+      if (filter && filter.length > 0) {
+        const filterConditions = filter.map(amenity => `tags.cs.{${amenity}}`).join(', ');
+        query = query.or(filterConditions);
+      }
+
+
+      // Apply search query filter
+      if (searchQuery) {
+        query = query.or(`name.ilike.%${searchQuery}%, description.ilike.%${searchQuery}%, address.ilike.%${searchQuery}%`);
+      }
+
+      const { data: posts, error: postError } = await query;
+
+      if (postError) {
+        throw postError;
+      }
+
+      this.posts = posts;
     },
+
     async updatePost(postId, updatedData, newImages = []) {
       try {
         // Update the post data in the database
