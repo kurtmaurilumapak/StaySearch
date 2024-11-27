@@ -226,38 +226,6 @@ const onFormSubmit = async () => {
                   >Sign in instead
                   </RouterLink>
                 </v-col>
-
-                <v-col
-                  cols="12"
-                  class="d-flex align-center pt-5"
-                >
-                  <v-divider />
-                  <span class="mx-4 text-overline">or</span>
-                  <v-divider />
-                </v-col>
-
-                <!-- auth providers -->
-                <v-col
-                  cols="12"
-                  class="text-center pt-5"
-                >
-                  <v-btn
-                    class="text-none font-weight-bold px-7"
-                    @click="signupWithGoogle"
-                    size="large"
-                    rounded="lg"
-
-                  >
-                    <img
-                      style="pointer-events: none; margin-right: 10px"
-                      src="../../assets/auth/google.png"
-                      alt="Google Icon"
-                      height="28"
-                      width="28"
-                    />
-                    Continue with Google
-                  </v-btn>
-                </v-col>
               </v-row>
             </v-form>
           </v-card>

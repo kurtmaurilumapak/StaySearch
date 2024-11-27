@@ -15,7 +15,7 @@ const onLogin = async () => {
   authStore.formAction.formSuccessMessage = ''
 
   const { data, error } = await authStore.signIn()
-
+  window.location.reload();
   if (!error) {
     const role = data.user.user_metadata.role
 
@@ -171,7 +171,7 @@ const onLogin = async () => {
                 >
                   <v-btn
                     class="text-none font-weight-bold px-7"
-                    @click="signupWithGoogle"
+                    @click="authStore.signInWithGoogle"
                     size="large"
                     rounded="lg"
 

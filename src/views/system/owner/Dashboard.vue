@@ -1,11 +1,21 @@
 <script setup>
 import Navbar from '@/components/common/Navbar.vue'
 import AppLayout from '@/components/layout/AppLayout.vue'
-import { ref } from 'vue'
+import { ref, onMounted, computed} from 'vue'
+import { useUserStore } from '@/stores/userStore.js'
+import { usePostStore } from '@/stores/postStore'
 
-
+const userStore = useUserStore()
+const postStore = usePostStore()
 const drawer = ref(true);
 
+const totalProperties = computed(() => postStore.posts.length);
+
+onMounted(async () => { 
+  await userStore.fetchUserData()
+  await postStore.ownerPost();
+  theme.global.name.value = userStore.userData.theme
+})
 
 </script>
 
@@ -61,7 +71,7 @@ const drawer = ref(true);
             <v-card-text>
               <v-row class="px-sm-15">
                 <v-col cols="12">
-                  <h1>Hi owners name</h1>
+                  <h1>Hi, {{ userStore.userData.firstname }}</h1>
                 </v-col>
                 <v-col cols="12" md="4" class="py-7">
                   <div class="border pa-10 rounded-lg">
@@ -70,7 +80,7 @@ const drawer = ref(true);
                       <v-spacer></v-spacer>
                       <v-icon color="green">mdi-home</v-icon>
                     </div>
-                    <h1 class="px-7">Total</h1>
+                    <h1 class="px-7">{{ totalProperties}}</h1>
                   </div>
                 </v-col>
                 <v-col cols="12" md="4" class="py-7">

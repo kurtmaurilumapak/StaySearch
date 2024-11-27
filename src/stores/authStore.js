@@ -53,7 +53,7 @@ export const useAuthStore = defineStore('auth', {
       })
 
       if (error) {
-        this.formAction.formErrorMessage = 'Wrong email or password.';
+        this.formAction.formErrorMessage = 'Wrong email or password.'
 
       } else {
         console.log('successfully logged in.')
@@ -61,6 +61,24 @@ export const useAuthStore = defineStore('auth', {
       }
       return { data, error }
     },
+
+    async signInWithGoogle() {
+      const { user, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+      })
+
+      if (error) {
+        console.error('Error signing in with Google:', error.message)
+        this.formAction.formErrorMessage = error.message
+        return
+      }
+
+      console.log('Successfully signed in with Google:', user)
+
+      this.formAction.formSuccessMessage = 'Successfully logged in with Google.'
+    },
+
+
 
     // SIGN OUT
     async signOut() {
