@@ -269,33 +269,35 @@ const submitPost = async () => {
                     </v-btn>
                     <v-dialog v-model="dialog">
                     <v-card>
-                      <div style="height: 500px; width: 100%">
-                        <l-map
-                        :use-global-leaflet="false"
-                        ref="map"
-                        zoom="15"
-                        :center="[8.9559, 125.59715]"
-                        @click="addMarker"
-                        minZoom="15"
-                      >
-                        <l-tile-layer
-                          url="https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=sQh8Ib7Qh6Fp1elfR6K8"
-                          layer-type="base"
-                          name="OpenStreetMap"
-                        ></l-tile-layer>
-                        <l-marker v-if="marker" :lat-lng="marker"></l-marker>
-                      </l-map>
-                      <v-btn @click="finalizeMarker" class="text-none mx-2 my-2"
-                      color="green-darken-2">
-                          Finalize Marker
-                        </v-btn>
-                        <v-btn @click="cancelMarker" class="text-none mx-2 my-2"
-                      color="red">
-                          Clear Marker
-                        </v-btn>
-                      </div>
-                      
-                    </v-card>
+  <div style="height: 500px; width: 100%; position: relative;">
+    <l-map
+      :use-global-leaflet="false"
+      ref="map"
+      zoom="15"
+      :center="[8.9559, 125.59715]"
+      @click="addMarker"
+      minZoom="15"
+    >
+      <l-tile-layer
+        url="https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=sQh8Ib7Qh6Fp1elfR6K8"
+        layer-type="base"
+        name="OpenStreetMap"
+      ></l-tile-layer>
+      <l-marker v-if="marker" :lat-lng="marker"></l-marker>
+    </l-map>
+    
+ 
+    <div style="position: absolute; bottom: 10px; left: 10px; z-index: 1000;">
+      <v-btn @click="finalizeMarker" class="text-none mx-2 my-2" color="green-darken-2">
+        Finalize Marker
+      </v-btn>
+      <v-btn @click="cancelMarker" class="text-none mx-2 my-2" color="red">
+        Clear Marker
+      </v-btn>
+    </div>
+  </div>
+</v-card>
+
                   </v-dialog>
                   </v-col>
                   <v-col cols="12">
