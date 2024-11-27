@@ -358,7 +358,7 @@ const onDelete = (post) => {
                       minZoom="15"
                     >
                       <l-tile-layer
-                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        url="https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=sQh8Ib7Qh6Fp1elfR6K8"
                         layer-type="base"
                         name="OpenStreetMap"
                       ></l-tile-layer>
