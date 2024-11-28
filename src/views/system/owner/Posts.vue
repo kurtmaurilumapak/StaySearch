@@ -12,8 +12,8 @@ import { formatDistanceToNow } from 'date-fns'
 const drawer = ref(true)
 const deleteDialog = ref(false)
 const deletePostId = ref(null)
-const selectedPost = ref(null);
-const isUpdateDialogOpen = ref(false);
+const selectedPost = ref(null)
+const isUpdateDialogOpen = ref(false)
 
 const postStore = usePostStore()
 
@@ -47,20 +47,20 @@ const openDialog = (post) => {
   postDialog.value.boardingHouseId = post.id
 
   postDialog.value.reviews = (post.reviews || []).map(review => {
-    const reviewTime = new Date(review.created_at); // Assuming each review has a created_at timestamp
-    const timeAgo = formatDistanceToNow(reviewTime, { addSuffix: true });
+    const reviewTime = new Date(review.created_at)
+    const timeAgo = formatDistanceToNow(reviewTime, { addSuffix: true })
 
     return {
       ...review,
       timeAgo,
-    };
-  });
-};
+    }
+  })
+}
 
 const onUpdate = (post) => {
-  selectedPost.value = post;
-  isUpdateDialogOpen.value = true;
-};
+  selectedPost.value = post
+  isUpdateDialogOpen.value = true
+}
 
 const averageRating = computed(() => {
   if (postDialog.value.reviews && postDialog.value.reviews.length > 0) {
@@ -76,11 +76,11 @@ onMounted(async () => {
 
     postStore.posts.forEach(post => {
       if (post.created_at) {
-        post.timeAgo = formatDistanceToNow(new Date(post.created_at), { addSuffix: true });
+        post.timeAgo = formatDistanceToNow(new Date(post.created_at), { addSuffix: true })
       }
-    });
+    })
   } catch (error) {
-    console.error('Error fetching posts:', error);
+    console.error('Error fetching posts:', error)
   }
 })
 
@@ -91,12 +91,12 @@ const deletePost = async () => {
   } catch (error) {
     console.error('Error deleting post:', error)
   }
-  deleteDialog.value = false;
-};
+  deleteDialog.value = false
+}
 
 const onDelete = (post) => {
-  deletePostId.value = post.id;
-  deleteDialog.value = true;
+  deletePostId.value = post.id
+  deleteDialog.value = true
 }
 </script>
 

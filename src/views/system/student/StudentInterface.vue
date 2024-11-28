@@ -48,7 +48,7 @@ const searchQuery = ref('')
 const selectedType = ref('')
 
 const handleBrandClick = () => {
-  window.location.reload();
+  window.location.reload()
 };
 
 const postDialog = ref({
@@ -80,18 +80,17 @@ const openDialog = (post) => {
   postDialog.value.boardingHouseId = post.id
 
   postDialog.value.reviews = (post.reviews || []).map(review => {
-    const reviewTime = new Date(review.created_at); // Assuming each review has a created_at timestamp
-    const timeAgo = formatDistanceToNow(reviewTime, { addSuffix: true });
+    const reviewTime = new Date(review.created_at)
+    const timeAgo = formatDistanceToNow(reviewTime, { addSuffix: true })
 
     return {
       ...review,
-      timeAgo, // Add the timeAgo property
+      timeAgo,
     };
   });
 
 };
 
-const postsWithTimeAgo = ref([]);
 const fetchPosts = async () => {
   try {
     await postStore.allPost({
@@ -102,14 +101,10 @@ const fetchPosts = async () => {
 
     });
 
-    postsWithTimeAgo.value = postStore.posts.map(post => {
-      const postTime = new Date(post.created_at);
-      const timeAgo = formatDistanceToNow(postTime, { addSuffix: true });
-
-      return {
-        ...post,
-        timeAgo,
-      };
+    postStore.posts.forEach(post => {
+      if (post.created_at) {
+        post.timeAgo = formatDistanceToNow(new Date(post.created_at), { addSuffix: true });
+      }
     });
     await userStore.fetchUserData()
   } catch (error) {
@@ -165,7 +160,7 @@ const averageRating = computed(() => {
 
 const logout = async () => {
   await useAuth.signOut()
-  window.location.reload();
+  window.location.reload()
   theme.global.name.value = 'light'
   await router.push('/login')
 }
@@ -343,7 +338,7 @@ const logout = async () => {
         <v-col cols="12" md="9" lg="10">
           <v-row>
             <v-col
-              v-for="post in postsWithTimeAgo"
+              v-for="post in postStore.posts"
               :key="post.id"
               cols="12" sm="6" lg="4"
               class="d-flex justify-center align-center">
