@@ -384,21 +384,5 @@ export const usePostStore = defineStore('post', {
 
       if (error) throw error
     },
-    async addReservation(postID, reservationData) {
-      const session = await this.fetchSession()
-      if (session?.user) {
-        this.id = session.user.id || ''
-      }
-
-      const { data, error } = await supabase
-        .from('reservations')
-        .insert([{ checkin_date: reservationData, boarding_house_id: postID, user_id: this.id }])
-
-
-      if (error) throw error
-      return data
-    },
-
-
   }
 })

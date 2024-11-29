@@ -1,10 +1,10 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { format } from 'date-fns'
-import { usePostStore } from '@/stores/postStore.js'
+import { usereservationStore } from '@/stores/reservationStore.js'
 
 
-const postStore = usePostStore();
+const reservationStore = usereservationStore();
 
 
 const props = defineProps({
@@ -35,7 +35,7 @@ const submitReservation = async () => {
   const formattedDate = format(reservationDate.value, 'yyyy-MM-dd')
   console.log('Reservation submitted', formattedDate)
   try {
-    await postStore.addReservation(props.boardingHouseId, formattedDate)
+    await reservationStore.addReservation(props.boardingHouseId, formattedDate)
     window.location.reload();
     closeDialog();
   }catch (error) {

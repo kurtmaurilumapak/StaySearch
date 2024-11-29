@@ -9,7 +9,7 @@ const reservationStore = useReservationStore()
 const drawer = ref(true);
 
 onMounted(async () => {
-  await reservationStore.fetchReservationData();
+  await reservationStore.fetchOwnerReservationData();
 });
 </script>
 
