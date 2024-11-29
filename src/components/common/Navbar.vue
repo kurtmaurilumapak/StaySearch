@@ -36,7 +36,8 @@ onMounted(async () => {
 
 <template>
   <v-navigation-drawer
-    :width="80"
+    color="green"
+    temporary
   >
     <v-list
 
@@ -45,27 +46,37 @@ onMounted(async () => {
         <v-menu location="bottom">
           <template v-slot:activator="{ props }">
             <v-btn
-              icon
+              class="text-none"
+              variant="text"
+              size="x-large"
               v-bind="props"
+              block
             >
-              <v-avatar
-                color="brown"
-                size="large"
-              >
-              </v-avatar>
+              <div class="d-flex align-center ga-3">
+                <v-avatar
+                  color="brown"
+                >
+                </v-avatar>
+                <div class="d-flex flex-column align-start">
+                  <p style="font-size: 15px; font-weight: bold;">{{ userStore.userData.firstname }} {{ userStore.userData.lastname }}</p>
+                  <p style="font-size: 13px; font-weight: bold;">Owner</p>
+                </div>
+              </div>
             </v-btn>
           </template>
           <v-card>
             <v-card-text>
               <div class="mx-auto text-center">
-                <v-avatar
-                  color="brown"
-                >
-                </v-avatar>
-                <h3>{{ userStore.userData.firstname }}</h3>
-                <p class="text-caption mt-1">
-                  {{ userStore.userData.email }}
-                </p>
+                <div class="d-flex align-center ga-3">
+                  <v-avatar
+                    color="brown"
+                  >
+                  </v-avatar>
+                  <div class="d-flex flex-column align-start">
+                    <p style="font-size: 15px">{{ userStore.userData.firstname }} {{ userStore.userData.lastname }}</p>
+                    <p style="font-size: 13px">{{ userStore.userData.email }}</p>
+                  </div>
+                </div>
                 <v-divider class="my-3"></v-divider>
                 <v-btn
                   class="text-none font-weight-bold"
@@ -96,13 +107,24 @@ onMounted(async () => {
       <v-divider class="my-2"></v-divider>
 
       <v-list-item
-        class="d-flex flex-column text-center py-3"
+        class="pa-5"
         v-for="(item, index) in nav.navItems"
         :key="index"
         :to="item.path"
       >
-        <img :src="item.icon" alt="icon" width="30" />
-        <p class="text-center" style="font-size: 10px; font-weight: bold">{{ item.title }}</p>
+
+        <v-list-item-title
+          class="d-flex align-center ga-5"
+          style="font-size: 15px;
+          font-weight: bold"
+        >
+          <img
+            :src="item.icon"
+            alt="icon"
+            width="30"
+          />
+          {{ item.title }}
+        </v-list-item-title>
       </v-list-item>
     </v-list>
   </v-navigation-drawer>

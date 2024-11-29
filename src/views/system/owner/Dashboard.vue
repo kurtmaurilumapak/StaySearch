@@ -7,7 +7,7 @@ import { usePostStore } from '@/stores/postStore'
 
 const userStore = useUserStore()
 const postStore = usePostStore()
-const drawer = ref(true);
+const drawer = ref(null);
 
 const totalProperties = computed(() => postStore.posts.length);
 
