@@ -17,7 +17,7 @@ export const useReservationStore = defineStore('reservation', {
       return this.session
     },
 
-    async fetchReservationData() {
+    async fetchOwnerReservationData() {
       const session = await this.fetchSession()
       if (session?.user) {
         this.id = session.user.id || ''
@@ -33,6 +33,25 @@ export const useReservationStore = defineStore('reservation', {
       if (reservationError) throw reservationError
 
       this.reservations = reservationData
+    },
+    async fetchStudentReservationData() {
+      const session = await this.fetchSession()
+      if (session?.user) {
+        this.id = session.user.id || ''
+
+        const { data: reservationData, error: reservationError } = await supabase
+          .from('reservations')
+          .select('checkin_date, boarding_houses(name, address)')
+          .eq('user_id', this.id)
+
+
+        if (reservationError) throw reservationError
+
+        this.reservations = reservationData
+        console.log(reservationData)
+      }else {
+        throw new Error('User  not authenticated')
+      }
     }
   }
 })
