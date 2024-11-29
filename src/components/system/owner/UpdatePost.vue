@@ -45,13 +45,13 @@ watch(
         address: newPost.address,
         price: newPost.price,
         description: newPost.description,
-        images: newPost.boarding_house_images.map((image) => image.image_url),
+        images: newPost.images,
       };
       // Set selected types and inclusions based on current post tags
-      selectedTypes.value = newPost.boarding_house_tags
+      selectedTypes.value = newPost.tags
         .filter(tag => tag.tag_name === "type")
         .map(tag => tag.tag_name);
-      selectedInclusions.value = newPost.boarding_house_tags
+      selectedInclusions.value = newPost.tags
         .filter(tag => tag.tag_name === "inclusion")
         .map(tag => tag.tag_name);
     }
