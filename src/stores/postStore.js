@@ -185,6 +185,7 @@ export const usePostStore = defineStore('post', {
       let query = supabase
         .from('posts_data')
         .select('*')
+        .eq('status', 'approved')
         .order('created_at', { ascending: false });
 
       // Apply price range filter
