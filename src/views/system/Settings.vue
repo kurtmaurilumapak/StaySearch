@@ -19,6 +19,15 @@ const userUpdate = ref({
   emailSnackbar: false,
 })
 
+const onPreview = async (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    const pictureUrl = await userStore.uploadProfilePicture(file);
+    if (!pictureUrl) {
+      console.error("Failed to upload profile picture");
+    }
+  }
+};
 
 onMounted(async () => {
   await userStore.fetchUserData()
@@ -57,7 +66,7 @@ const handleUpdateUser = async () => {
   userStore.userData.firstname = userUpdate.value.editedFirstname || userStore.userData.firstname
   userStore.userData.lastname = userUpdate.value.editedLastname || userStore.userData.lastname
   userStore.userData.email = userUpdate.value.editedEmail
-
+  userStore.userData.picture = userUpdate.value.picture
   userStore.formAction.formProcess = true
   const updateSuccessful = await userStore.updateUser();
   userStore.formAction.formProcess = false
@@ -142,6 +151,42 @@ const isEmailValid = computed(() => {
                   <v-row>
                     <v-col cols="12" >
                       <h2>Your Account</h2>
+                    </v-col>
+                    <v-col cols="12">
+                      <h3>Profile Picture</h3>
+                      <div class="d-flex justify-space-between align-center my-5">
+                        <v-col cols="12" sm="6" md="5">
+                          <v-img
+  width="55%"
+  class="mx-auto rounded-circle"
+  :src="imagePreview || userStore.userData.picture"
+  alt="Profile Picture Preview"
+  cover
+></v-img>
+      </v-col>
+
+      <v-col cols="12" sm="6" md="7">
+        <v-file-input
+  class="mt-5"
+  accept="image/png, image/jpeg, image/bmp"
+  label="Browse Profile Picture"
+  placeholder="Browse Profile Picture"
+  prepend-icon="mdi-camera"
+  show-size
+  chips
+  @change="onPreview"
+></v-file-input>
+
+<v-btn
+  class="mt-2"
+  color="red-darken-4"
+  prepend-icon="mdi-image-edit"
+  @click="onPreview($event)" 
+>
+  Update Picture
+</v-btn>
+      </v-col>
+                      </div>
                     </v-col>
                     <v-col cols="12">
                       <h3>Name</h3>

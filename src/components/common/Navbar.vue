@@ -48,20 +48,25 @@ onMounted(async () => {
               icon
               v-bind="props"
             >
-              <v-avatar
-                color="brown"
-                size="large"
-              >
-              </v-avatar>
+              <v-avatar>
+      <v-img
+      
+        alt="Profile"
+        :src="userStore.userData.picture ||  '/csu.png'"
+      ></v-img>
+    </v-avatar>
             </v-btn>
           </template>
           <v-card>
             <v-card-text>
               <div class="mx-auto text-center">
-                <v-avatar
-                  color="brown"
-                >
-                </v-avatar>
+                <v-avatar>
+      <v-img
+      
+        alt="Profile"
+        :src="userStore.userData.picture ||  '/csu.png'"
+      ></v-img>
+    </v-avatar>
                 <h3>{{ userStore.userData.firstname }}</h3>
                 <p class="text-caption mt-1">
                   {{ userStore.userData.email }}
