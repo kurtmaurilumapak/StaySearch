@@ -37,7 +37,6 @@ onMounted(async () => {
 <template>
   <v-navigation-drawer
     color="green"
-    temporary
   >
     <v-list
 

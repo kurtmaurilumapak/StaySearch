@@ -1,10 +1,16 @@
 <script setup>
 import Navbar from '@/components/common/Navbar.vue'
 import AppLayout from '@/components/layout/AppLayout.vue'
-import { ref } from 'vue'
+import { useReservationStore } from '@/stores/reservationStore.js'
+import { ref, onMounted } from 'vue'
 
+
+const reservationStore = useReservationStore()
 const drawer = ref(true);
 
+onMounted(async () => {
+  await reservationStore.fetchReservationData();
+});
 </script>
 
 <template>
@@ -52,7 +58,10 @@ const drawer = ref(true);
 
             <!-- Boarding House Posts -->
             <v-row class="pa-6 px-md-16" style="overflow-y: auto; max-height: 100vh">
-              <v-col cols="12" md="6">
+              <v-col
+                cols="12" md="6"
+                v-for="reservation in reservationStore.reservations" :key="reservation.boarding_house_id"
+              >
                 <v-card class="mb-5" elevation="12" style="border-radius: 12px; overflow: hidden;">
                   <v-card-title
                     class="d-flex bg-green"
@@ -64,8 +73,8 @@ const drawer = ref(true);
                       </v-col>
                       <v-col cols="6" class="d-flex flex-column align-end">
                        <div>
-                         <p>Boarding House</p>
-                         <p>address</p>
+                         <p>{{ reservation.name }}</p>
+                         <p>{{ reservation.address }}</p>
                        </div>
                       </v-col>
                     </v-row>
@@ -75,70 +84,17 @@ const drawer = ref(true);
                       <v-col cols="12">
                         <h2>All Reservations</h2>
                       </v-col>
-                      <v-col cols="12" class="d-flex align-center border rounded-lg mb-4">
+                      <v-col cols="12" class="d-flex align-center border border-b-lg rounded-lg mb-4" v-for="(checkin, index) in reservation.reservations" :key="index">
                         <div>
-                          <h2>Name</h2>
-                          <p>Check-in: date</p>
+                          <h3>{{ checkin.student_name }}</h3>
+                          <div class="d-flex ga-1">
+                            <p>Check-in date:</p>
+                            <p class="font-weight-bold">{{ checkin.checkin_date }}</p>
+                          </div>
                         </div>
                         <v-spacer></v-spacer>
-                        <p>status</p>
-                      </v-col>
-                      <v-col cols="12" class="d-flex align-center border rounded-lg mb-4">
-                        <div>
-                          <h2>Name</h2>
-                          <p>Check-in: date</p>
-                        </div>
-                        <v-spacer></v-spacer>
-                        <p>status</p>
-                      </v-col>
 
-                    </v-row>
-                  </v-card-text>
-                  <v-card-actions class="d-flex justify-center">
-                    <v-pagination :length="4"></v-pagination>
-                  </v-card-actions>
-                </v-card>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-card class="mb-5" elevation="12" style="border-radius: 12px; overflow: hidden;">
-                  <v-card-title
-                    class="d-flex bg-green"
-                  >
-                    <v-row>
-                      <v-col cols="6" class="d-flex align-center">
-                        <v-icon>mdi-calendar-text</v-icon>
-                        <p class="d-none d-sm-block">Reservations</p>
                       </v-col>
-                      <v-col cols="6" class="d-flex flex-column align-end">
-                        <div>
-                          <p>Boarding House</p>
-                          <p>address</p>
-                        </div>
-                      </v-col>
-                    </v-row>
-                  </v-card-title>
-                  <v-card-text style="padding: 20px;">
-                    <v-row>
-                      <v-col cols="12">
-                        <h2>All Reservations</h2>
-                      </v-col>
-                      <v-col cols="12" class="d-flex align-center border rounded-lg mb-4">
-                        <div>
-                          <h2>Name</h2>
-                          <p>Check-in: date</p>
-                        </div>
-                        <v-spacer></v-spacer>
-                        <p>status</p>
-                      </v-col>
-                      <v-col cols="12" class="d-flex align-center border rounded-lg mb-4">
-                        <div>
-                          <h2>Name</h2>
-                          <p>Check-in: date</p>
-                        </div>
-                        <v-spacer></v-spacer>
-                        <p>status</p>
-                      </v-col>
-
                     </v-row>
                   </v-card-text>
                   <v-card-actions class="d-flex justify-center">

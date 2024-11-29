@@ -7,11 +7,11 @@ import { usePostStore } from '@/stores/postStore'
 
 const userStore = useUserStore()
 const postStore = usePostStore()
-const drawer = ref(null);
+const drawer = ref(true);
 
 const totalProperties = computed(() => postStore.posts.length);
 
-onMounted(async () => { 
+onMounted(async () => {
   await userStore.fetchUserData()
   await postStore.ownerPost();
 })
