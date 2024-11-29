@@ -16,9 +16,6 @@ const nav = ref({
   drawer: false
 })
 
-const openDialog = () => {
-  nav.value.profile.dialog = true
-}
 </script>
 
 <template>
