@@ -8,15 +8,15 @@ const adminStore = useAdminStore();
 
 
 onMounted(() => {
-  adminStore.fetchCards();
+  adminStore.fetchBoardData();
 });
 
-const handleApprove = async (cardID) => {
-  await adminStore.approveCard(cardID)
+const handleApprove = async (boardinghouseID) => {
+  await adminStore.approveCard(boardinghouseID)
 };
 
-const handleReject = async (cardID) => {
-  await adminStore.rejectCard(cardID);
+const handleReject = async (boardinghouseID) => {
+  await adminStore.rejectCard(boardinghouseID);
 }
 
 </script>
@@ -26,15 +26,15 @@ const handleReject = async (cardID) => {
     <template #content>
       <AdminNavbar />
       <v-row justify="space-around">
-        <v-col cols="12" md="6" v-for="card in adminStore.cards":key="card.id">
+        <v-col cols="12" md="6" v-for="boardinghouse in adminStore.boardinghouse"  :key="boardinghouse.id">
           <v-card class="mx-auto align-start">
-            <v-card-title>{{card.name}}</v-card-title>
-            <v-card-text>{{card.address}}</v-card-text>
-            <v-card-text>{{card.price}}</v-card-text>
-            <v-card-text>{{card.decription}}</v-card-text>
+            <v-card-title>{{boardinghouse.name}}</v-card-title>
+            <v-card-text>{{boardinghouse.address}}</v-card-text>
+            <v-card-text>{{boardinghouse.price}}</v-card-text>
+            <v-card-text>{{boardinghouse.decription}}</v-card-text>
             <v-card-actions justify="end">
-              <v-btn color="green" text @click="handleApprove">Approve</v-btn>
-              <v-btn color="red" text @click="handleReject">Reject</v-btn>
+              <v-btn color="green" text @click="handleApprove(boardinghouse.id)">Approve</v-btn>
+              <v-btn color="red" text @click="handleReject(boardinghouse.id)">Reject</v-btn>
             </v-card-actions>
           </v-card>
         </v-col>
