@@ -11,7 +11,7 @@ const drawer = ref(true);
 
 const totalProperties = computed(() => postStore.posts.length);
 
-onMounted(async () => { 
+onMounted(async () => {
   await userStore.fetchUserData()
   await postStore.ownerPost();
 })
