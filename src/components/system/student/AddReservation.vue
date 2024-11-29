@@ -1,10 +1,10 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { format } from 'date-fns'
-import { usereservationStore } from '@/stores/reservationStore.js'
+import { useReservationStore } from '@/stores/reservationStore.js'
 
 
-const reservationStore = usereservationStore();
+const reservationStore = useReservationStore();
 
 
 const props = defineProps({
