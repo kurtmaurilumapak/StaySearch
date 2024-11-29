@@ -8,6 +8,7 @@ const userDataDefault = {
   lastname: '',
   email: '',
   role: '',
+  picture: '',
 };
 
 export const useUserStore = defineStore('userData', {
@@ -26,6 +27,7 @@ export const useUserStore = defineStore('userData', {
         this.userData.email = session.user.email || ''
         this.userData.role = session.user.user_metadata.role || ''
         this.userData.theme = session.user.user_metadata.theme || 'light'
+        this.userData.picture = session.user.user_metadata.picture || '/csu.png'
       }
     },
 
@@ -57,6 +59,7 @@ export const useUserStore = defineStore('userData', {
           data: {
             firstname: this.userData.firstname,
             lastname:  this.userData.lastname,
+            picture: this.userData.picture,
           },
         })
 
@@ -92,7 +95,85 @@ export const useUserStore = defineStore('userData', {
         return false
       }
     },
+    async uploadProfilePicture(file) {
+      if (!file) {
+        console.error('No file provided.');
+        return null;
+      }
 
+      try {
+        const userId = this.userData.id;
+        if (!userId) {
+          console.error('No user is authenticated.');
+          return null;
+        }
+     
+        const timestamp = Date.now();
+        const uniqueFileName = `profile_${userId}_${timestamp}_${file.name}`;
+
+        
+        const { data: uploadData , error: uploadError } = await supabase.storage
+          .from('user_images') 
+          .upload(`user_profiles/${userId}/${uniqueFileName}`, file ,{
+            cacheControl: '3600',
+            upsert: false,
+          });
+
+          if (uploadError) {
+            console.error('Image Upload Error:', uploadError.message);
+            throw uploadError
+          }
+
+          const { data: publicUrl, error: publicUrlError } = supabase.storage
+          .from('user_images') // Replace with your bucket name
+          .getPublicUrl(uploadData.path);
+        
+        if (publicUrlError) {
+          console.error('Failed to retrieve public URL:', publicUrlError.message);
+          return null;
+        }
+        
+        if (!publicUrl) {
+          console.error('Public URL data is null.');
+          return null;
+        }
+        
+        
+        this.userData.picture = publicUrl.publicUrl;
+        const updateSuccess = await this.updateUser();
+
+
+    if (!updateSuccess) {
+      console.error('Failed to update user profile picture.');
+      return null;
+    }
+
+    console.log('Profile picture updated successfully.');
+        return publicUrl;
+      } catch (error) {
+        console.error('Error uploading profile picture:', error);
+        return null;
+      }
+    },
+    async updatePicture(newPictureUrl) {
+      try {
+        const { error } = await supabase.auth.updateUser({
+          data: { picture: newPictureUrl },
+        });
+
+        if (error) {
+          console.error('Error updating user picture:', error.message);
+          return false;
+        }
+
+        console.log('Profile picture updated successfully in metadata.');
+        this.userData.picture = newPictureUrl; // Update store state
+        return true;
+      } catch (error) {
+        console.error('Error during picture update:', error.message);
+        return false;
+      }
+    },
 
   },
 })

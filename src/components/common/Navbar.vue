@@ -41,7 +41,7 @@ onMounted(async () => {
     <v-list
 
     >
-      <v-list-item class="d-flex justify-center">
+      <v-list-item class="d-flex justify-center align-center pa-2">
         <v-menu location="bottom">
           <template v-slot:activator="{ props }">
             <v-btn
@@ -49,12 +49,15 @@ onMounted(async () => {
               variant="text"
               size="x-large"
               v-bind="props"
-              block
             >
               <div class="d-flex align-center ga-3">
                 <v-avatar
-                  color="brown"
+                  size="50"
                 >
+                  <v-img
+                    alt="Profile"
+                    :src="userStore.userData.picture ||  '/csu.png'"
+                  ></v-img>
                 </v-avatar>
                 <div class="d-flex flex-column align-start">
                   <p style="font-size: 15px; font-weight: bold;">{{ userStore.userData.firstname }} {{ userStore.userData.lastname }}</p>
@@ -68,8 +71,12 @@ onMounted(async () => {
               <div class="mx-auto text-center">
                 <div class="d-flex align-center ga-3">
                   <v-avatar
-                    color="brown"
+                    size="50"
                   >
+                    <v-img
+                      alt="Profile"
+                      :src="userStore.userData.picture ||  '/csu.png'"
+                    ></v-img>
                   </v-avatar>
                   <div class="d-flex flex-column align-start">
                     <p style="font-size: 15px">{{ userStore.userData.firstname }} {{ userStore.userData.lastname }}</p>
