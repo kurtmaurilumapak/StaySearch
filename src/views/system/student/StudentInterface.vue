@@ -202,23 +202,32 @@ const logout = async () => {
                   v-bind="props"
                 >
                   <v-avatar
-                    color="brown"
-                    size="large"
+                    size="50"
                   >
+                    <v-img
+                      alt="Profile"
+                      :src="userStore.userData.picture ||  '/csu.png'"
+                    ></v-img>
                   </v-avatar>
                 </v-btn>
               </template>
               <v-card>
                 <v-card-text>
                   <div class="mx-auto text-center">
-                    <v-avatar
-                      color="brown"
-                    >
-                    </v-avatar>
-                    <h3>{{ userStore.userData.firstname }}</h3>
-                    <p class="text-caption mt-1">
-                      {{ userStore.userData.email }}
-                    </p>
+                    <div class="d-flex align-center ga-3">
+                      <v-avatar
+                        size="50"
+                      >
+                        <v-img
+                          alt="Profile"
+                          :src="userStore.userData.picture ||  '/csu.png'"
+                        ></v-img>
+                      </v-avatar>
+                      <div class="d-flex flex-column align-start">
+                        <p style="font-size: 15px">{{ userStore.userData.firstname }} {{ userStore.userData.lastname }}</p>
+                        <p style="font-size: 13px">{{ userStore.userData.email }}</p>
+                      </div>
+                    </div>
                     <v-divider class="my-3"></v-divider>
                     <v-btn
                       class="text-none font-weight-bold"
