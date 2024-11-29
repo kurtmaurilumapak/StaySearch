@@ -1,8 +1,8 @@
 <script setup>
 import { ref, watch, onMounted } from 'vue'
-import { usePostStore } from '@/stores/postStore.js'
+import { useReservationStore } from '@/stores/reservationStore.js'
 
-const postStore = usePostStore();
+const reservationStore = useReservationStore();
 
 const props = defineProps({
   isOpen: Boolean,
@@ -22,7 +22,7 @@ const closeDialog = () => {
 
 onMounted(async () => {
   try {
-    await postStore.showReservations()
+    await reservationStore.fetchStudentReservationData()
   } catch (error) {
     console.error('Error fetching posts:', error)
   }
@@ -48,14 +48,14 @@ onMounted(async () => {
       <v-card-text>
         <v-row no-gutters>
 
-          <template v-if="postStore.reservations.length === 0">
+          <template v-if="reservationStore.reservations.length === 0">
             <v-col cols="12" class="d-flex justify-center">
               <p class="text-center text-disabled">No Reservations</p>
             </v-col>
           </template>
 
           <v-col
-            v-for="reservation in postStore.reservations"
+            v-for="reservation in reservationStore.reservations"
             :key="reservation.id"
             cols="12"
             class="d-flex justify-space-between border pa-3 mb-2 rounded-lg border-b-lg"

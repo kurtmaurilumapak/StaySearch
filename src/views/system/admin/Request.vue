@@ -25,16 +25,16 @@ const handleReject = async (boardinghouseID) => {
   <Applayout>
     <template #content>
       <AdminNavbar />
-      <v-row justify="space-around">
-        <v-col cols="12" md="6" v-for="boardinghouse in adminStore.boardinghouse"  :key="boardinghouse.id">
-          <v-card class="mx-auto align-start">
-            <v-card-title>{{boardinghouse.name}}</v-card-title>
-            <v-card-text>{{boardinghouse.address}}</v-card-text>
-            <v-card-text>{{boardinghouse.price}}</v-card-text>
-            <v-card-text>{{boardinghouse.decription}}</v-card-text>
-            <v-card-actions justify="end">
-              <v-btn color="green" text @click="handleApprove(boardinghouse.id)">Approve</v-btn>
-              <v-btn color="red" text @click="handleReject(boardinghouse.id)">Reject</v-btn>
+      <v-row class="ma-2 ma-lg-10 w-lg-50">
+        <v-col cols="12" v-for="boardinghouse in adminStore.boardinghouse"  :key="boardinghouse.id">
+          <v-card class="d-flex align-start border border-b-lg">
+            <v-card-text>
+              <h2>{{boardinghouse.name}}</h2>
+              <p class="text-disabled">{{boardinghouse.address}}</p>
+            </v-card-text>
+            <v-card-actions>
+              <v-btn color="green" @click="handleApprove(boardinghouse.id)">Approve</v-btn>
+              <v-btn color="red" @click="handleReject(boardinghouse.id)">Reject</v-btn>
             </v-card-actions>
           </v-card>
         </v-col>
