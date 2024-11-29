@@ -4,16 +4,21 @@ import AppLayout from '@/components/layout/AppLayout.vue'
 import { ref, onMounted, computed} from 'vue'
 import { useUserStore } from '@/stores/userStore.js'
 import { usePostStore } from '@/stores/postStore'
+import { useReservationStore } from '@/stores/reservationStore.js'
 
 const userStore = useUserStore()
 const postStore = usePostStore()
+const reservationStore = useReservationStore()
 const drawer = ref(true);
 
 const totalProperties = computed(() => postStore.posts.length);
+const totalReservations = computed(() => reservationStore.countMetaObjects());
+
 
 onMounted(async () => {
   await userStore.fetchUserData()
   await postStore.ownerPost();
+  await reservationStore.fetchOwnerReservationData();
 })
 
 </script>
@@ -89,7 +94,7 @@ onMounted(async () => {
                       <v-spacer></v-spacer>
                       <v-icon color="green">mdi-calendar-text</v-icon>
                     </div>
-                    <h1 class="px-7">Total</h1>
+                    <h1 class="px-7">{{totalReservations}}</h1>
                   </div>
                 </v-col>
                 <v-col cols="12" md="4" class="py-7">

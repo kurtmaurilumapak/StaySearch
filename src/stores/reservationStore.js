@@ -34,6 +34,14 @@ export const useReservationStore = defineStore('reservation', {
 
       this.reservations = reservationData
     },
+    countMetaObjects() {
+      return this.reservations.reduce((total, record) => {
+        if (record.reservations && Array.isArray(record.reservations)) {
+          return total + record.reservations.length;
+        }
+        return total;
+      }, 0);
+    },
     async fetchStudentReservationData() {
       const session = await this.fetchSession()
       if (session?.user) {
