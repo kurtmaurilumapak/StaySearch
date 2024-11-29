@@ -156,14 +156,18 @@ const isEmailValid = computed(() => {
                       <h3>Profile Picture</h3>
                       <div class="d-flex justify-space-between align-center my-5">
                         <v-col cols="12" sm="6" md="5">
-                          <v-img
-  width="55%"
-  class="mx-auto rounded-circle"
-  :src="imagePreview || userStore.userData.picture"
-  alt="Profile Picture Preview"
-  cover
-></v-img>
-      </v-col>
+                          <v-avatar
+                          size="500"
+                          >
+                            <v-img
+                              width="55%"
+                              class="mx-auto"
+                              :src="imagePreview || userStore.userData.picture"
+                              alt="Profile Picture Preview"
+                              cover
+                            ></v-img>
+                          </v-avatar>
+                        </v-col>
 
       <v-col cols="12" sm="6" md="7">
         <v-file-input
