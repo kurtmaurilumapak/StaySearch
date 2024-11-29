@@ -84,16 +84,10 @@ onMounted(async () => {
                       <v-col cols="12">
                         <h2>All Reservations</h2>
                       </v-col>
-                      <v-col cols="12" class="d-flex align-center border border-b-lg rounded-lg mb-4" v-for="(checkin, index) in reservation.reservations" :key="index">
+                      <v-col cols="12" class="d-flex align-center border border-b-lg rounded-lg pa-5 mb-4" v-for="(reservationDetail, index) in reservation.reservations" :key="index">
                         <div>
-                          <h3>{{ checkin.student_name }}</h3>
-                          <div class="d-flex ga-1">
-                            <p>Check-in date:</p>
-                            <p class="font-weight-bold">{{ checkin.checkin_date }}</p>
-                          </div>
+                          <h2>{{ reservationDetail }}</h2>
                         </div>
-                        <v-spacer></v-spacer>
-
                       </v-col>
                     </v-row>
                   </v-card-text>
