@@ -2,7 +2,9 @@
 import AppLayout from '@/components/layout/AppLayout.vue'
 import { ref, onMounted, computed } from 'vue'
 import { useAdminStore } from '@/stores/adminStore'
+import { useUserStore } from '@/stores/userStore'
 
+const userStore = useUserStore()
 const adminStore = useAdminStore()
 const drawer = ref(true)
 
@@ -17,6 +19,7 @@ onMounted(() => {
   adminStore.fetchPostLogs().then(() => {
     console.log(adminStore.postLogs); // Log the fetched post logs
   });
+  userStore.fetchUserData()
 });
 
 const paginatedPostLogs = computed(() => {
@@ -71,14 +74,64 @@ function previousPage() {
                       </h3>
                     </RouterLink>
                   </v-col>
-                  <v-col cols="6" class="d-flex align-center justify-end px-sm-16">
+                  <v-col cols="6" class="d-flex align-center justify-end pr-10">
+            <v-menu location="left">
+              <template v-slot:activator="{ props }">
+                <v-btn
+                  icon
+                  v-bind="props"
+                >
+                <v-avatar>
+                  <v-img
+
+                    alt="Profile"
+                    :src="userStore.userData.picture ||  '/csu.png'"
+                  ></v-img>
+                </v-avatar>
+                </v-btn>
+              </template>
+              <v-card>
+                <v-card-text>
+                  <div class="mx-auto text-center">
+                    <div class="d-flex align-center ga-3">
+                      <v-avatar
+                        size="50"
+                      >
+                        <v-img
+                          alt="Profile"
+                         :src="userStore.userData.picture ||  '/csu.png'"
+                        ></v-img>
+                      </v-avatar>
+                      <div class="d-flex flex-column align-start">
+                        
+                      </div>
+                    </div>
+                  
+                    <v-divider class="my-3"></v-divider>
                     <v-btn
-                      class="ma-2 d-flex d-lg-none"
-                      icon="mdi-menu"
+                      class="text-none font-weight-bold"
                       variant="text"
-                      @click="drawer = !drawer"
-                    ></v-btn>
-                  </v-col>
+                      rounded
+                      block
+                      @click="$router.push('/settings')"
+                    >
+                      Edit Account
+                    </v-btn>
+                    <v-divider class="my-3"></v-divider>
+                    <v-btn
+                      class="text-none font-weight-bold"
+                      variant="text"
+                      color="red"
+                      rounded
+                      block
+                    >
+                      Logout
+                    </v-btn>
+                  </div>
+                </v-card-text>
+              </v-card>
+            </v-menu>
+          </v-col>
                 </v-row>
               </v-card-title>
   
@@ -87,6 +140,31 @@ function previousPage() {
               <!-- CONTENTS -->
               <v-card-text>
                 <v-row class="px-sm-15">
+                  <v-col cols="12" md="6" class="py-7">
+                    <v-card @click="$router.push('/admin/request')">
+                      <div class="border pa-10 rounded-lg">
+                    <div class="d-flex align-center px-7">
+                      <h3 class="text-h5 font-weight-bold">Pendings</h3>
+                      <v-spacer></v-spacer>
+                      <v-icon class="text-h2" color="green" >mdi-arrow-right</v-icon>
+                    </div>
+                  </div>
+                    </v-card>
+                 
+                </v-col>
+                <v-col cols="12" md="6" class="py-7">
+                  <v-card @click="$router.push('/admin/approved')">
+                    <div class="border pa-10 rounded-lg">
+                    <div class="d-flex align-center px-7">
+                      <h3 class="text-h5 font-weight-bold">Approved Posts</h3>
+                      <v-spacer></v-spacer>
+                      <v-icon class="text-h2"color="green">mdi-arrow-right</v-icon>
+                    </div>
+                    
+                  </div>
+                  </v-card>
+                  
+                </v-col>
                   <v-col cols="12">
                     <h1>Recent Created Posts:</h1>
                   </v-col>

@@ -60,6 +60,12 @@ const openPostDialog = (boardinghouse) => {
             <!-- CONTENTS -->
             <v-card-text>
               <v-row class="px-sm-15">
+                <v-btn
+                    fab icon
+                    @click="$router.push('/admin/dashboard')"
+                  >
+                    <v-icon>mdi-arrow-left</v-icon>
+                  </v-btn>
                 <v-col cols="12">
                   <h1>Pending Posts: {{ totalBoardinghouses }}</h1>
                 </v-col>
