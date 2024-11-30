@@ -42,15 +42,17 @@ onMounted(async () => {
 
     >
       <v-list-item class="d-flex justify-center align-center pa-2">
-        <v-menu location="bottom">
+        <v-menu
+          location="right"
+          transition="slide-x-transition"
+        >
           <template v-slot:activator="{ props }">
-            <v-btn
-              class="text-none"
+            <v-card
+              class="py-2"
               variant="text"
-              size="x-large"
               v-bind="props"
             >
-              <div class="d-flex align-center ga-3">
+              <div class="d-flex align-center ga-3 px-5">
                 <v-avatar
                   size="50"
                 >
@@ -60,11 +62,12 @@ onMounted(async () => {
                   ></v-img>
                 </v-avatar>
                 <div class="d-flex flex-column align-start">
-                  <p style="font-size: 15px; font-weight: bold;">{{ userStore.userData.firstname }} {{ userStore.userData.lastname }}</p>
-                  <p style="font-size: 13px; font-weight: bold;">Owner</p>
+                  <p style="font-size: 17px; font-weight: bold;">{{ userStore.userData.firstname }} {{ userStore.userData.lastname }}</p>
+                  <p style="font-size: 15px; font-weight: bold;">Owner</p>
                 </div>
+                <v-icon>mdi-chevron-right</v-icon>
               </div>
-            </v-btn>
+            </v-card>
           </template>
           <v-card>
             <v-card-text>
