@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { supabase } from '@/lib/supabaseClient' // Ensure this is correctly set up
+import { supabase } from '@/lib/supabaseClient' 
 
 export const useAdminStore = defineStore('adminStore', {
   state: () => ({
@@ -7,19 +7,20 @@ export const useAdminStore = defineStore('adminStore', {
     name:'',
     status:'',
     boardinghouse:[],
-    session: null // Store user session
+    postLogs: [], 
+    session: null 
   }),
   actions: {
-    // Fetch cards from the Supabase database
+
     async fetchBoardData() {
       try {
-        // Skip session validation for testing
+       
         console.warn('Bypassing session check for testing.');
         const { data, error } = await supabase
-          .from('boarding_houses') // Replace with your table name
+          .from('posts_data') 
           .select('*')
-          .eq('status', 'pending'); // Fetch only pending cards
-    
+          .eq('status', 'pending'); 
+
         if (error) throw error;
     
         console.log('Fetched data:', data); // Log fetched data for debugging
@@ -40,14 +41,14 @@ export const useAdminStore = defineStore('adminStore', {
     
         if (error) throw error;
     
-        console.log('Fetched data:', data); // Log fetched data for debugging
+        console.log('Fetched data:', data); 
         this.boardinghouse = data;
       } catch (error) {
         console.error('Failed to fetch boarding houses:', error.message);
       }
     },
 
-    // Approve a card and update its status in Supabase
+    
     async approveCard(boardinghouseID) {
       try {
         const { error } = await supabase
@@ -79,6 +80,38 @@ export const useAdminStore = defineStore('adminStore', {
       } catch (error) {
         console.error('Failed to reject card:', error.message);
       }
+    },
+    async fetchPostLogs() {
+      try {
+        const { data, error } = await supabase
+          .from('post_logs') 
+          .select('id, table_name, action, updated_at, username') 
+          .order('updated_at', { ascending: false }); 
+    
+        if (error) throw error;
+    
+        console.log('Fetched post logs in descending order:', data); 
+        this.postLogs = data;
+      } catch (error) {
+        console.error('Failed to fetch post logs:', error.message);
+      }
+    },
+    async fetchRecentPosts() {
+      try {
+        const { data, error } = await supabase
+          .from('posts_data') 
+          .select('*') 
+          .order('created_at', { ascending: false }) 
+          .limit(5); 
+    
+        if (error) throw error;
+    
+        console.log('Fetched recent posts:', data); 
+        this.boardinghouse = data;
+      } catch (error) {
+        console.error('Failed to fetch recent posts:', error.message);
+      }
     }
+    ,
   }
 })

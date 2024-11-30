@@ -73,6 +73,11 @@ const router = createRouter({
       component: () => import('@/views/system/admin/Approved.vue')
     },
     {
+      path: '/admin/dashboard',
+      name: 'admin',
+      component: () => import('@/views/system/admin/Dashboard.vue')
+    },
+    {
       path: '/user/select',
       name: 'select',
       component: () => import('@/views/auth/RoleSelection.vue'),
