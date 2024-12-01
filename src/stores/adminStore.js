@@ -86,7 +86,7 @@ export const useAdminStore = defineStore('adminStore', {
         const { data, error } = await supabase
           .from('post_logs_view')
           .select('*')
-          .order('date_modified', { ascending: false });
+          .order('updated_at', { ascending: false });
     
         if (error) throw error;
     

@@ -3,6 +3,7 @@ import AppLayout from '@/components/layout/AppLayout.vue'
 import { ref, onMounted, computed } from 'vue'
 import { useAdminStore } from '@/stores/adminStore'
 import { useUserStore } from '@/stores/userStore'
+import { format } from 'date-fns'
 
 const userStore = useUserStore()
 const adminStore = useAdminStore()
@@ -181,7 +182,7 @@ function previousPage() {
                         <tr v-for="boardinghouse in adminStore.boardinghouse" :key="boardinghouse.id">
                           <td class="text-center">{{ boardinghouse.name }}</td>
                           <td class="text-center">{{ boardinghouse.owner_name }}</td>
-                          <td class="text-center">{{ boardinghouse.created_at }}</td>
+                          <td class="text-center">{{ format(new Date(boardinghouse.created_at), 'MMM dd, yyyy hh:mm:ss a') }}</td>
                         </tr>
                       </tbody>
                     </v-table>
@@ -203,7 +204,7 @@ function previousPage() {
                         <tr v-for="log in paginatedPostLogs" :key="log.id">
                           <td class="text-center">{{ log.table_name }}</td>
                           <td class="text-center">{{ log.action }}</td>
-                          <td class="text-center">{{ log.date_modified }}</td>
+                          <td class="text-center">{{ format(new Date(log.updated_at), 'MMM dd, yyyy hh:mm:ss a') }}</td>
                           <td class="text-center">{{ log.username }}</td>
                         </tr>
                       </tbody>
