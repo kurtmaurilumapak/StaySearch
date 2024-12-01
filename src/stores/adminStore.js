@@ -99,7 +99,7 @@ export const useAdminStore = defineStore('adminStore', {
     async fetchRecentPosts() {
       try {
         const { data, error } = await supabase
-          .from('posts_data') 
+          .from('admin_posts_data')
           .select('*') 
           .order('created_at', { ascending: false }) 
           .limit(5); 
