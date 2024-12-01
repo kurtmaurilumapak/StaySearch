@@ -14,7 +14,7 @@ const itemsPerPage = 5
 
 onMounted(() => {
   adminStore.fetchRecentPosts().then(() => {
-    console.log(adminStore.boardinghouse); // Log the fetched recent posts
+    console.log(adminStore.boardinghouse);
   });
   adminStore.fetchPostLogs().then(() => {
     console.log(adminStore.postLogs); // Log the fetched post logs
@@ -158,7 +158,7 @@ function previousPage() {
                     <div class="d-flex align-center px-7">
                       <h3 class="text-h5 font-weight-bold">Approved Posts</h3>
                       <v-spacer></v-spacer>
-                      <v-icon class="text-h2"color="green">mdi-arrow-right</v-icon>
+                      <v-icon class="text-h2" color="green">mdi-arrow-right</v-icon>
                     </div>
                     
                   </div>
@@ -203,7 +203,7 @@ function previousPage() {
                         <tr v-for="log in paginatedPostLogs" :key="log.id">
                           <td class="text-center">{{ log.table_name }}</td>
                           <td class="text-center">{{ log.action }}</td>
-                          <td class="text-center">{{ log.updated_at }}</td>
+                          <td class="text-center">{{ log.date_modified }}</td>
                           <td class="text-center">{{ log.username }}</td>
                         </tr>
                       </tbody>

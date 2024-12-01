@@ -84,9 +84,9 @@ export const useAdminStore = defineStore('adminStore', {
     async fetchPostLogs() {
       try {
         const { data, error } = await supabase
-          .from('post_logs') 
-          .select('id, table_name, action, updated_at, username') 
-          .order('updated_at', { ascending: false }); 
+          .from('post_logs_view')
+          .select('*')
+          .order('date_modified', { ascending: false });
     
         if (error) throw error;
     

@@ -121,13 +121,6 @@ const averageRating = computed(() => {
                       <v-icon color="green">mdi-star-outline</v-icon>
                     </div>
                   <h1 class="px-7">{{ averageRating.toFixed(1) }}</h1>
-                    <h4 class="px-7"><v-rating
-                      :size="21"
-                      :model-value="averageRating.toFixed(1)"
-                      color="yellow-darken-3"
-                      half-increments
-                      readonly
-                    ></v-rating></h4>
                   </div>
                 </v-col>
               </v-row>
