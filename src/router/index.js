@@ -70,7 +70,7 @@ const router = createRouter({
     {
       path: '/admin/request',
       name: 'adminRequest',
-      component: () => import('@/views/system/admin/AdminRequest.vue'),
+      component: () => import('@/views/system/admin/AdminRequests.vue'),
       meta: { requiresAuth: true, role: 'admin' },
     },
     {

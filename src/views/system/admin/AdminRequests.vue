@@ -110,9 +110,7 @@ const handleReject = async (boardinghouseID) => {
                       <h2>{{ boardinghouse.name }}</h2>
                       <p class="text-subtitle-1">{{ boardinghouse.address }}</p>
                       <p class="text-body-2">posted by: <strong>{{ boardinghouse.owner_name }}</strong></p>
-                    </v-card-text>
-                    <v-card-text>
-                      <v-btn size="large" class="my-2 rounded-lg font-weight-bold bg-green text-body-2" @click="openDialog(boardinghouse)">
+                      <v-btn rounded size="small" class="my-2 font-weight-bold bg-green text-none text-h7-2" @click="openDialog(boardinghouse)">
                         View Details
                       </v-btn>
                     </v-card-text>
