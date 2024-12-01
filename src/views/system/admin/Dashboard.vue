@@ -172,9 +172,9 @@ function previousPage() {
                     <v-table class="border">
                       <thead>
                         <tr>
-                          <th class="text-center">Boarding House Name</th>
-                          <th class="text-center">Owner</th>
-                          <th class="text-center">Posted at</th>
+                          <th class="text-center text-subtitle-1 font-weight-bold">Boarding House Name</th>
+                          <th class="text-center text-subtitle-1 font-weight-bold">Owner</th>
+                          <th class="text-center text-subtitle-1 font-weight-bold">Posted at</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -193,10 +193,10 @@ function previousPage() {
                     <v-table class="border">
                       <thead>
                         <tr>
-                          <th class="text-center">Table Name</th>
-                          <th class="text-center">Action</th>
-                          <th class="text-center">Updated At</th>
-                          <th class="text-center">Username</th>
+                          <th class="text-center text-subtitle-1 font-weight-bold">Table Name</th>
+                          <th class="text-center text-subtitle-1 font-weight-bold">Action</th>
+                          <th class="text-center text-subtitle-1 font-weight-bold">Updated At</th>
+                          <th class="text-center text-subtitle-1 font-weight-bold">Username</th>
                         </tr>
                       </thead>
                       <tbody>

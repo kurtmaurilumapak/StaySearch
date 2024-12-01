@@ -49,9 +49,7 @@ const openPostDialog = (boardinghouse) => {
                     <h3 class="font-weight-bold">StaySearch</h3>
                   </RouterLink>
                 </v-col>
-                <v-col cols="6" class="d-flex align-center justify-end px-sm-16">
-                  <v-btn class="ma-2 d-flex d-lg-none" icon="mdi-menu" variant="text" @click="drawer = !drawer"></v-btn>
-                </v-col>
+                
               </v-row>
             </v-card-title>
 
