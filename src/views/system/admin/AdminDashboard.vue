@@ -60,7 +60,7 @@ function previousPage() {
             >
               <v-card-title class="py-0">
                 <v-row>
-                  <v-col cols="6" class="d-flex justify-start align-center px-sm-16">
+                  <v-col cols="12" class="d-flex justify-start align-center px-sm-16">
                     <RouterLink
                       style="text-decoration: none; color: inherit;"
                       to="/"
@@ -77,64 +77,6 @@ function previousPage() {
                       </h3>
                     </RouterLink>
                   </v-col>
-                  <v-col cols="6" class="d-flex align-center justify-end pr-10">
-            <v-menu location="left">
-              <template v-slot:activator="{ props }">
-                <v-btn
-                  icon
-                  v-bind="props"
-                >
-                <v-avatar>
-                  <v-img
-
-                    alt="Profile"
-                    :src="userStore.userData.picture ||  '/csu.png'"
-                  ></v-img>
-                </v-avatar>
-                </v-btn>
-              </template>
-              <v-card>
-                <v-card-text>
-                  <div class="mx-auto text-center">
-                    <div class="d-flex align-center ga-3">
-                      <v-avatar
-                        size="50"
-                      >
-                        <v-img
-                          alt="Profile"
-                         :src="userStore.userData.picture ||  '/csu.png'"
-                        ></v-img>
-                      </v-avatar>
-                      <div class="d-flex flex-column align-start">
-                        
-                      </div>
-                    </div>
-                  
-                    <v-divider class="my-3"></v-divider>
-                    <v-btn
-                      class="text-none font-weight-bold"
-                      variant="text"
-                      rounded
-                      block
-                      @click="$router.push('/settings')"
-                    >
-                      Edit Account
-                    </v-btn>
-                    <v-divider class="my-3"></v-divider>
-                    <v-btn
-                      class="text-none font-weight-bold"
-                      variant="text"
-                      color="red"
-                      rounded
-                      block
-                    >
-                      Logout
-                    </v-btn>
-                  </div>
-                </v-card-text>
-              </v-card>
-            </v-menu>
-          </v-col>
                 </v-row>
               </v-card-title>
   
