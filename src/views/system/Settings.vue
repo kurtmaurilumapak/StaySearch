@@ -17,6 +17,12 @@ const userUpdate = ref({
   editedEmail: '',
   nameSnackbar: false,
   emailSnackbar: false,
+  editingPassword: false,
+  newPassword: '',
+  confirmPassword: '',
+  passwordSnackbar: false,
+  newPasswordVisible: false,
+  confirmPasswordVisible: false,
 })
 
 const onPreview = async (event) => {
@@ -83,6 +89,27 @@ const handleUpdateUser = async () => {
   userUpdate.value.editingEmail = false
 }
 
+const handleChangePassword = async () => {
+  if (userUpdate.value.newPassword !== userUpdate.value.confirmPassword) {
+    return; // Just in case the validation failed
+  }
+
+  userStore.formAction.formProcess = true;
+
+  // Call your store action to update the password
+  const passwordUpdated = await userStore.updatePassword(userUpdate.value.newPassword);
+
+  userStore.formAction.formProcess = false;
+
+  if (passwordUpdated) {
+    userUpdate.value.passwordSnackbar = true; // Show success message
+    userUpdate.value.editingPassword = false; // Close dialog
+  } else {
+    // Handle password update failure
+    console.error('Password update failed');
+  }
+};
+
 const tab = ref('profile')
 
 const validationRules = {
@@ -92,6 +119,14 @@ const validationRules = {
     v => !!v || 'Email is required',
     v => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(v) || 'Invalid email format',
   ],
+  passwordRules: [
+    v => !!v || 'Password is required',
+    v => v.length >= 8 || 'Password must be at least 8 characters long',
+    v => /[a-z]/.test(v) || 'Password must contain at least one lowercase letter',
+    v => /[A-Z]/.test(v) || 'Password must contain at least one uppercase letter',
+    v => /[0-9]/.test(v) || 'Password must contain at least one number',
+    v => /[^\w\s]/.test(v) || 'Password must contain at least one special character',
+  ]
 }
 
 const isNameValid = computed(() => {
@@ -101,6 +136,13 @@ const isNameValid = computed(() => {
 
 const isEmailValid = computed(() => {
   return validationRules.emailRules.every(rule => rule(userUpdate.value.editedEmail) === true);
+});
+
+const isPasswordValid = computed(() => {
+  return userUpdate.value.newPassword &&
+    userUpdate.value.confirmPassword &&
+    userUpdate.value.newPassword === userUpdate.value.confirmPassword &&
+    validationRules.passwordRules.every(rule => rule(userUpdate.value.newPassword) === true)
 });
 </script>
 
@@ -239,11 +281,16 @@ const isEmailValid = computed(() => {
                           </div>
                         </v-col>
                         <v-col cols="12" sm="2" class="d-flex flex-sm-column ga-2">
-                          <v-btn variant="outlined" class="text-none font-weight-bold">
+                          <v-btn
+                            color="green"
+                            variant="outlined"
+                            class="text-none font-weight-bold"
+                            @click="userUpdate.editingPassword = true"
+                          >
                             Change
                           </v-btn>
                           <br>
-                          <v-btn variant="outlined" class="text-none font-weight-bold">
+                          <v-btn  color="red" variant="outlined" class="text-none font-weight-bold">
                             Reset
                           </v-btn>
                         </v-col>
@@ -311,6 +358,53 @@ const isEmailValid = computed(() => {
       </v-snackbar>
       <v-snackbar v-model="userUpdate.emailSnackbar" :timeout="3000" color="green-darken-4" elevation="24">
         <strong>Email confirmation has been sent!</strong>
+      </v-snackbar>
+
+      <v-dialog v-model="userUpdate.editingPassword" max-width="500px">
+        <v-card>
+          <v-card-title>
+            <span class="headline">Change Password</span>
+          </v-card-title>
+          <v-card-text>
+            <v-text-field
+              color="green"
+              v-model="userUpdate.newPassword"
+              label="New Password"
+              :rules="validationRules.passwordRules"
+              variant="outlined"
+              :append-inner-icon="userUpdate.newPasswordVisible ? 'mdi-eye' : 'mdi-eye-off'"
+              :type="userUpdate.newPasswordVisible ? 'text' : 'password'"
+              @click:append-inner="userUpdate.newPasswordVisible = !userUpdate.newPasswordVisible"
+            ></v-text-field>
+
+            <v-text-field
+              color="green"
+              v-model="userUpdate.confirmPassword"
+              label="Confirm Password"
+              :rules="[v => v === userUpdate.newPassword || 'Passwords must match']"
+              variant="outlined"
+              :append-inner-icon="userUpdate.confirmPasswordVisible ? 'mdi-eye' : 'mdi-eye-off'"
+              :type="userUpdate.confirmPasswordVisible ? 'text' : 'password'"
+              @click:append-inner="userUpdate.confirmPasswordVisible = !userUpdate.confirmPasswordVisible"
+            ></v-text-field>
+          </v-card-text>
+
+          <v-card-actions>
+            <v-spacer />
+            <v-btn
+              color="green"
+              :disabled="userStore.formAction.formProcess || !isPasswordValid"
+              @click="handleChangePassword"
+            >
+              Save
+            </v-btn>
+            <v-btn  color="red" @click="userUpdate.editingPassword = false">Cancel</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
+      <v-snackbar v-model="userUpdate.passwordSnackbar" :timeout="3000" color="green-darken-4" elevation="24">
+        <strong>Password updated successfully!</strong>
       </v-snackbar>
 
     </template>

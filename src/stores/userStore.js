@@ -81,7 +81,9 @@ export const useUserStore = defineStore('userData', {
 
     async updatePassword(newPassword) {
       try {
-        const { error } = await supabase.auth.updateUser({ password: newPassword })
+        const { error } = await supabase.auth.updateUser({
+          password: newPassword
+        })
 
         if (error) {
           console.error('Error updating password:', error)
