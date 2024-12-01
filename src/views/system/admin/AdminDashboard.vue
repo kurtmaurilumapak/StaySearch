@@ -4,6 +4,7 @@ import { ref, onMounted, computed } from 'vue'
 import { useAdminStore } from '@/stores/adminStore'
 import { useUserStore } from '@/stores/userStore'
 import { format } from 'date-fns'
+import AdminNavbar from '@/components/common/AdminNavbar.vue'
 
 const userStore = useUserStore()
 const adminStore = useAdminStore()
@@ -47,6 +48,7 @@ function previousPage() {
 <template>
     <AppLayout>
       <template #content>
+        <AdminNavbar v-model="drawer" />
         <v-row>
           <v-col
             cols="12"
