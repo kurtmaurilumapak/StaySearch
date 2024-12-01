@@ -155,8 +155,10 @@ function previousPage() {
                     </v-table>
                     <!-- Pagination Controls -->
                     <v-row class="mt-4">
-                      <v-col cols="12" class="d-flex justify-center">
+                      <v-col cols="12" class="d-flex justify-center align-center">
                         <v-btn
+                          class="text-none"
+                          color="green"
                           :disabled="currentPage === 1"
                           @click="previousPage"
                         >
@@ -164,6 +166,8 @@ function previousPage() {
                         </v-btn>
                         <span class="mx-2">Page {{ currentPage }} of {{ totalPages }}</span>
                         <v-btn
+                          class="text-none"
+                          color="green"
                           :disabled="currentPage === totalPages"
                           @click="nextPage"
                         >
