@@ -97,6 +97,32 @@ export const useUserStore = defineStore('userData', {
         return false
       }
     },
+    async resetPassword() {
+      this.formAction.formProcess = true
+      this.formAction.formErrorMessage = ''
+      this.formAction.formSuccessMessage = ''
+
+      if (!this.userData.email) {
+        this.formAction.formErrorMessage = 'Email is required'
+        this.formAction.formProcess = false
+        return
+      }
+
+      try {
+        const { error } = await supabase.auth.resetPasswordForEmail(this.userData.email)
+        if (error) {
+          this.formAction.formErrorMessage = `Error: ${error.message}`
+        } else {
+          this.formAction.formSuccessMessage = 'Password reset email has been sent. Please check your inbox.'
+          this.email = '' // Clear the email input field
+        }
+      } catch (err) {
+        this.formAction.formErrorMessage = `Error: ${err.message}`
+      }
+
+      this.formAction.formProcess = false
+    },
+
     async uploadProfilePicture(file) {
       if (!file) {
         console.error('No file provided.');

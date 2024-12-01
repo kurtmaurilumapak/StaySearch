@@ -290,7 +290,12 @@ const isPasswordValid = computed(() => {
                             Change
                           </v-btn>
                           <br>
-                          <v-btn  color="red" variant="outlined" class="text-none font-weight-bold">
+                          <v-btn
+                            color="red"
+                            variant="outlined"
+                            class="text-none font-weight-bold"
+                            @click="userStore.resetPassword"
+                          >
                             Reset
                           </v-btn>
                         </v-col>
@@ -405,6 +410,13 @@ const isPasswordValid = computed(() => {
 
       <v-snackbar v-model="userUpdate.passwordSnackbar" :timeout="3000" color="green-darken-4" elevation="24">
         <strong>Password updated successfully!</strong>
+      </v-snackbar>
+
+      <v-snackbar v-if="userStore.formAction.formErrorMessage" :timeout="3000" color="red" elevation="24">
+        <strong>Reset password failed.</strong>
+      </v-snackbar>
+      <v-snackbar v-if="userStore.formAction.formSuccessMessage" :timeout="3000" color="green-darken-4" elevation="24">
+        <strong>Reset password link sent!</strong>
       </v-snackbar>
 
     </template>
