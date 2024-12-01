@@ -5,7 +5,10 @@ import { useAdminStore } from '@/stores/adminStore'
 import { LMap, LTileLayer, LMarker } from "@vue-leaflet/vue-leaflet";
 import "leaflet/dist/leaflet.css"
 import { formatDistanceToNow } from 'date-fns'
+import AdminNavbar from '@/components/common/AdminNavbar.vue'
 
+
+const drawer = ref(true)
 const adminStore = useAdminStore()
 const postDialog = ref({
   tags: [],
@@ -67,6 +70,7 @@ const handleReject = async (boardinghouseID) => {
 <template>
   <AppLayout>
     <template #content>
+      <AdminNavbar v-model="drawer" />
       <v-row>
         <v-col cols="12" class="d-flex justify-center align-center">
           <v-card :elevation="7" style="border-radius: 0; height: 100vh; width: 100%; overflow-y: auto;">
