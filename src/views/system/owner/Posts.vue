@@ -393,6 +393,7 @@ const onDelete = (post) => {
                       :model-value="averageRating.toFixed(1)"
                       color="yellow-darken-3"
                       half-increments
+                      readonly
                     ></v-rating>
                   </div>
                   <div
@@ -422,6 +423,7 @@ const onDelete = (post) => {
                             :model-value="review.rating"
                             color="yellow-darken-3"
                             half-increments
+                            readonly
                           ></v-rating>
                           <div class="mx-3">
                             <span style="font-size: 14px">{{ review.comment }}</span>

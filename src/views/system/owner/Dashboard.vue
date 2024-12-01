@@ -20,7 +20,21 @@ onMounted(async () => {
   await postStore.ownerPost();
   await reservationStore.fetchOwnerReservationData();
 })
+const averageRating = computed(() => {
+  if (postStore.posts.length > 0) {
+    
+    const totalRating = postStore.posts.reduce((acc, post) => {
+      if (post.reviews && post.reviews.length > 0) {
+        const postTotalRating = post.reviews.reduce((sum, review) => sum + review.rating, 0)
+        return acc + (postTotalRating / post.reviews.length)
+      }
+      return acc
+    }, 0)
 
+    return totalRating / postStore.posts.length
+  }
+  return 0
+})
 </script>
 
 <template>
@@ -85,6 +99,7 @@ onMounted(async () => {
                       <v-icon color="green">mdi-home</v-icon>
                     </div>
                     <h1 class="px-7">{{ totalProperties}}</h1>
+                    <h4 class="px-7 mb-7"></h4>
                   </div>
                 </v-col>
                 <v-col cols="12" md="4" class="py-7">
@@ -95,6 +110,7 @@ onMounted(async () => {
                       <v-icon color="green">mdi-calendar-text</v-icon>
                     </div>
                     <h1 class="px-7">{{totalReservations}}</h1>
+                    <h4 class="px-7 mb-7"></h4>
                   </div>
                 </v-col>
                 <v-col cols="12" md="4" class="py-7">
@@ -104,7 +120,14 @@ onMounted(async () => {
                       <v-spacer></v-spacer>
                       <v-icon color="green">mdi-star-outline</v-icon>
                     </div>
-                    <h1 class="px-7">Total</h1>
+                  <h1 class="px-7">{{ averageRating.toFixed(1) }}</h1>
+                    <h4 class="px-7"><v-rating
+                      :size="21"
+                      :model-value="averageRating.toFixed(1)"
+                      color="yellow-darken-3"
+                      half-increments
+                      readonly
+                    ></v-rating></h4>
                   </div>
                 </v-col>
               </v-row>
