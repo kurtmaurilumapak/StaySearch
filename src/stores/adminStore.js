@@ -35,7 +35,7 @@ export const useAdminStore = defineStore('adminStore', {
         // Skip session validation for testing
         console.warn('Bypassing session check for testing.');
         const { data, error } = await supabase
-          .from('boarding_houses') // Replace with your table name
+          .from('posts_data') // Replace with your table name
           .select('*')
           .eq('status', 'approved'); // Fetch only pending cards
     
