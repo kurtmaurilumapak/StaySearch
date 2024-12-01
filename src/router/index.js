@@ -70,19 +70,19 @@ const router = createRouter({
     {
       path: '/admin/request',
       name: 'adminRequest',
-      component: () => import('@/views/system/admin/Request.vue'),
+      component: () => import('@/views/system/admin/AdminRequest.vue'),
       meta: { requiresAuth: true, role: 'admin' },
     },
     {
       path: '/admin/approved',
       name: 'adminApproved',
-      component: () => import('@/views/system/admin/Approved.vue'),
+      component: () => import('@/views/system/admin/AdminApproved.vue'),
       meta: { requiresAuth: true, role: 'admin' },
     },
     {
       path: '/admin/dashboard',
       name: 'adminDashboard',
-      component: () => import('@/views/system/admin/Dashboard.vue'),
+      component: () => import('@/views/system/admin/AdminDashboard.vue'),
       meta: { requiresAuth: true, role: 'admin' },
     },
     {
