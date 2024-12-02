@@ -14,10 +14,8 @@ export const useAdminStore = defineStore('adminStore', {
 
     async fetchBoardData() {
       try {
-       
-        console.warn('Bypassing session check for testing.');
         const { data, error } = await supabase
-          .from('posts_data') 
+          .from('admin_posts_data')
           .select('*')
           .eq('status', 'pending'); 
 
@@ -32,10 +30,8 @@ export const useAdminStore = defineStore('adminStore', {
 
     async fetchBoardData2() {
       try {
-        // Skip session validation for testing
-        console.warn('Bypassing session check for testing.');
         const { data, error } = await supabase
-          .from('posts_data') // Replace with your table name
+          .from('admin_posts_data') // Replace with your table name
           .select('*')
           .eq('status', 'approved'); // Fetch only pending cards
     
