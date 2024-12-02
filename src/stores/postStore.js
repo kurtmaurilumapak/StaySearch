@@ -183,8 +183,8 @@ export const usePostStore = defineStore('post', {
 
     async allPost({ priceRange, selectedType, filter, searchQuery }) {
       let query = supabase
-        .from('posts_data')
-        .select('*')
+        .from('boarding_houses')
+        .select('*, boarding_house_images(image_url), boarding_house_tags(tag_id, tags(tag_name)), reviews(comment, rating, user_id, users(name, picture)')
         .eq('status', 'approved')
         .order('created_at', { ascending: false });
 
