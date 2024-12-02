@@ -19,10 +19,8 @@ const onLogin = async () => {
   if (!error) {
     const role = data.user.user_metadata.role
 
-    if (role === 'student') {
-      await router.push('/student/page')
-    } else if (role === 'owner') {
-      await router.push('/owner/dashboard')
+    if (role === 'admin') {
+      await router.push('/admin/dashboard')
     }
     authStore.resetForm();
   } else {
@@ -46,12 +44,12 @@ const onLogin = async () => {
       <v-row
         style="height: calc(100vh + 12px); overflow-y: auto;"
         class="d-flex justify-center align-start mx-0">
-      >
+        >
         <v-col cols="12" class="d-flex justify-center align-center">
           <v-card
             style="border-radius: 20px;"
             :elevation="12"
-            max-width="475"
+            max-width="400"
           >
             <img
               style="position: absolute; z-index: -1"
@@ -81,13 +79,13 @@ const onLogin = async () => {
             <v-card-text class="pt-2 px-10">
               <div class="d-flex align-end text-white cursor-default">
                 <h1 class="mb-1" style="font-size: 26px;">
-                  Welcome to StaySearch!
+                  Welcome
                 </h1>
                 <p class="text-h2 float">👋🏻</p>
               </div>
 
               <p class="mb-0 text-white cursor-default">
-                Please sign-in to your account and start searching.
+                Please sign-in to your account as admin.
               </p>
             </v-card-text>
             <v-form
@@ -138,52 +136,6 @@ const onLogin = async () => {
                     @click="onLogin"
                   >
                     Login
-                  </v-btn>
-                </v-col>
-
-                <!-- login instead -->
-                <v-col
-                  cols="12"
-                  class="text-center text-base pt-10"
-                >
-                  <span>New on our platform?</span>
-                  <RouterLink
-                    style="text-decoration: none;color: mediumseagreen;"
-                    class="ms-2 font-weight-bold"
-                    to="signup"
-                  >Create an account
-                  </RouterLink>
-                </v-col>
-
-                <v-col
-                  cols="12"
-                  class="d-flex align-center pt-5"
-                >
-                  <v-divider />
-                  <span class="mx-4 text-overline">or</span>
-                  <v-divider />
-                </v-col>
-
-                <!-- auth providers -->
-                <v-col
-                  cols="12"
-                  class="text-center pt-5"
-                >
-                  <v-btn
-                    class="text-none font-weight-bold px-7"
-                    @click="authStore.signInWithGoogle"
-                    size="large"
-                    rounded="lg"
-
-                  >
-                    <img
-                      style="pointer-events: none; margin-right: 10px"
-                      src="../../assets/auth/google.png"
-                      alt="Google Icon"
-                      height="28"
-                      width="28"
-                    />
-                    Continue with Google
                   </v-btn>
                 </v-col>
               </v-row>

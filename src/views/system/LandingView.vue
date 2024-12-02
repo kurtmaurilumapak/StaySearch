@@ -3,10 +3,12 @@ import { ref , onMounted} from 'vue'
 import hero from '@/assets/landing/hero.png'
 import 'aos/dist/aos.css'
 import AOS from 'aos'
-const dialog = ref(false) 
-const selectedImage = ref(null) 
-const drawer = ref(false)
+import { LMap, LTileLayer, LMarker, LTooltip } from "@vue-leaflet/vue-leaflet";
+import "leaflet/dist/leaflet.css"
+import { useMapStore } from '@/stores/mapStore'
 
+const drawer = ref(false)
+const mapStore = useMapStore()
 
 const scrollToSection = (sectionId) => {
   const section = document.getElementById(sectionId)
@@ -15,18 +17,23 @@ const scrollToSection = (sectionId) => {
     drawer.value = false
   }
 }
+const fetchCoordinates = async () => {
+  try {
+    await mapStore.fetchUserBoardingHouseData();
+  } catch (error) {
+    console.error('Error fetching posts:', error);
+  }
+};
 
-const openModal = (image) => {
-  selectedImage.value = image 
-  dialog.value = true 
-}
 onMounted(() => {
   AOS.init({
     duration: 600, // Adjust as needed
     once: false, 
     mirror: true,   // Whether animation should happen only once
   });
+  fetchCoordinates()
 });
+
 
 </script>
 
@@ -64,7 +71,7 @@ onMounted(() => {
         </v-col>
         <v-col cols="6" class="d-flex justify-end align-center">
           <v-btn class="d-none d-md-flex" @click="scrollToSection('home')">Home</v-btn>
-          <v-btn class="d-none d-md-flex" @click="scrollToSection('gallery')">Boardings</v-btn>
+          <v-btn class="d-none d-md-flex" @click="scrollToSection('locations')">Locations</v-btn>
           <v-btn class="d-none d-md-flex" @click="scrollToSection('about')">About us</v-btn>
           <v-btn class="d-none d-md-flex ml-5 mr-5" @click="$router.push({ name: 'login' })" style="background-color: green; color: white;">Sign in</v-btn>
         </v-col>
@@ -85,8 +92,8 @@ onMounted(() => {
         <v-list-item @click="scrollToSection('home')">
           <v-list-item-title>Home</v-list-item-title>
         </v-list-item>
-        <v-list-item @click="scrollToSection('gallery')">
-          <v-list-item-title>Boardings</v-list-item-title>
+        <v-list-item @click="scrollToSection('locations')">
+          <v-list-item-title>Locations</v-list-item-title>
         </v-list-item>
         <v-list-item @click="scrollToSection('about')">
           <v-list-item-title>About us</v-list-item-title>
@@ -152,145 +159,35 @@ onMounted(() => {
       </v-row>
     </v-container>
 
-    <v-container fluid class="pa-4 text-center d-flex flex-column justify-center align-center" id="gallery">
-      <v-row class="w-100 d-flex justify-center">
-        <v-col cols="12">
-          <v-row>
-            <!-- Image 1 -->
-            <v-col cols="12" md="4" data-aos="fade-up">
-              <v-hover v-slot="{ isHovering, props }">
-                <v-card
-                  :class="{ 'on-hover': isHovering }"
-                  :elevation="isHovering ? 20 : 2"
-                  width="100%"
-                  v-bind="props"
-                  @click="openModal('https://www.taskspace.co.uk/wp-content/uploads/2020/09/Hero-Boarding.jpg')"
-                >
-                  <v-img
-                    src="https://www.taskspace.co.uk/wp-content/uploads/2020/09/Hero-Boarding.jpg"
-                    max-width="100%"
-                    height="500"
-                    cover
-                  >
-                  </v-img>
-                </v-card>
-              </v-hover>
-            </v-col>
+    <v-container fluid class="pa-4 text-center d-flex flex-column justify-center align-center" id="locations">
+      <h1 class="text-green-darken-4 text-h3 font-weight-bold">Explore Boarding Locations</h1>
+      <div
+  class="d-flex flex-wrap mx-10 pa-10 text-center"
+  style="height: 500px; width: 100%; border-radius: 10px;"
+>
+  <l-map
+    :use-global-leaflet="false"
+    ref="map"
+    zoom=15
+    :center="[8.9559,125.59715]"
+    minZoom=12
+  >
+    <l-tile-layer
+      url="https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=sQh8Ib7Qh6Fp1elfR6K8"
+      layer-type="base"
+      name="OpenStreetMap"
+    ></l-tile-layer>
+    <l-marker
+      v-for="coordinates in mapStore.boardingHouseCoordinates"
+      :key="coordinates.id"
+      :lat-lng="[coordinates.latitude, coordinates.longitude]"
+    >
+    <l-tooltip>{{ coordinates.name }}</l-tooltip>
+  </l-marker>
+  </l-map>
+</div>
 
-            <!-- Image 2 -->
-            <v-col cols="12" md="8" data-aos="fade-up">
-              <v-hover v-slot="{ isHovering, props }">
-                <v-card
-                  :class="{ 'on-hover': isHovering }"
-                  :elevation="isHovering ? 20 : 2"
-                  width="100%"
-                  v-bind="props"
-                  @click="openModal('https://www.kayak.com.ph/rimg/himg/45/bc/5f/expediav2-287511-eddf8e-547412.jpg?width=1366&height=768&crop=true')"
-                >
-                  <v-img
-                    src="https://www.kayak.com.ph/rimg/himg/45/bc/5f/expediav2-287511-eddf8e-547412.jpg?width=1366&height=768&crop=true"
-                    height="500"
-                    cover
-                  >
-                   
-                  </v-img>
-                </v-card>
-              </v-hover>
-            </v-col>
-          </v-row>
-        </v-col>
-
-        <v-col cols="12">
-          <v-row>
-            <!-- Image 3 -->
-            <v-col cols="12" md="4" data-aos="fade-up">
-              <v-hover v-slot="{ isHovering, props }">
-                <v-card
-
-                  :class="{ 'on-hover': isHovering }"
-                  :elevation="isHovering ? 20 : 2"
-                  v-bind="props"
-                  @click="openModal('https://cf.bstatic.com/xdata/images/hotel/max1024x768/426392656.jpg?k=e7d5e7ff512747a6b77bc4718ac513d99f4aa3a225ed53a8b542ea4b324ed8b1&o=&hp=1')"
-                >
-                  <v-img
-                    src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/426392656.jpg?k=e7d5e7ff512747a6b77bc4718ac513d99f4aa3a225ed53a8b542ea4b324ed8b1&o=&hp=1"
-                    height="500"
-                    cover
-                  >
-                  </v-img>
-                </v-card>
-              </v-hover>
-            </v-col>
-
-            <!-- Image 4 -->
-            <v-col cols="12" md="4" data-aos="fade-up">
-              <v-hover v-slot="{ isHovering, props }">
-                <v-card
-                  :class="{ 'on-hover': isHovering }"
-                  :elevation="isHovering ? 20 : 2"
-                  v-bind="props"
-                  @click="openModal('https://i0.wp.com/josoromabuilders.wordpress.com/wp-content/uploads/2019/04/pers-01.jpg?ssl=1')"
-                >
-                  <v-img
-                    src="https://i0.wp.com/josoromabuilders.wordpress.com/wp-content/uploads/2019/04/pers-01.jpg?ssl=1"
-                    height="500"
-                    cover
-                  >
-                  
-                  </v-img>
-                </v-card>
-              </v-hover>
-            </v-col>
-
-            <!-- Image 5 -->
-            <v-col cols="12" md="4" data-aos="fade-up">
-              <v-hover v-slot="{ isHovering, props }">
-                <v-card
-                  :class="{ 'on-hover': isHovering }"
-                  :elevation="isHovering ? 20 : 2"
-                  v-bind="props"
-                  @click="openModal('https://media.istockphoto.com/id/1216332347/photo/corner-of-a-white-building-against-a-background-of-trees-and-overcast-sky.jpg?s=612x612&w=0&k=20&c=Liox3B2cAlLRkfGo7YzKY1qlrxALXrrqpafSwixGuHY=')"
-                >
-                  <v-img
-                    src="https://media.istockphoto.com/id/1216332347/photo/corner-of-a-white-building-against-a-background-of-trees-and-overcast-sky.jpg?s=612x612&w=0&k=20&c=Liox3B2cAlLRkfGo7YzKY1qlrxALXrrqpafSwixGuHY="
-                    height="500"
-                    cover
-                  >
-                      
-                  </v-img>
-                </v-card>
-              </v-hover>
-            </v-col>
-          </v-row>
-        </v-col>
-
-        <!-- Image 6 -->
-        <v-col cols="12" data-aos="fade-up">
-          <v-hover v-slot="{ isHovering, props }">
-            <v-card
-              :class="{ 'on-hover': isHovering }"
-              :elevation="isHovering ? 20 : 2"
-              v-bind="props"
-              @click="openModal('https://htrealty.ph/wp-content/uploads/2022/08/received_385083866879715-816x785.jpeg')"
-            >
-              <v-img
-                src="https://htrealty.ph/wp-content/uploads/2022/08/received_385083866879715-816x785.jpeg"
-                height=500
-                cover
-              >
-                
-              </v-img>
-            </v-card>
-          </v-hover>
-        </v-col>
-      </v-row>
-
-      <!-- Dialog Modal for Image Viewing -->
-      <v-dialog v-model="dialog" max-width="600px">
-        <v-card style="opacity: 1;">
-          <v-img :src="selectedImage" aspect-ratio="16/9" class="clear-modal-image"></v-img>
-        </v-card>
-      </v-dialog>
+      
     </v-container>
     
 
@@ -416,7 +313,7 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.gallery h2 {
+.locations h2 {
   color: rgba(0, 0, 0, 0.5);
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }

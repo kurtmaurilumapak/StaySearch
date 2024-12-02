@@ -1,12 +1,40 @@
 <script setup>
 import Navbar from '@/components/common/Navbar.vue'
 import AppLayout from '@/components/layout/AppLayout.vue'
-import { ref } from 'vue'
+import { ref, onMounted, computed} from 'vue'
+import { useUserStore } from '@/stores/userStore.js'
+import { usePostStore } from '@/stores/postStore'
+import { useReservationStore } from '@/stores/reservationStore.js'
 
-
+const userStore = useUserStore()
+const postStore = usePostStore()
+const reservationStore = useReservationStore()
 const drawer = ref(true);
 
+const totalProperties = computed(() => postStore.posts.length);
+const totalReservations = computed(() => reservationStore.countMetaObjects());
 
+
+onMounted(async () => {
+  await userStore.fetchUserData()
+  await postStore.ownerPost();
+  await reservationStore.fetchOwnerReservationData();
+})
+const averageRating = computed(() => {
+  if (postStore.posts.length > 0) {
+    
+    const totalRating = postStore.posts.reduce((acc, post) => {
+      if (post.reviews && post.reviews.length > 0) {
+        const postTotalRating = post.reviews.reduce((sum, review) => sum + review.rating, 0)
+        return acc + (postTotalRating / post.reviews.length)
+      }
+      return acc
+    }, 0)
+
+    return totalRating / postStore.posts.length
+  }
+  return 0
+})
 </script>
 
 <template>
@@ -61,7 +89,7 @@ const drawer = ref(true);
             <v-card-text>
               <v-row class="px-sm-15">
                 <v-col cols="12">
-                  <h1>Hi owners name</h1>
+                  <h1>Hi, {{ userStore.userData.firstname || userStore.userData.name }}</h1>
                 </v-col>
                 <v-col cols="12" md="4" class="py-7">
                   <div class="border pa-10 rounded-lg">
@@ -70,7 +98,8 @@ const drawer = ref(true);
                       <v-spacer></v-spacer>
                       <v-icon color="green">mdi-home</v-icon>
                     </div>
-                    <h1 class="px-7">Total</h1>
+                    <h1 class="px-7">{{ totalProperties}}</h1>
+                   
                   </div>
                 </v-col>
                 <v-col cols="12" md="4" class="py-7">
@@ -80,7 +109,8 @@ const drawer = ref(true);
                       <v-spacer></v-spacer>
                       <v-icon color="green">mdi-calendar-text</v-icon>
                     </div>
-                    <h1 class="px-7">Total</h1>
+                    <h1 class="px-7">{{totalReservations}}</h1>
+                    
                   </div>
                 </v-col>
                 <v-col cols="12" md="4" class="py-7">
@@ -90,7 +120,7 @@ const drawer = ref(true);
                       <v-spacer></v-spacer>
                       <v-icon color="green">mdi-star-outline</v-icon>
                     </div>
-                    <h1 class="px-7">Total</h1>
+                  <h1 class="px-7">{{ averageRating.toFixed(1) }}</h1>
                   </div>
                 </v-col>
               </v-row>

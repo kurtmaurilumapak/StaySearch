@@ -26,6 +26,11 @@ const router = createRouter({
       component: () => import('@/views/auth/Login.vue'),
     },
     {
+      path: '/admin/login',
+      name: 'adminLogin',
+      component: () => import('@/views/auth/AdminLogin.vue'),
+    },
+    {
       path: '/owner/dashboard',
       name: 'dashboard',
       component: () => import('@/views/system/owner/Dashboard.vue'),
@@ -64,13 +69,27 @@ const router = createRouter({
     },
     {
       path: '/admin/request',
-      name: 'request',
-      component: () => import('@/views/system/admin/Request.vue')
+      name: 'adminRequest',
+      component: () => import('@/views/system/admin/AdminRequests.vue'),
+      meta: { requiresAuth: true, role: 'admin' },
     },
     {
       path: '/admin/approved',
-      name: 'approved',
-      component: () => import('@/views/system/admin/Approved.vue')
+      name: 'adminApproved',
+      component: () => import('@/views/system/admin/AdminApproved.vue'),
+      meta: { requiresAuth: true, role: 'admin' },
+    },
+    {
+      path: '/admin/dashboard',
+      name: 'adminDashboard',
+      component: () => import('@/views/system/admin/AdminDashboard.vue'),
+      meta: { requiresAuth: true, role: 'admin' },
+    },
+    {
+      path: '/user/select',
+      name: 'select',
+      component: () => import('@/views/auth/RoleSelection.vue'),
+      meta: { requiresAuth: true},
     },
   ]
 })
@@ -81,14 +100,24 @@ router.beforeEach(async (to, from, next) => {
   const userRole = session?.user?.user_metadata?.role;
 
   const isAuthenticated = !!session;
-
-  if (isAuthenticated && (to.name === 'login' || to.name === 'signup' || to.name === 'landing')) {
+  if (isAuthenticated && to.name === 'select') {
     if (userRole === 'owner') {
       return next({ name: 'dashboard' });
     } else if (userRole === 'student') {
       return next({ name: 'student' });
-    } else {
-      return next({ name: 'landing' });
+    }
+  }
+
+  if (isAuthenticated && (to.name === 'login' || to.name === 'signup' || to.name === 'landing' || to.name === 'adminLogin')) {
+    if (userRole === 'owner') {
+      return next({ name: 'dashboard' });
+    } else if (userRole === 'student') {
+      return next({ name: 'student' });
+    } else if (userRole === 'admin') {
+      return next({ name: 'adminDashboard' });
+    }
+    else {
+      return next({ name: 'select' });
     }
   }
 

@@ -1,11 +1,16 @@
 <script setup>
-import { computed, ref, onMounted } from 'vue'
+import { computed, ref, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router';
 import AppLayout from '@/components/layout/AppLayout.vue'
 import { usePostStore } from '@/stores/postStore'
 import { useAuthStore } from '@/stores/authStore'
 import { useTheme } from 'vuetify'
 import { useUserStore } from '@/stores/userStore'
+import { LMap, LTileLayer, LMarker } from "@vue-leaflet/vue-leaflet";
+import "leaflet/dist/leaflet.css"
+import { formatDistanceToNow } from 'date-fns'
+import ReservationsPage from '@/components/system/student/ReservationsPage.vue'
+import AddReservation from '@/components/system/student/AddReservation.vue'
 
 const router = useRouter()
 const theme = useTheme()
@@ -13,8 +18,18 @@ const useAuth = useAuthStore()
 const postStore = usePostStore()
 const userStore = useUserStore()
 
+const reservationsDialogOpen = ref(false)
+const openReservationsDialog = () => {
+  reservationsDialogOpen.value = true;
+}
+const addReservationDialogOpen = ref(false)
+const boardingHouseId = ref(null)
+const openAddReservationDialog = () => {
+  boardingHouseId.value = postDialog.value.boardingHouseId
+  addReservationDialogOpen.value = true;
+};
 
-const rating = ref(0)
+const rating = ref(1)
 const comment = ref('')
 const sheet = ref(false)
 const filterValue = ['Free Electricity', 'Free Water', 'Free Wifi']
@@ -32,50 +47,8 @@ const priceRangeIndex = ref(0);
 const searchQuery = ref('')
 const selectedType = ref('')
 
-const filteredPosts = computed(() => {
-  return postStore.posts.filter(post => {
-    const priceRange = priceRanges[priceRangeIndex.value].range;
-    const postPrice = post.price;
-
-    if (filter.value.length === 0 && selectedType.value === '' && priceRangeIndex.value === 0 && !searchQuery.value) {
-      return true;
-    }
-
-    // Filter by price range
-    if (priceRange && priceRangeIndex.value !== 0 && (postPrice < priceRange[0] || postPrice > priceRange[1])) {
-      return false;
-    }
-
-    // Filter by boarding house type
-    if (selectedType.value && selectedType.value !== '') {
-      const postTags = post.boarding_house_tags.map(tag => tag.tags.name);
-      if (!postTags.includes(selectedType.value)) {
-        return false; // Exclude posts that don't match the selected type
-      }
-    }
-
-    // Filter by amenities (checkboxes)
-    if (filter.value.length > 0) {
-      const postTags = post.boarding_house_tags.map(tag => tag.tags.name);
-      const hasRequiredAmenities = filter.value.every(amenity => postTags.includes(amenity));
-      if (!hasRequiredAmenities) {
-        return false;
-      }
-    }
-
-    if (searchQuery.value) {
-      const lowerCaseQuery = searchQuery.value.toLowerCase();
-      if (!(post.name.toLowerCase().includes(lowerCaseQuery) || post.description.toLowerCase().includes(lowerCaseQuery) || post.address.toLowerCase().includes(lowerCaseQuery))) {
-        return false;
-      }
-    }
-
-    return true;
-  });
-});
-
 const handleBrandClick = () => {
-  window.location.reload();
+  window.location.reload()
 };
 
 const postDialog = ref({
@@ -94,24 +67,50 @@ const openCarousel = (index) => {
 
 const openDialog = (post) => {
   postDialog.value.PostContent = true
-  postDialog.value.tags = post.boarding_house_tags?.map(tag => tag.tags.name)
+  postDialog.value.tags = post.boarding_house_tags?.map(tag => tag.tags.tag_name)
   postDialog.value.images = post.boarding_house_images.map(image => image.image_url)
   postDialog.value.address = post.address
+  postDialog.value.latitude = post.latitude
+  postDialog.value.longitude = post.longitude
   postDialog.value.price = post.price
   postDialog.value.name = post.name
   postDialog.value.description = post.description
+  postDialog.value.owner_name = post.users?.name
   postDialog.value.reviews = post.reviews || []
-
   postDialog.value.boardingHouseId = post.id
+
+  postDialog.value.reviews?.forEach(review => {
+    if (review.created_at) {
+      review.timeAgo = formatDistanceToNow(new Date(review.created_at), { addSuffix: true });
+    }
+  });
+
 };
 
-onMounted(async () => {
+const fetchPosts = async () => {
   try {
-    await postStore.allPost()
+    await postStore.allPost({
+      priceRange: priceRanges[priceRangeIndex.value]?.range,
+      selectedType: selectedType.value,
+      filter: filter.value,
+      searchQuery: searchQuery.value,
+
+    });
+
+    postStore.posts.forEach(post => {
+      if (post.created_at) {
+        post.timeAgo = formatDistanceToNow(new Date(post.created_at), { addSuffix: true });
+      }
+
+    });
+    await userStore.fetchUserData()
   } catch (error) {
-    console.error('Error fetching posts:', error);
+    console.error('Error fetching posts:', error)
   }
-});
+}
+onMounted(fetchPosts);
+watch([priceRangeIndex, selectedType, filter, searchQuery], fetchPosts);
+
 
 
 const addReview = async () => {
@@ -127,11 +126,10 @@ const addReview = async () => {
     postDialog.value.reviews.push({
       rating: newReview.rating,
       comment: newReview.comment,
-      name: newReview.name,
     });
 
     sheet.value = false
-    rating.value = 0
+    rating.value = 1
     comment.value = ''
   } catch (error) {
     console.error('Error adding review:', error)
@@ -139,16 +137,26 @@ const addReview = async () => {
 }
 
 const averageRating = computed(() => {
-  if (postDialog.value.reviews && postDialog.value.reviews.length > 0) {
-    const totalRating = postDialog.value.reviews.reduce((acc, review) => acc + review.rating, 0)
-    return totalRating / postDialog.value.reviews.length
+  const reviews = postDialog.value.reviews || []
+
+  if (reviews.length > 0) {
+    const validRatings = reviews
+      .filter(review => review && review.rating != null)
+      .map(review => review.rating)
+
+    if (validRatings.length > 0) {
+      const totalRating = validRatings.reduce((acc, rating) => acc + rating, 0)
+      return totalRating / validRatings.length
+    }
   }
+
   return 0
 })
 
 
 const logout = async () => {
   await useAuth.signOut()
+  window.location.reload()
   theme.global.name.value = 'light'
   await router.push('/login')
 }
@@ -156,9 +164,7 @@ const logout = async () => {
 
 
 <template>
-  <AppLayout
-    class="bg-green-lighten-5"
-  >
+  <AppLayout>
     <template #content>
       <v-app-bar
         color="green"
@@ -185,30 +191,48 @@ const logout = async () => {
           </v-col>
 
           <v-col cols="6" class="d-flex align-center justify-end pr-10">
-            <v-menu location="bottom">
+            <v-menu location="left">
               <template v-slot:activator="{ props }">
                 <v-btn
                   icon
                   v-bind="props"
                 >
-                  <v-avatar
-                    color="brown"
-                    size="large"
-                  >
-                  </v-avatar>
+                <v-avatar>
+                  <v-img
+
+                    alt="Profile"
+                    :src="userStore.userData.picture ||  '/csu.png'"
+                  ></v-img>
+                </v-avatar>
                 </v-btn>
               </template>
               <v-card>
                 <v-card-text>
                   <div class="mx-auto text-center">
-                    <v-avatar
-                      color="brown"
+                    <div class="d-flex align-center ga-3">
+                      <v-avatar
+                        size="50"
+                      >
+                        <v-img
+                          alt="Profile"
+                          :src="userStore.userData.picture ||  '/csu.png'"
+                        ></v-img>
+                      </v-avatar>
+                      <div class="d-flex flex-column align-start">
+                        <p style="font-size: 15px">{{ userStore.userData.name }}</p>
+                        <p style="font-size: 13px">{{ userStore.userData.email }}</p>
+                      </div>
+                    </div>
+                    <v-divider class="my-3"></v-divider>
+                    <v-btn
+                      class="text-none font-weight-bold"
+                      variant="text"
+                      rounded
+                      block
+                      @click="openReservationsDialog"
                     >
-                    </v-avatar>
-                    <h3>{{ userStore.userData.firstname }}</h3>
-                    <p class="text-caption mt-1">
-                      {{ userStore.userData.email }}
-                    </p>
+                      My Reservations
+                    </v-btn>
                     <v-divider class="my-3"></v-divider>
                     <v-btn
                       class="text-none font-weight-bold"
@@ -265,16 +289,16 @@ const logout = async () => {
         </v-col>
 
         <v-col cols="12" md="3" lg="2">
-          <v-expansion-panels class="mb-6">
+          <v-expansion-panels class="mb-6 border">
             <v-expansion-panel>
               <v-expansion-panel-title
                 expand-icon="mdi-menu-down"
-                class="px-5 py-5 font-weight-bold text-green-darken-4"
+                class="px-5 py-5 font-weight-bold"
               >
                 Filters
               </v-expansion-panel-title>
               <v-expansion-panel-text
-                class="text-green-darken-4 font-weight-bold"
+                class="font-weight-bold"
               >
                 <div>
                   <p>Price Range</p>
@@ -302,7 +326,6 @@ const logout = async () => {
 
                 <p>Amenities</p>
                 <v-checkbox
-                  class="text-black"
                   v-model="filter"
                   :label="label"
                   :value="label"
@@ -319,12 +342,12 @@ const logout = async () => {
         <v-col cols="12" md="9" lg="10">
           <v-row>
             <v-col
-              v-for="post in filteredPosts"
+              v-for="post in postStore.posts"
               :key="post.id"
               cols="12" sm="6" lg="4"
               class="d-flex justify-center align-center">
               <v-card
-                class="rounded-lg"
+                class="rounded-lg border"
                 :elevation="7"
                 width="100%"
               >
@@ -349,19 +372,22 @@ const logout = async () => {
                       ></v-img>
                     </v-col>
                   </v-row>
+                  <p class="text-h7 font-weight-light text-disabled">{{ post.timeAgo }}</p>
                   <p class="text-h5 font-weight-bold text-green-darken-3">{{ post.name }}</p>
                   <p class="text-subtitle-2 text-disabled truncate">{{ post.address }}</p>
                   <p class="text-h5 font-weight-bold text-green mb-2 px-1">₱{{ post.price }}.00/month</p>
                   <div class="d-flex flex-wrap">
                     <v-chip
+                      size="small"
                       v-if="post.boarding_house_tags.length > 0"
                       class="mr-1 mb-1 px-3"
                       color="green"
                     >
-                      {{ post.boarding_house_tags[0].tags.name }}
+                      {{ post.boarding_house_tags[0].tags.tag_name || 'No tags' }}
                     </v-chip>
 
                     <v-chip
+                      size="small"
                       v-if="post.boarding_house_tags.length > 1"
                       class="mr-1 mb-1 px-3"
                       color="green"
@@ -395,7 +421,7 @@ const logout = async () => {
             <v-card-title class="d-flex align-center justify-center font-weight-bold"
             >
               <v-spacer class="px-4"></v-spacer>
-              <h4>Your Post</h4>
+              <h4>{{ postDialog.owner_name }}'s Post</h4>
               <v-spacer></v-spacer>
               <v-btn
                 class="ma-2"
@@ -451,10 +477,11 @@ const logout = async () => {
                     </v-col>
                   </v-row>
                 </v-col>
-                <v-col cols="12">
+                <v-col cols="12" class="d-flex justify-space-between">
                   <div v-if="postDialog.tags.length > 0">
                     <div class="d-flex flex-wrap">
                       <v-chip
+                        size="small"
                         v-for="(tag, index) in postDialog.tags"
                         :key="index"
                         color="green-darken-2"
@@ -464,6 +491,32 @@ const logout = async () => {
                       </v-chip>
                     </div>
                   </div>
+                  <v-btn
+                    class="text-none"
+                    color="green"
+                    @click="openAddReservationDialog"
+                  >
+                    Reservation
+                  </v-btn>
+                </v-col>
+                <v-col cols="12">
+                  <div class="d-flex flex-wrap mt-4 text-center" style="height: 300px; width: 100%; border-radius: 10px;">
+                      <l-map
+                        :use-global-leaflet="false"
+                        ref="map"
+                        zoom="15"
+                        :center="[postDialog.latitude, postDialog.longitude]"
+                        minZoom="15"
+                      >
+                        <l-tile-layer
+                          url="https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=sQh8Ib7Qh6Fp1elfR6K8"
+                          layer-type="base"
+                          name="OpenStreetMap"
+                        ></l-tile-layer>
+                        <l-marker :lat-lng="[postDialog.latitude, postDialog.longitude]"></l-marker>
+
+                      </l-map>
+                    </div>
                 </v-col>
                 <v-col cols="12" class="d-block">
                   <div class="d-flex justify-space-between">
@@ -498,39 +551,49 @@ const logout = async () => {
                       :model-value="averageRating.toFixed(1)"
                       color="yellow-darken-3"
                       half-increments
+                      readonly
                     ></v-rating>
                   </div>
                   <div
                     class="d-flex flex-column text-start py-5 px-5"
                   >
-                    <div
+                    <v-card
                       v-for="(review, index) in postDialog.reviews"
                       :key="index"
-                      class="mb-3 py-5"
-                      style="background-color: ghostwhite; border-radius: 15px"
+                      class="mb-3 border border-b-lg"
+                      style="border-radius: 15px"
                     >
-                      <v-row>
-                        <v-col cols="12" class="d-flex align-center ga-5 ml-5">
+                      <v-card-text>
+                        <div class="d-flex">
                           <v-avatar
-                            image="https://cdn.vuetifyjs.com/images/john.jpg"
-                            size="50"
+                            size="40"
                           >
+                            <v-img
+                              :src="review.users?.picture"
+                            >
+
+                            </v-img>
                           </v-avatar>
-                          <h3 class="font-weight-bold">{{ review.name }}</h3>
-                        </v-col>
-                        <v-col cols="12" class="ml-5">
+                          <h3 class="font-weight-bold pl-4">{{ review.users?.name }}</h3>
+                          <v-spacer></v-spacer>
+                          <p class="text-caption text-muted">{{ review.timeAgo }}</p>
+                        </div>
+                        <v-divider class="mt-3"></v-divider>
+                        <div class="d-flex flex-column">
                           <v-rating
                             size="small"
                             :model-value="review.rating"
                             color="yellow-darken-3"
                             half-increments
+                            readonly
                           ></v-rating>
-                        </v-col>
-                        <v-col cols="12" class="px-10">
-                          <span style="font-size: 17px">{{ review.comment }}</span>
-                        </v-col>
-                      </v-row>
-                    </div>
+                          <div class="mx-3">
+                            <span style="font-size: 14px">{{ review.comment }}</span>
+                          </div>
+
+                        </div>
+                      </v-card-text>
+                    </v-card>
                   </div>
                 </v-col>
               </v-row>
@@ -586,6 +649,17 @@ const logout = async () => {
           </v-carousel-item>
         </v-carousel>
       </v-dialog>
+
+      <AddReservation
+        :isOpen="addReservationDialogOpen"
+        :boardingHouseId="boardingHouseId"
+        @update:isOpen="addReservationDialogOpen = $event"
+      />
+
+      <ReservationsPage
+        :isOpen="reservationsDialogOpen"
+        @update:isOpen="reservationsDialogOpen = $event"
+      />
 
     </template>
   </AppLayout>

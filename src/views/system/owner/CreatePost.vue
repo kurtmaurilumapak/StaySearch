@@ -3,10 +3,14 @@ import { ref, watch, computed, onMounted, onBeforeUnmount  } from 'vue'
 import AppLayout from '@/components/layout/AppLayout.vue'
 import { usePostStore } from '@/stores/postStore'
 import { useRouter } from 'vue-router'
+import { LMap, LTileLayer, LMarker } from "@vue-leaflet/vue-leaflet";
+import "leaflet/dist/leaflet.css"
 
+const dialog = ref(false)
 const postStore = usePostStore()
-const router = useRouter()
+const router = useRouter()  
 const form = ref()
+
 
 const create = ref({
   images: [],
@@ -20,10 +24,48 @@ const create = ref({
   active: 1,
   type: '',
   inclusion: [],
-  latitude: null,
-  longitude: null,
+  latitude: '',
+  longitude: '',
 })
+const marker = ref(null); // Single marker position
+const finalizedPosition = ref(null); // Finalized marker position
+const isFinalized = ref(false); // Flag to restrict further marker creation
+const openModal = () => {
+  dialog.value = true 
+}
 
+const addMarker = (event) => {
+  if (!isFinalized.value) {
+    const { lat, lng } = event.latlng;
+    marker.value = [lat, lng];
+    create.value.latitude = lat;
+    create.value.longitude = lng;
+  } else {
+    alert("Marker has been finalized. You cannot add a new marker.");
+  }
+};
+const finalizeMarker = () => {
+  if (marker.value) {
+    finalizedPosition.value = {
+      lat: marker.value[0],
+      lng: marker.value[1],
+    };
+    isFinalized.value = true;
+    create.value.latitude = marker.value[0];
+    create.value.longitude = marker.value[1];
+    create.value.showMapDialog = false;
+    dialog.value = false;
+  } else {
+    alert("Please place a marker first!");
+  }
+};
+const cancelMarker = () => {
+  marker.value = null; 
+  finalizedPosition.value = null; 
+  isFinalized.value = false; 
+  create.value.latitude = ""; 
+  create.value.longitude = ""; 
+};
 // FORMAT THE INPUTTED PRICE TO CURRENCY
 const formatPrice = (value) => {
   if (!value) return '';
@@ -67,7 +109,9 @@ const isFormValid = computed(() => {
     create.value.address.trim() !== '' &&
     create.value.description.trim() !== '' &&
     create.value.type.trim() !== '' &&
-    create.value.inclusion.length > 0
+    create.value.inclusion.length > 0 &&
+    create.value.latitude !== "" &&
+    create.value.longitude !== ""
   );
 });
 
@@ -102,6 +146,8 @@ const submitPost = async () => {
         name: create.value.name,
         address: create.value.address,
         description: create.value.description,
+        latitude: create.value.latitude,
+        longitude: create.value.longitude,
       },
       create.value.images,
       create.value.type,
@@ -173,7 +219,7 @@ const submitPost = async () => {
                       @click="$refs.fileInput.$el.querySelector('input').click()"
                     >
                       <v-icon>mdi-upload</v-icon>
-                      Uplaod Images
+                      Upload Images
                     </v-btn>
                     <v-file-input
                       ref="fileInput"
@@ -218,11 +264,43 @@ const submitPost = async () => {
                     <v-btn
                       color="green-darken-1"
                       variant="outlined"
-                      @click="openMapDialog"
+                      @click="openModal"
                       block
                     >
                       pin location
                     </v-btn>
+                    <v-dialog v-model="dialog">
+                    <v-card>
+  <div style="height: 500px; width: 100%; position: relative;">
+    <l-map
+      :use-global-leaflet="false"
+      ref="map"
+      zoom="15"
+      :center="[8.9559, 125.59715]"
+      @click="addMarker"
+      minZoom="15"
+    >
+      <l-tile-layer
+        url="https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=sQh8Ib7Qh6Fp1elfR6K8"
+        layer-type="base"
+        name="OpenStreetMap"
+      ></l-tile-layer>
+      <l-marker v-if="marker" :lat-lng="marker"></l-marker>
+    </l-map>
+    
+ 
+    <div style="position: absolute; bottom: 10px; left: 10px; z-index: 1000;">
+      <v-btn @click="finalizeMarker" class="text-none mx-2 my-2" color="green-darken-2">
+        Finalize Marker
+      </v-btn>
+      <v-btn @click="cancelMarker" class="text-none mx-2 my-2" color="red">
+        Clear Marker
+      </v-btn>
+    </div>
+  </div>
+</v-card>
+
+                  </v-dialog>
                   </v-col>
                   <v-col cols="12">
                     <v-text-field
@@ -389,9 +467,9 @@ const submitPost = async () => {
                   <v-col cols="12">
                     <div v-if=" create.type || create.inclusion">
                       <v-chip
+                        size="small"
                         color="pink"
                         class="mr-1"
-                        label
                       >
                         <v-icon icon="mdi-label" start></v-icon>
                         Tags:
@@ -399,29 +477,47 @@ const submitPost = async () => {
                       <v-chip
                         color="green-darken-2"
                         class="ma-1"
-                        label
                       >
                         {{ create.type }}
                       </v-chip>
                       <v-chip
+                        size="small"
                         v-for="(inclusion, index) in create.inclusion"
                         :key="index"
                         color="green-darken-2"
                         class="ma-1"
-                        label
                       >
                         {{ inclusion }}
                       </v-chip>
                     </div>
                     <div v-else>
                       <v-chip
+                        size="small"
                         color="pink"
                         label
                       >
                         <v-icon icon="mdi-label" start></v-icon>
                         Tags:
                       </v-chip>
-                      <v-chip class="ma-1" color="grey" label>No Tags Added</v-chip>
+                    </div>
+                  </v-col>
+                  <v-col cols="12">
+                    <div class="d-flex flex-wrap mt-4 text-center" style="height: 300px; width: 100%; border-radius: 10px;">
+                      <l-map
+                      :use-global-leaflet="false"
+                        ref="map"
+                        zoom="15"
+                        :center="[create.latitude, create.longitude]"
+                        minZoom="15"
+                      >
+                        <l-tile-layer
+                          url="https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=sQh8Ib7Qh6Fp1elfR6K8"
+                          layer-type="base"
+                          name="OpenStreetMap"
+                        ></l-tile-layer>
+                        <l-marker v-if="create.latitude && create.longitude" :lat-lng="[create.latitude, create.longitude]"></l-marker>
+
+                      </l-map>
                     </div>
                   </v-col>
                   <v-col cols="12" class="d-block">

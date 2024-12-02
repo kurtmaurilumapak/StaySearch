@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted} from 'vue'
 import { useRouter } from 'vue-router'
 import dashboardIcon from '@/assets/navbar/dashboard.png';
 import postsIcon from '@/assets/navbar/post.png';
@@ -23,44 +23,69 @@ const nav = ref({
 
 const logout = async () => {
   await useAuth.signOut()
+  window.location.reload();
   theme.global.name.value = 'light'
   await router.push('/login')
 }
+
+onMounted(async () => {
+  await userStore.fetchUserData()
+})
 
 </script>
 
 <template>
   <v-navigation-drawer
-    :width="80"
+    color="green"
   >
     <v-list
 
     >
-      <v-list-item class="d-flex justify-center">
-        <v-menu location="bottom">
+      <v-list-item class="d-flex justify-center align-center pa-2">
+        <v-menu
+          location="right"
+          transition="slide-x-transition"
+        >
           <template v-slot:activator="{ props }">
-            <v-btn
-              icon
+            <v-card
+              class="py-2"
+              variant="text"
               v-bind="props"
             >
-              <v-avatar
-                color="brown"
-                size="large"
-              >
-              </v-avatar>
-            </v-btn>
+              <div class="d-flex align-center ga-3 px-5">
+                <v-avatar
+                  size="50"
+                >
+                  <v-img
+                    alt="Profile"
+                    :src="userStore.userData.picture ||  '/csu.png'"
+                  ></v-img>
+                </v-avatar>
+                <div class="d-flex flex-column align-start">
+                  <p style="font-size: 17px; font-weight: bold;">{{ userStore.userData.name }}</p>
+                  <p style="font-size: 15px; font-weight: bold;">Owner</p>
+                </div>
+                <v-icon>mdi-chevron-right</v-icon>
+              </div>
+            </v-card>
           </template>
           <v-card>
             <v-card-text>
               <div class="mx-auto text-center">
-                <v-avatar
-                  color="brown"
-                >
-                </v-avatar>
-                <h3>{{ userStore.userData.firstname }}</h3>
-                <p class="text-caption mt-1">
-                  {{ userStore.userData.email }}
-                </p>
+                <div class="d-flex align-center ga-3">
+                  <v-avatar
+                    size="50"
+                  >
+                    <v-img
+                      alt="Profile"
+                      :src="userStore.userData.picture ||  '/csu.png'"
+                    ></v-img>
+                  </v-avatar>
+                  <div class="d-flex flex-column align-start">
+                    <p style="font-size: 15px">{{ userStore.userData.name }}</p>
+                    <p style="font-size: 13px">{{ userStore.userData.email }}</p>
+                  </div>
+                </div>
                 <v-divider class="my-3"></v-divider>
                 <v-btn
                   class="text-none font-weight-bold"
@@ -91,13 +116,24 @@ const logout = async () => {
       <v-divider class="my-2"></v-divider>
 
       <v-list-item
-        class="d-flex flex-column text-center py-3"
+        class="pa-5"
         v-for="(item, index) in nav.navItems"
         :key="index"
         :to="item.path"
       >
-        <img :src="item.icon" alt="icon" width="30" />
-        <p class="text-center" style="font-size: 10px; font-weight: bold">{{ item.title }}</p>
+
+        <v-list-item-title
+          class="d-flex align-center ga-5"
+          style="font-size: 15px;
+          font-weight: bold"
+        >
+          <img
+            :src="item.icon"
+            alt="icon"
+            width="30"
+          />
+          {{ item.title }}
+        </v-list-item-title>
       </v-list-item>
     </v-list>
   </v-navigation-drawer>
