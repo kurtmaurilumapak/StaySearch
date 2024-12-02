@@ -12,8 +12,7 @@ const userStore = useUserStore()
 const userUpdate = ref({
   editingName: false,
   editingEmail: false,
-  editedFirstname: '',
-  editedLastname: '',
+  editedName: '',
   editedEmail: '',
   nameSnackbar: false,
   emailSnackbar: false,
@@ -79,8 +78,7 @@ const userPage = async () => {
 
 const openEditDialog = (field) => {
   if (field === 'name') {
-    userUpdate.value.editedFirstname = userStore.userData.firstname
-    userUpdate.value.editedLastname = userStore.userData.lastname
+    userUpdate.value.editedName = userStore.userData.name
     userUpdate.value.editingName = true
   } else if (field === 'email') {
     userUpdate.value.editedEmail = userStore.userData.email
@@ -89,8 +87,7 @@ const openEditDialog = (field) => {
 }
 
 const handleUpdateUser = async () => {
-  userStore.userData.firstname = userUpdate.value.editedFirstname || userStore.userData.firstname
-  userStore.userData.lastname = userUpdate.value.editedLastname || userStore.userData.lastname
+  userStore.userData.name = userUpdate.value.editedName || userStore.userData.name
   userStore.userData.email = userUpdate.value.editedEmail
   if (userUpdate.value.picture) {
     userStore.userData.picture = userUpdate.value.picture
@@ -248,7 +245,7 @@ const isPasswordValid = computed(() => {
                     <v-col cols="12">
                       <h3>Name</h3>
                       <div class="d-flex justify-space-between align-center my-5">
-                        <span>{{ userStore.userData.firstname }} {{ userStore.userData.lastname }}</span>
+                        <span>{{ userStore.userData.name }}</span>
                         <v-btn variant="outlined" class="text-none font-weight-bold px-8" @click="openEditDialog('name')">
                           Edit
                         </v-btn>
@@ -344,8 +341,7 @@ const isPasswordValid = computed(() => {
         <v-card>
           <v-card-title><span class="headline">Edit User Information</span></v-card-title>
           <v-card-text>
-            <v-text-field v-model="userUpdate.editedFirstname" :rules="validationRules.firstname" label="First Name" variant="outlined"></v-text-field>
-            <v-text-field v-model="userUpdate.editedLastname" :rules="validationRules.lastname" label="Last Name" variant="outlined"></v-text-field>
+            <v-text-field v-model="userUpdate.editedName" :rules="validationRules.name" label="First Name" variant="outlined"></v-text-field>
           </v-card-text>
           <v-card-actions>
             <v-spacer />
