@@ -13,7 +13,7 @@ const userStore = useUserStore()
 const nav = ref({
   navItems: [
     { title: 'Dashboard', path: '/admin/dashboard', icon: 'mdi-view-dashboard' },
-    { title: 'Request', path: '/admin/request', icon: 'mdi-view-dashboard' },
+    { title: 'Request', path: '/admin/request', icon: 'mdi-chart-timeline' },
     { title: 'Approved', path: '/admin/approved', icon: 'mdi-checkbox-marked-circle-outline' }
   ],
   profile: {
