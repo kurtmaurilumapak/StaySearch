@@ -51,6 +51,14 @@ export const useUserStore = defineStore('userData', {
       }
 
       try {
+        const { error } = await supabase.auth.updateUser({
+          email: this.userData.email,
+          data: {
+            name: this.userData.name,
+            picture: this.userData.picture,
+          },
+        })
+
         const { data: userData, error: userDataError } = await supabase
           .from('users')
           .update({
@@ -65,14 +73,6 @@ export const useUserStore = defineStore('userData', {
           throw userDataError;
         }
         console.log('User profile updated successfully:', userData);
-
-        const { error } = await supabase.auth.updateUser({
-          email: this.userData.email,
-          data: {
-            name: this.userData.name,
-            picture: this.userData.picture,
-          },
-        })
 
         if (error) {
           console.error('Error updating data:', error)

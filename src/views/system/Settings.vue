@@ -128,8 +128,7 @@ const handleChangePassword = async () => {
 const tab = ref('profile')
 
 const validationRules = {
-  firstnameRules: [v => !!v || 'First name is required'],
-  lastnameRules: [v => !!v || 'Last name is required'],
+  nameRules: [v => !!v || 'New name is required'],
   emailRules: [
     v => !!v || 'Email is required',
     v => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(v) || 'Invalid email format',
@@ -145,7 +144,7 @@ const validationRules = {
 }
 
 const isNameValid = computed(() => {
-  return validationRules.firstnameRules.every(rule => rule(userUpdate.value.editedFirstname) === true) && validationRules.lastnameRules.every(rule => rule(userUpdate.value.editedLastname) === true)
+  return validationRules.nameRules.every(rule => rule(userUpdate.value.editedName) === true)
 });
 
 const isEmailValid = computed(() => {
