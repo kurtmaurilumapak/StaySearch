@@ -62,7 +62,7 @@ onMounted(async () => {
                 ></v-img>
               </v-avatar>
               <div class="d-flex flex-column align-start">
-                <p style="font-size: 17px; font-weight: bold;">{{ userStore.userData.firstname }} {{ userStore.userData.lastname }}</p>
+                <p style="font-size: 17px; font-weight: bold;">{{ userStore.userData.name }}</p>
                 <p style="font-size: 15px; font-weight: bold;">Admin</p>
               </div>
               <v-icon>mdi-chevron-right</v-icon>
@@ -82,7 +82,7 @@ onMounted(async () => {
                   ></v-img>
                 </v-avatar>
                 <div class="d-flex flex-column align-start">
-                  <p style="font-size: 15px">{{ userStore.userData.firstname }} {{ userStore.userData.lastname }}</p>
+                  <p style="font-size: 15px">{{ userStore.userData.name }}</p>
                   <p style="font-size: 13px">{{ userStore.userData.email }}</p>
                 </div>
               </div>
