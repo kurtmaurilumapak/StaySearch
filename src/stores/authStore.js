@@ -30,8 +30,7 @@ export const useAuthStore = defineStore('auth', {
         options: {
           data: {
             role: this.formData.role,
-            name: fullName,
-            picture: ''
+            name: fullName
           },
         },
       });
@@ -45,7 +44,7 @@ export const useAuthStore = defineStore('auth', {
           .from('users')
           .insert([
             {
-              user_id: user.id,
+              user_id: user.id, // FK referencing the auth user ID
               name: fullName,
               email: user.email
             },
@@ -94,26 +93,7 @@ export const useAuthStore = defineStore('auth', {
 
       console.log('Successfully signed in with Google:', user)
 
-      const fullName = user.user_metadata.name || user.email.split('@')[0]; // Use full name from Google or email prefix as fallback
-      const { error: insertError } = await supabase
-        .from('users')
-        .upsert([
-          {
-            user_id: user.id, // FK referencing the auth user ID
-            name: fullName,
-            picture: user.picture,
-            email: user.email,
-          },
-        ]);
-
-      if (insertError) {
-        this.formAction.formErrorMessage = insertError.message;
-      } else {
-        console.log('Successfully saved user details after Google login.');
-        this.formAction.formSuccessMessage = 'Successfully logged in with Google and saved your information.';
-      }
-
-      this.formAction.formSuccessMessage = 'Successfully logged in with Google.';
+      this.formAction.formSuccessMessage = 'Successfully logged in with Google.'
     },
 
 

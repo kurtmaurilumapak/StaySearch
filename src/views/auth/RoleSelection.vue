@@ -12,12 +12,34 @@ const selectRole = async (role) => {
     return;
   }
   const user = session?.user;
+  const name = session?.user?.user_metadata?.name;
+  const picture = session?.user?.user_metadata?.picture;
+  const email = session?.user?.user_metadata?.email;
 
   if (user) {
     // Update user metadata with the selected role
     const { error: updateError } = await supabase.auth.updateUser({
       data: { role },
     })
+
+    const { error: insertError } = await supabase
+      .from('users')
+      .insert([
+        {
+          user_id: user.id,
+          name: name,
+          picture: picture,
+          email: email
+        },
+      ]);
+
+    if (insertError) {
+      console.log(insertError.message);
+    } else {
+      console.log('Successfully saved user details after Google login.');
+      console.log('Successfully logged in with Google and saved your information.');
+    }
+
     window.location.reload();
     if (updateError) {
       console.error('Error updating role:', updateError.message)
