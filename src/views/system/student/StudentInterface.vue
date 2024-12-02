@@ -75,9 +75,16 @@ const openDialog = (post) => {
   postDialog.value.price = post.price
   postDialog.value.name = post.name
   postDialog.value.description = post.description
-  postDialog.value.owner_name = post.owner_name
+  postDialog.value.owner_name = post.users?.name
   postDialog.value.reviews = post.reviews || []
   postDialog.value.boardingHouseId = post.id
+
+  postDialog.value.reviews?.forEach(review => {
+    console.log('Review Created At:', review.created_at);
+    if (review.created_at) {
+      review.timeAgo = formatDistanceToNow(new Date(review.created_at), { addSuffix: true });
+    }
+  });
 
 };
 
@@ -95,6 +102,7 @@ const fetchPosts = async () => {
       if (post.created_at) {
         post.timeAgo = formatDistanceToNow(new Date(post.created_at), { addSuffix: true });
       }
+
     });
     await userStore.fetchUserData()
   } catch (error) {
