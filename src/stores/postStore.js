@@ -184,7 +184,7 @@ export const usePostStore = defineStore('post', {
       let query = supabase
         .from('boarding_houses')
         .select('*, users(name), boarding_house_images(image_url), boarding_house_tags(tag_id, tags(tag_name)), reviews(created_at, comment, rating, user_id, users(name, picture))')
-        .eq('status', 'pending')
+        .eq('status', 'approved')
         .order('created_at', { ascending: false });
 
       // Apply price range filter

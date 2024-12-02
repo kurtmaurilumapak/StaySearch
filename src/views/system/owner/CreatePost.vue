@@ -465,9 +465,9 @@ const submitPost = async () => {
                   <v-col cols="12">
                     <div v-if=" create.type || create.inclusion">
                       <v-chip
+                        size="small"
                         color="pink"
                         class="mr-1"
-                        label
                       >
                         <v-icon icon="mdi-label" start></v-icon>
                         Tags:
@@ -475,29 +475,28 @@ const submitPost = async () => {
                       <v-chip
                         color="green-darken-2"
                         class="ma-1"
-                        label
                       >
                         {{ create.type }}
                       </v-chip>
                       <v-chip
+                        size="small"
                         v-for="(inclusion, index) in create.inclusion"
                         :key="index"
                         color="green-darken-2"
                         class="ma-1"
-                        label
                       >
                         {{ inclusion }}
                       </v-chip>
                     </div>
                     <div v-else>
                       <v-chip
+                        size="small"
                         color="pink"
                         label
                       >
                         <v-icon icon="mdi-label" start></v-icon>
                         Tags:
                       </v-chip>
-                      <v-chip class="ma-1" color="grey" label>No Tags Added</v-chip>
                     </div>
                   </v-col>
                   <v-col cols="12">
