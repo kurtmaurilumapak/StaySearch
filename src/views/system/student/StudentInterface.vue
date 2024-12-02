@@ -80,7 +80,6 @@ const openDialog = (post) => {
   postDialog.value.boardingHouseId = post.id
 
   postDialog.value.reviews?.forEach(review => {
-    console.log('Review Created At:', review.created_at);
     if (review.created_at) {
       review.timeAgo = formatDistanceToNow(new Date(review.created_at), { addSuffix: true });
     }

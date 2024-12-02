@@ -47,6 +47,12 @@ const openDialog = (post) => {
 
   postDialog.value.boardingHouseId = post.id
 
+  postDialog.value.reviews?.forEach(review => {
+    if (review.created_at) {
+      review.timeAgo = formatDistanceToNow(new Date(review.created_at), { addSuffix: true });
+    }
+  });
+
 }
 
 const onUpdate = (post) => {
