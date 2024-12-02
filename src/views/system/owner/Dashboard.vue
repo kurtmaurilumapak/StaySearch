@@ -99,7 +99,7 @@ const averageRating = computed(() => {
                       <v-icon color="green">mdi-home</v-icon>
                     </div>
                     <h1 class="px-7">{{ totalProperties}}</h1>
-                    <h4 class="px-7 mb-7"></h4>
+                   
                   </div>
                 </v-col>
                 <v-col cols="12" md="4" class="py-7">
@@ -110,7 +110,7 @@ const averageRating = computed(() => {
                       <v-icon color="green">mdi-calendar-text</v-icon>
                     </div>
                     <h1 class="px-7">{{totalReservations}}</h1>
-                    <h4 class="px-7 mb-7"></h4>
+                    
                   </div>
                 </v-col>
                 <v-col cols="12" md="4" class="py-7">
