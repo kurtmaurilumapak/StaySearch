@@ -30,17 +30,34 @@ export const useAuthStore = defineStore('auth', {
         options: {
           data: {
             role: this.formData.role,
-            name: fullName
+            name: fullName,
+            picture: ''
           },
         },
       });
 
       if (error) {
         this.formAction.formErrorMessage = error.message;
-      } else if (data){
-        console.log('Successfully created an account.')
-        this.formAction.formSuccessMessage = 'Successfully created an account.'
-        this.formAction.formProcess = false
+      } else if (data) {
+        // After successful signup, insert name into public_users table
+        const { user } = data;
+        const { error: insertError } = await supabase
+          .from('users')
+          .insert([
+            {
+              user_id: user.id,
+              name: fullName,
+              email: user.email
+            },
+          ]);
+
+        if (insertError) {
+          this.formAction.formErrorMessage = insertError.message;
+        } else {
+          console.log('Successfully created an account and saved user details.');
+          this.formAction.formSuccessMessage = 'Successfully created an account and saved your information.';
+        }
+        this.formAction.formProcess = false;
       }
 
     },
@@ -77,7 +94,26 @@ export const useAuthStore = defineStore('auth', {
 
       console.log('Successfully signed in with Google:', user)
 
-      this.formAction.formSuccessMessage = 'Successfully logged in with Google.'
+      const fullName = user.user_metadata.name || user.email.split('@')[0]; // Use full name from Google or email prefix as fallback
+      const { error: insertError } = await supabase
+        .from('users')
+        .upsert([
+          {
+            user_id: user.id, // FK referencing the auth user ID
+            name: fullName,
+            picture: user.picture,
+            email: user.email,
+          },
+        ]);
+
+      if (insertError) {
+        this.formAction.formErrorMessage = insertError.message;
+      } else {
+        console.log('Successfully saved user details after Google login.');
+        this.formAction.formSuccessMessage = 'Successfully logged in with Google and saved your information.';
+      }
+
+      this.formAction.formSuccessMessage = 'Successfully logged in with Google.';
     },
 
 
