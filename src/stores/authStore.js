@@ -44,7 +44,6 @@ export const useAuthStore = defineStore('auth', {
           .from('users')
           .insert([
             {
-              user_id: user.id, // FK referencing the auth user ID
               name: fullName,
               email: user.email
             },

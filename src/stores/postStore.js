@@ -165,8 +165,8 @@ export const usePostStore = defineStore('post', {
         this.id = session.user.id || ''
 
         const { data: posts, error: postError } = await supabase
-          .from('posts_data')
-          .select('*')
+          .from('boarding_houses')
+          .select('*, boarding_house_images(image_url), boarding_house_tags(tag_id, tags(tag_name)), reviews(comment, rating, user_id, users(name, picture))')
           .eq('user_id', this.id)
           .order('created_at', { ascending: false })
 
@@ -184,7 +184,7 @@ export const usePostStore = defineStore('post', {
     async allPost({ priceRange, selectedType, filter, searchQuery }) {
       let query = supabase
         .from('boarding_houses')
-        .select('*, boarding_house_images(image_url), boarding_house_tags(tag_id, tags(tag_name)), reviews(comment, rating, user_id, users(name, picture)')
+        .select('*, boarding_house_images(image_url), boarding_house_tags(tag_id, tags(tag_name)), reviews(comment, rating, user_id, users(name, picture))')
         .eq('status', 'approved')
         .order('created_at', { ascending: false });
 

@@ -26,7 +26,6 @@ const selectRole = async (role) => {
       .from('users')
       .insert([
         {
-          user_id: user.id,
           name: name,
           picture: picture,
           email: email
