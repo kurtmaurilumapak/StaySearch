@@ -199,7 +199,7 @@ const isPasswordValid = computed(() => {
                       <div class="d-flex justify-space-between align-center my-5">
                         <v-col cols="12" sm="6" md="5">
                           <v-avatar
-                          size="500"
+                            size="500"
                           >
                             <v-img
                               width="55%"
@@ -211,27 +211,27 @@ const isPasswordValid = computed(() => {
                           </v-avatar>
                         </v-col>
 
-      <v-col cols="12" sm="6" md="7">
-        <v-file-input
-  class="mt-5"
-  accept="image/png, image/jpeg, image/bmp"
-  label="Browse Profile Picture"
-  placeholder="Browse Profile Picture"
-  prepend-icon="mdi-camera"
-  show-size
-  chips
-  @change="onPreview"
-></v-file-input>
+                        <v-col cols="12" sm="6" md="7">
+                          <v-file-input
+                            class="mt-5"
+                            accept="image/png, image/jpeg, image/bmp"
+                            label="Browse Profile Picture"
+                            placeholder="Browse Profile Picture"
+                            prepend-icon="mdi-camera"
+                            show-size
+                            chips
+                            @change="onPreview"
+                          ></v-file-input>
 
-<v-btn
-  class="mt-2"
-  color="red-darken-4"
-  prepend-icon="mdi-image-edit"
-  @click="onPreview($event)" 
->
-  Update Picture
-</v-btn>
-      </v-col>
+                          <v-btn
+                            class="mt-2"
+                            color="red-darken-4"
+                            prepend-icon="mdi-image-edit"
+                            @click="onPreview($event)"
+                          >
+                            Update Picture
+                          </v-btn>
+                        </v-col>
                       </div>
                     </v-col>
                     <v-col cols="12">
