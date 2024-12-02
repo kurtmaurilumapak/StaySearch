@@ -4,8 +4,7 @@ import { supabase, formActionDefault } from '@/lib/supabaseClient'
 const userDataDefault = {
   id: '',
   theme: 'light',
-  firstname: '',
-  lastname: '',
+  name: '',
   email: '',
   role: '',
   picture: '',
@@ -21,8 +20,6 @@ export const useUserStore = defineStore('userData', {
       const { data: { session } } = await supabase.auth.getSession()
       if (session?.user) {
         this.userData.id = session.user.id || ''
-        this.userData.firstname = session.user.user_metadata.firstname || ''
-        this.userData.lastname = session.user.user_metadata.lastname || ''
         this.userData.name = session.user.user_metadata.name || ''
         this.userData.email = session.user.email || ''
         this.userData.role = session.user.user_metadata.role || ''
@@ -54,11 +51,25 @@ export const useUserStore = defineStore('userData', {
       }
 
       try {
+        const { data: userData, error: userDataError } = await supabase
+          .from('users')
+          .update({
+            name: this.userData.name,
+            email: this.userData.email,
+            picture: this.userData.picture,
+          })
+          .eq('id', this.userData.id)
+          .single()
+
+        if (userDataError) {
+          throw userDataError;
+        }
+        console.log('User profile updated successfully:', userData);
+
         const { error } = await supabase.auth.updateUser({
           email: this.userData.email,
           data: {
-            firstname: this.userData.firstname,
-            lastname:  this.userData.lastname,
+            name: this.userData.name,
             picture: this.userData.picture,
           },
         })
