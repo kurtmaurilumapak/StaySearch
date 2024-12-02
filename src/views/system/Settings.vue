@@ -23,15 +23,35 @@ const userUpdate = ref({
   passwordSnackbar: false,
   newPasswordVisible: false,
   confirmPasswordVisible: false,
-})
+  picture: null,
+});
 
-const onPreview = async (event) => {
+const selectedFile = ref(null)
+
+const onFileChange = (event) => {
   const file = event.target.files[0];
   if (file) {
-    const pictureUrl = await userStore.uploadProfilePicture(file);
-    if (!pictureUrl) {
-      console.error("Failed to upload profile picture");
-    }
+    selectedFile.value = file; // Store the selected file for later use
+  }
+};
+
+const handleUpdateProfilePicture = async () => {
+  if (!selectedFile.value) {
+    console.error("No file selected.");
+    return;
+  }
+
+  userStore.formAction.formProcess = true;
+  const pictureUrl = await userStore.uploadProfilePicture(selectedFile.value);
+  userStore.formAction.formProcess = false;
+
+  if (pictureUrl) {
+    console.log("Profile picture updated successfully.");
+    // Optionally update the local userStore's picture data here if needed
+    userStore.userData.picture = pictureUrl;
+    window.location.reload()
+  } else {
+    console.error("Failed to upload profile picture");
   }
 };
 
@@ -72,7 +92,9 @@ const handleUpdateUser = async () => {
   userStore.userData.firstname = userUpdate.value.editedFirstname || userStore.userData.firstname
   userStore.userData.lastname = userUpdate.value.editedLastname || userStore.userData.lastname
   userStore.userData.email = userUpdate.value.editedEmail
-  userStore.userData.picture = userUpdate.value.picture
+  if (userUpdate.value.picture) {
+    userStore.userData.picture = userUpdate.value.picture
+  }
   userStore.formAction.formProcess = true
   const updateSuccessful = await userStore.updateUser();
   userStore.formAction.formProcess = false
@@ -95,17 +117,13 @@ const handleChangePassword = async () => {
   }
 
   userStore.formAction.formProcess = true;
-
-  // Call your store action to update the password
   const passwordUpdated = await userStore.updatePassword(userUpdate.value.newPassword);
-
   userStore.formAction.formProcess = false;
 
   if (passwordUpdated) {
-    userUpdate.value.passwordSnackbar = true; // Show success message
-    userUpdate.value.editingPassword = false; // Close dialog
+    userUpdate.value.passwordSnackbar = true;
+    userUpdate.value.editingPassword = false;
   } else {
-    // Handle password update failure
     console.error('Password update failed');
   }
 };
@@ -131,7 +149,6 @@ const validationRules = {
 
 const isNameValid = computed(() => {
   return validationRules.firstnameRules.every(rule => rule(userUpdate.value.editedFirstname) === true) && validationRules.lastnameRules.every(rule => rule(userUpdate.value.editedLastname) === true)
-
 });
 
 const isEmailValid = computed(() => {
@@ -142,7 +159,7 @@ const isPasswordValid = computed(() => {
   return userUpdate.value.newPassword &&
     userUpdate.value.confirmPassword &&
     userUpdate.value.newPassword === userUpdate.value.confirmPassword &&
-    validationRules.passwordRules.every(rule => rule(userUpdate.value.newPassword) === true)
+    validationRules.passwordRules.every(rule => rule(userUpdate.value.newPassword) === true);
 });
 </script>
 
@@ -199,7 +216,7 @@ const isPasswordValid = computed(() => {
                       <div class="d-flex justify-space-between align-center my-5">
                         <v-col cols="12" sm="6" md="5">
                           <v-avatar
-                            size="500"
+                            size="350"
                           >
                             <v-img
                               width="55%"
@@ -220,15 +237,9 @@ const isPasswordValid = computed(() => {
                             prepend-icon="mdi-camera"
                             show-size
                             chips
-                            @change="onPreview"
+                            @change="onFileChange"
                           ></v-file-input>
-
-                          <v-btn
-                            class="mt-2"
-                            color="red-darken-4"
-                            prepend-icon="mdi-image-edit"
-                            @click="onPreview($event)"
-                          >
+                          <v-btn class="mt-2" color="red-darken-4" prepend-icon="mdi-image-edit" @click="handleUpdateProfilePicture" :disabled="!selectedFile">
                             Update Picture
                           </v-btn>
                         </v-col>

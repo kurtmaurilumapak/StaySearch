@@ -183,25 +183,6 @@ export const useUserStore = defineStore('userData', {
         return null;
       }
     },
-    async updatePicture(newPictureUrl) {
-      try {
-        const { error } = await supabase.auth.updateUser({
-          data: { picture: newPictureUrl },
-        });
-
-        if (error) {
-          console.error('Error updating user picture:', error.message);
-          return false;
-        }
-
-        console.log('Profile picture updated successfully in metadata.');
-        this.userData.picture = newPictureUrl; // Update store state
-        return true;
-      } catch (error) {
-        console.error('Error during picture update:', error.message);
-        return false;
-      }
-    },
 
   },
 })
