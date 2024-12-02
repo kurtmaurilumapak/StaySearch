@@ -53,6 +53,8 @@ const finalizeMarker = () => {
     isFinalized.value = true;
     create.value.latitude = marker.value[0];
     create.value.longitude = marker.value[1];
+    create.value.showMapDialog = false;
+    dialog.value = false;
   } else {
     alert("Please place a marker first!");
   }
