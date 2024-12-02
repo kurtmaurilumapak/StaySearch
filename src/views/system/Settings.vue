@@ -340,11 +340,11 @@ const isPasswordValid = computed(() => {
         <v-card>
           <v-card-title><span class="headline">Edit User Information</span></v-card-title>
           <v-card-text>
-            <v-text-field v-model="userUpdate.editedName" :rules="validationRules.name" label="First Name" variant="outlined"></v-text-field>
+            <v-text-field color="green" v-model="userUpdate.editedName" :rules="validationRules.name" label="First Name" variant="outlined"></v-text-field>
           </v-card-text>
           <v-card-actions>
             <v-spacer />
-            <v-btn color="primary" :disabled="userStore.formAction.formProcess || !isNameValid" @click="handleUpdateUser">Save</v-btn>
+            <v-btn color="green" :disabled="userStore.formAction.formProcess || !isNameValid" @click="handleUpdateUser">Save</v-btn>
             <v-btn @click="userUpdate.editingName = false">Cancel</v-btn>
           </v-card-actions>
         </v-card>
@@ -354,11 +354,11 @@ const isPasswordValid = computed(() => {
         <v-card>
           <v-card-title><span class="headline">Edit User Information</span></v-card-title>
           <v-card-text>
-            <v-text-field v-model="userUpdate.editedEmail" :rules="validationRules.email" label="Email" variant="outlined"></v-text-field>
+            <v-text-field color="green" v-model="userUpdate.editedEmail" :rules="validationRules.email" label="Email" variant="outlined"></v-text-field>
           </v-card-text>
           <v-card-actions>
             <v-spacer />
-            <v-btn color="primary" :disabled="userStore.formAction.formProcess || !isEmailValid" @click="handleUpdateUser">Save</v-btn>
+            <v-btn color="green" :disabled="userStore.formAction.formProcess || !isEmailValid" @click="handleUpdateUser">Save</v-btn>
             <v-btn @click="userUpdate.editingEmail = false">Cancel</v-btn>
           </v-card-actions>
         </v-card>
