@@ -67,8 +67,8 @@ const openCarousel = (index) => {
 
 const openDialog = (post) => {
   postDialog.value.PostContent = true
-  postDialog.value.tags = post.tags || []
-  postDialog.value.images = post.images || []
+  postDialog.value.tags = post.boarding_house_tags?.map(tag => tag.tags.tag_name)
+  postDialog.value.images = post.boarding_house_images.map(image => image.image_url)
   postDialog.value.address = post.address
   postDialog.value.latitude = post.latitude
   postDialog.value.longitude = post.longitude
@@ -76,18 +76,8 @@ const openDialog = (post) => {
   postDialog.value.name = post.name
   postDialog.value.description = post.description
   postDialog.value.owner_name = post.owner_name
-
+  postDialog.value.reviews = post.reviews || []
   postDialog.value.boardingHouseId = post.id
-
-  postDialog.value.reviews = (post.reviews || []).map(review => {
-    const reviewTime = new Date(review.created_at)
-    const timeAgo = formatDistanceToNow(reviewTime, { addSuffix: true })
-
-    return {
-      ...review,
-      timeAgo,
-    };
-  });
 
 };
 
@@ -129,7 +119,6 @@ const addReview = async () => {
     postDialog.value.reviews.push({
       rating: newReview.rating,
       comment: newReview.comment,
-      reviewer_name: newReview.name,
     });
 
     sheet.value = false
@@ -360,7 +349,7 @@ const logout = async () => {
                     <v-col cols="12" md="8">
                       <v-img
                         class="bg-grey rounded-lg mb-5"
-                        :src="post.images[0]"
+                        :src="post.boarding_house_images?.[0]?.image_url"
                         width="100%"
                         height="200"
                         cover
@@ -369,7 +358,7 @@ const logout = async () => {
                     <v-col cols="4" class="d-none d-md-block">
                       <v-img
                         class="bg-grey rounded-lg mb-5"
-                        :src="post.images[1]"
+                        :src="post.boarding_house_images?.[1]?.image_url"
                         width="100%"
                         height="200"
                         cover
@@ -383,20 +372,20 @@ const logout = async () => {
                   <div class="d-flex flex-wrap">
                     <v-chip
                       size="small"
-                      v-if="post.tags.length > 0"
+                      v-if="post.boarding_house_tags.length > 0"
                       class="mr-1 mb-1 px-3"
                       color="green"
                     >
-                      {{ post.tags[0] || 'No tags' }}
+                      {{ post.boarding_house_tags[0].tags.tag_name || 'No tags' }}
                     </v-chip>
 
                     <v-chip
                       size="small"
-                      v-if="post.tags.length > 1"
+                      v-if="post.boarding_house_tags.length > 1"
                       class="mr-1 mb-1 px-3"
                       color="green"
                     >
-                      +{{ post.tags.length - 1 }} more
+                      +{{ post.boarding_house_tags.length - 1 }} more
                     </v-chip>
                   </div>
                 </v-card-text>
@@ -574,7 +563,7 @@ const logout = async () => {
                             size="40"
                           >
                           </v-avatar>
-                          <h3 class="font-weight-bold pl-4">{{ review.reviewer_name }}</h3>
+                          <h3 class="font-weight-bold pl-4">{{ review.name }}</h3>
                           <v-spacer></v-spacer>
                           <p class="text-caption text-muted">{{ review.timeAgo }}</p>
                         </div>

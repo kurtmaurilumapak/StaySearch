@@ -141,11 +141,10 @@ export const usePostStore = defineStore('post', {
       const session = await this.fetchSession()
       if (session?.user) {
         this.id = session.user.id || ''
-        this.name = session.user.user_metadata.firstname + " " + session.user.user_metadata.lastname
 
         const { data: review, error: reviewError } = await supabase
           .from('reviews')
-          .insert([{ ...reviewData, boarding_house_id: boardingHouseId, user_id: this.id, reviewer_name: this.name }])
+          .insert([{ ...reviewData, boarding_house_id: boardingHouseId, user_id: this.id}])
           .select()
           .single()
 
@@ -185,7 +184,7 @@ export const usePostStore = defineStore('post', {
       let query = supabase
         .from('boarding_houses')
         .select('*, boarding_house_images(image_url), boarding_house_tags(tag_id, tags(tag_name)), reviews(comment, rating, user_id, users(name, picture))')
-        .eq('status', 'approved')
+        .eq('status', 'pending')
         .order('created_at', { ascending: false });
 
       // Apply price range filter
