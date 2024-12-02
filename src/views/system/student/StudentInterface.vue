@@ -212,7 +212,7 @@ const logout = async () => {
                         ></v-img>
                       </v-avatar>
                       <div class="d-flex flex-column align-start">
-                        <p style="font-size: 15px">{{ userStore.userData.firstname }} {{ userStore.userData.lastname }}</p>
+                        <p style="font-size: 15px">{{ userStore.userData.name }}</p>
                         <p style="font-size: 13px">{{ userStore.userData.email }}</p>
                       </div>
                     </div>
