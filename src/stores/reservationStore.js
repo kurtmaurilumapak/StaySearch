@@ -49,14 +49,13 @@ export const useReservationStore = defineStore('reservation', {
 
         const { data: reservationData, error: reservationError } = await supabase
           .from('reservations')
-          .select('checkin_date, boarding_houses(name, address)')
+          .select('id, checkin_date, boarding_houses(name, address)')
           .eq('user_id', this.id)
 
 
         if (reservationError) throw reservationError
 
         this.reservations = reservationData
-        console.log(reservationData)
       }else {
         throw new Error('User  not authenticated')
       }
@@ -74,6 +73,14 @@ export const useReservationStore = defineStore('reservation', {
 
       if (error) throw error
       return data
+    },
+    async deleteReservation(reservationID) {
+      const { error } = await supabase
+        .from('reservations')
+        .delete()
+        .eq('id', reservationID)
+
+      if (error) throw error
     },
   }
 })

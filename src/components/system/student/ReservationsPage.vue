@@ -28,6 +28,16 @@ onMounted(async () => {
   }
 })
 
+const handleCancelReservation = async (reservationID) => {
+  try {
+    await reservationStore.deleteReservation(reservationID)
+    await reservationStore.fetchStudentReservationData()
+    console.log('Reservation successfully deleted.')
+  } catch (error) {
+    console.error('Error deleting reservation:', error)
+  }
+}
+
 
 </script>
 
@@ -66,12 +76,12 @@ onMounted(async () => {
               <p class="text-disabled" style="font-size: 14px">{{ reservation.boarding_houses?.address }}</p>
             </div>
             <div class="text-center">
-              <p>status</p>
               <v-btn
                 class="text-none"
                 size="small"
                 rounded
                 color="red"
+                @click="handleCancelReservation(reservation.id)"
               >
                 Cancel
               </v-btn>
