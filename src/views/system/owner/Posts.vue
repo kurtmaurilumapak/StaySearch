@@ -406,11 +406,14 @@ const onDelete = (post) => {
                       <v-card-text>
                         <div class="d-flex">
                           <v-avatar
-                            image="https://cdn.vuetifyjs.com/images/john.jpg"
                             size="40"
                           >
+                            <v-img
+                              :src="review.users?.picture"
+                            >
+                            </v-img>
                           </v-avatar>
-                          <h3 class="font-weight-bold pl-4">{{ review.name }}</h3>
+                          <h3 class="font-weight-bold pl-4">{{ review.users?.name }}</h3>
                           <v-spacer></v-spacer>
                           <p class="text-caption">{{ review.timeAgo }}</p>
                         </div>
