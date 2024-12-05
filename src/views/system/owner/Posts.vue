@@ -169,7 +169,7 @@ const onDelete = (post) => {
                   </v-btn>
                 </v-col>
                 <!-- CARD POSTS -->
-                <v-col  v-for="post in postStore.posts" :key="post.id" cols="12" sm="6" md="4" lg="3" class="d-flex justify-center align-center">
+                <v-col  v-for="post in postStore.posts" :key="post.id" cols="12" sm="6" lg="4" class="d-flex justify-center align-center">
                   <v-card
                     class="rounded-lg border"
                     :elevation="7"
