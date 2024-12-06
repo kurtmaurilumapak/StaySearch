@@ -67,8 +67,8 @@ const openCarousel = (index) => {
 
 const openDialog = (post) => {
   postDialog.value.PostContent = true
-  postDialog.value.tags = post.boarding_house_tags?.map(tag => tag.tags.tag_name)
-  postDialog.value.images = post.boarding_house_images.map(image => image.image_url)
+  postDialog.value.tags = post.tags || []
+  postDialog.value.images = post.images || []
   postDialog.value.address = post.address
   postDialog.value.latitude = post.latitude
   postDialog.value.longitude = post.longitude
@@ -124,8 +124,8 @@ const addReview = async () => {
     postDialog.value.boardingHouseId
     )
     postDialog.value.reviews.push({
-      rating: newReview.rating,
-      comment: newReview.comment,
+      reviewer_rating: newReview.rating,
+      reviewer_comment: newReview.comment,
     });
 
     sheet.value = false
@@ -356,7 +356,7 @@ const logout = async () => {
                     <v-col cols="12" md="8">
                       <v-img
                         class="bg-grey rounded-lg mb-5"
-                        :src="post.boarding_house_images?.[0]?.image_url"
+                        :src="post.images[0]"
                         width="100%"
                         height="200"
                         cover
@@ -365,7 +365,7 @@ const logout = async () => {
                     <v-col cols="4" class="d-none d-md-block">
                       <v-img
                         class="bg-grey rounded-lg mb-5"
-                        :src="post.boarding_house_images?.[1]?.image_url"
+                        :src="post.images[1]"
                         width="100%"
                         height="200"
                         cover
@@ -379,20 +379,20 @@ const logout = async () => {
                   <div class="d-flex flex-wrap">
                     <v-chip
                       size="small"
-                      v-if="post.boarding_house_tags.length > 0"
+                      v-if="post.tags.length > 0"
                       class="mr-1 mb-1 px-3"
                       color="green"
                     >
-                      {{ post.boarding_house_tags[0].tags.tag_name || 'No tags' }}
+                      {{ post.tags[0] || 'No tags' }}
                     </v-chip>
 
                     <v-chip
                       size="small"
-                      v-if="post.boarding_house_tags.length > 1"
+                      v-if="post.tags.length > 1"
                       class="mr-1 mb-1 px-3"
                       color="green"
                     >
-                      +{{ post.boarding_house_tags.length - 1 }} more
+                      +{{ post.tags.length - 1 }} more
                     </v-chip>
                   </div>
                 </v-card-text>
@@ -569,12 +569,12 @@ const logout = async () => {
                             size="40"
                           >
                             <v-img
-                              :src="review.users?.picture"
+                              :src="review.reviewer_picture"
                             >
 
                             </v-img>
                           </v-avatar>
-                          <h3 class="font-weight-bold pl-4">{{ review.users?.name }}</h3>
+                          <h3 class="font-weight-bold pl-4">{{ review.reviewer_name }}</h3>
                           <v-spacer></v-spacer>
                           <p class="text-caption text-muted">{{ review.timeAgo }}</p>
                         </div>
@@ -582,13 +582,13 @@ const logout = async () => {
                         <div class="d-flex flex-column">
                           <v-rating
                             size="small"
-                            :model-value="review.rating"
+                            :model-value="review.reviewer_rating"
                             color="yellow-darken-3"
                             half-increments
                             readonly
                           ></v-rating>
                           <div class="mx-3">
-                            <span style="font-size: 14px">{{ review.comment }}</span>
+                            <span style="font-size: 14px">{{ review.reviewer_comment }}</span>
                           </div>
 
                         </div>
