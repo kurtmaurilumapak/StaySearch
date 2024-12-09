@@ -75,7 +75,7 @@ const openDialog = (post) => {
   postDialog.value.price = post.price
   postDialog.value.name = post.name
   postDialog.value.description = post.description
-  postDialog.value.owner_name = post.users?.name
+  postDialog.value.owner_name = post.owner_name
   postDialog.value.reviews = post.reviews || []
   postDialog.value.boardingHouseId = post.id
 
