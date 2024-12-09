@@ -77,6 +77,7 @@ const openDialog = (post) => {
   postDialog.value.description = post.description
   postDialog.value.owner_name = post.owner_name
   postDialog.value.reviews = post.reviews || []
+  postDialog.value.avgRating = post.average_rating,
   postDialog.value.boardingHouseId = post.id
 
   postDialog.value.reviews?.forEach(review => {
@@ -115,6 +116,9 @@ watch([priceRangeIndex, selectedType, filter, searchQuery], fetchPosts);
 
 const addReview = async () => {
   try {
+    await userStore.fetchUserData();
+    const currentUser = userStore.userData;
+
     const newReview = await postStore.addReview(
    {
     rating: rating.value,
@@ -124,6 +128,8 @@ const addReview = async () => {
     postDialog.value.boardingHouseId
     )
     postDialog.value.reviews.push({
+      reviewer_name: currentUser.name,
+      reviewer_picture: currentUser.picture,
       reviewer_rating: newReview.rating,
       reviewer_comment: newReview.comment,
     });
@@ -135,24 +141,6 @@ const addReview = async () => {
     console.error('Error adding review:', error)
   }
 }
-
-const averageRating = computed(() => {
-  const reviews = postDialog.value.reviews || []
-
-  if (reviews.length > 0) {
-    const validRatings = reviews
-      .filter(review => review && review.rating != null)
-      .map(review => review.rating)
-
-    if (validRatings.length > 0) {
-      const totalRating = validRatings.reduce((acc, rating) => acc + rating, 0)
-      return totalRating / validRatings.length
-    }
-  }
-
-  return 0
-})
-
 
 const logout = async () => {
   await useAuth.signOut()
@@ -545,10 +533,10 @@ const logout = async () => {
                   <div class="d-flex align-center px-5">
                     <h3 class="pr-5">REVIEWS ({{ postDialog.reviews.length }})</h3>
                     <v-spacer></v-spacer>
-                    <h3>{{ averageRating.toFixed(1) }}</h3>
+                    <h3>{{ postDialog.avgRating.toFixed(1) }}</h3>
                     <v-rating
                       :size="21"
-                      :model-value="averageRating.toFixed(1)"
+                      :model-value="postDialog.avgRating"
                       color="yellow-darken-3"
                       half-increments
                       readonly
