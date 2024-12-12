@@ -66,14 +66,14 @@ const handleCancelReservation = async (reservationID) => {
 
           <v-col
             v-for="reservation in reservationStore.reservations"
-            :key="reservation.id"
+            :key="reservation.reservation_id"
             cols="12"
             class="d-flex justify-space-between border pa-3 mb-2 rounded-lg border-b-lg"
           >
             <div>
               <h4>{{ reservation.checkin_date }}</h4>
-              <h3>{{ reservation.boarding_houses?.name }}</h3>
-              <p class="text-disabled" style="font-size: 14px">{{ reservation.boarding_houses?.address }}</p>
+              <h3>{{ reservation.boarding_house_name }}</h3>
+              <p class="text-disabled" style="font-size: 14px">{{ reservation.boarding_house_address }}</p>
             </div>
             <div class="text-center">
               <v-btn
@@ -81,7 +81,7 @@ const handleCancelReservation = async (reservationID) => {
                 size="small"
                 rounded
                 color="red"
-                @click="handleCancelReservation(reservation.id)"
+                @click="handleCancelReservation(reservation.reservation_id)"
               >
                 Cancel
               </v-btn>
