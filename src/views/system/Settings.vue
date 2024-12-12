@@ -88,7 +88,11 @@ const openEditDialog = (field) => {
 
 const handleUpdateUser = async () => {
   userStore.userData.name = userUpdate.value.editedName || userStore.userData.name
-  userStore.userData.email = userUpdate.value.editedEmail
+
+  if (userUpdate.value.editedEmail) {
+    userStore.userData.email = userUpdate.value.editedEmail;
+  }
+
   if (userUpdate.value.picture) {
     userStore.userData.picture = userUpdate.value.picture
   }
@@ -340,7 +344,7 @@ const isPasswordValid = computed(() => {
         <v-card>
           <v-card-title><span class="headline">Edit User Information</span></v-card-title>
           <v-card-text>
-            <v-text-field color="green" v-model="userUpdate.editedName" :rules="validationRules.name" label="First Name" variant="outlined"></v-text-field>
+            <v-text-field color="green" v-model="userUpdate.editedName" :rules="validationRules.name" label="Name" variant="outlined"></v-text-field>
           </v-card-text>
           <v-card-actions>
             <v-spacer />

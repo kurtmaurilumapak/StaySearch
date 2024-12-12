@@ -20,12 +20,26 @@ export const useUserStore = defineStore('userData', {
       const { data: { session } } = await supabase.auth.getSession()
       if (session?.user) {
         this.userData.id = session.user.id || ''
-        this.userData.name = session.user.user_metadata.name || ''
-        this.userData.email = session.user.email || ''
         this.userData.role = session.user.user_metadata.role || ''
         this.userData.theme = session.user.user_metadata.theme || 'light'
-        this.userData.picture = session.user.user_metadata.picture || '/csu.png'
       }
+
+      const { data: userData, error: userDataError } = await supabase
+      .from('users')
+      .select('*')
+      .eq('id', this.userData.id)
+      .single();
+
+      if (userDataError) {
+        console.error('Error fetching user data:', userDataError.message);
+        return;
+      }
+
+      this.userData.name = userData.name || ''
+      this.userData.email = userData.email || ''
+      this.userData.picture = userData.picture || '/csu.png'
+
+      console.log(userData.name)
     },
 
     async updateTheme(newTheme) {
