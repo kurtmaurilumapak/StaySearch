@@ -48,10 +48,7 @@ export const useReservationStore = defineStore('reservation', {
         this.id = session.user.id || ''
 
         const { data: reservationData, error: reservationError } = await supabase
-          .from('reservations')
-          .select('id, checkin_date, boarding_houses(name, address)')
-          .eq('user_id', this.id)
-
+          .rpc('get_reservations_data', { user_id_input: this.id })
 
         if (reservationError) throw reservationError
 

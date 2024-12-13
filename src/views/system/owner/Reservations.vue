@@ -20,20 +20,20 @@ onMounted(async () => {
 })
 
 // Method to update the current page for a specific card
-function updatePage(index, page) {
+const updatePage = (index, page) => {
   currentPages.value[index] = page
   console.log(`Current Page for card ${index}:`, page)
 }
 
 // Get the paginated reservations for the specified card
-function getPaginatedReservations(cardIndex) {
+const getPaginatedReservations = (cardIndex) => {
   const itemsPerPage = 3
   const startIndex = (currentPages.value[cardIndex] - 1) * itemsPerPage
   return reservationStore.reservations[cardIndex].reservations.slice(startIndex, startIndex + itemsPerPage)
 }
 
 // Calculate the total number of pages for the specified card
-function getTotalPages(cardIndex) {
+const getTotalPages = (cardIndex) => {
   const itemsPerPage = 3
   return Math.ceil(reservationStore.reservations[cardIndex].reservations.length / itemsPerPage)
 }
