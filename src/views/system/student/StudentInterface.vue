@@ -154,52 +154,59 @@ const logout = async () => {
 <template>
   <AppLayout>
     <template #content>
+      <!-- Modern Glassmorphic App Bar -->
       <v-app-bar
-        color="green"
-        :elevation="2"
+        class="modern-appbar"
+        :elevation="0"
+        flat
       >
-        <v-row class="d-flex align-center">
+        <div class="appbar-background"></div>
+        <v-row class="d-flex align-center position-relative">
           <v-col cols="6">
             <RouterLink
-              style="text-decoration: none;color: inherit;"
+              style="text-decoration: none;color: white;"
               to="/student/page"
-              class="d-inline-flex align-center ga-1 my-5 ml-5"
+              class="d-inline-flex align-center ga-2 my-5 ml-5 logo-link"
               @click="handleBrandClick"
             >
-              <img
-                src="@/assets/logo.png"
-                alt="Logo"
-                width="30"
-                height="30"
-              />
-              <h2 class="font-weight-bold">
+              <div class="logo-container">
+                <img
+                  src="@/assets/logo.png"
+                  alt="Logo"
+                  width="35"
+                  height="35"
+                />
+              </div>
+              <h2 class="font-weight-bold brand-text">
                 StaySearch
               </h2>
             </RouterLink>
           </v-col>
 
           <v-col cols="6" class="d-flex align-center justify-end pr-10">
-            <v-menu location="left">
+            <v-menu location="bottom" offset="10">
               <template v-slot:activator="{ props }">
                 <v-btn
                   icon
                   v-bind="props"
+                  class="profile-btn"
+                  size="large"
                 >
-                <v-avatar>
+                <v-avatar size="42" class="profile-avatar">
                   <v-img
-
                     alt="Profile"
                     :src="userStore.userData.picture ||  '/csu.png'"
                   ></v-img>
                 </v-avatar>
                 </v-btn>
               </template>
-              <v-card>
-                <v-card-text>
+              <v-card class="profile-menu" elevation="12" rounded="xl">
+                <v-card-text class="pa-6">
                   <div class="mx-auto text-center">
-                    <div class="d-flex align-center ga-3">
+                    <div class="d-flex align-center ga-3 mb-4">
                       <v-avatar
-                        size="50"
+                        size="55"
+                        class="profile-avatar-large"
                       >
                         <v-img
                           alt="Profile"
@@ -207,37 +214,41 @@ const logout = async () => {
                         ></v-img>
                       </v-avatar>
                       <div class="d-flex flex-column align-start">
-                        <p style="font-size: 15px">{{ userStore.userData.name }}</p>
-                        <p style="font-size: 13px">{{ userStore.userData.email }}</p>
+                        <p class="font-weight-bold text-body-1 mb-1">{{ userStore.userData.name }}</p>
+                        <p class="text-caption text-medium-emphasis">{{ userStore.userData.email }}</p>
                       </div>
                     </div>
                     <v-divider class="my-3"></v-divider>
                     <v-btn
-                      class="text-none font-weight-bold"
-                      variant="text"
-                      rounded
+                      class="text-none font-weight-bold menu-btn"
+                      variant="tonal"
+                      color="green"
+                      rounded="lg"
                       block
+                      prepend-icon="mdi-calendar-check"
                       @click="openReservationsDialog"
                     >
                       My Reservations
                     </v-btn>
-                    <v-divider class="my-3"></v-divider>
                     <v-btn
-                      class="text-none font-weight-bold"
-                      variant="text"
-                      rounded
+                      class="text-none font-weight-bold menu-btn mt-2"
+                      variant="tonal"
+                      color="blue"
+                      rounded="lg"
                       block
+                      prepend-icon="mdi-account-edit"
                       @click="$router.push('/settings')"
                     >
                       Edit Account
                     </v-btn>
                     <v-divider class="my-3"></v-divider>
                     <v-btn
-                      class="text-none font-weight-bold"
-                      variant="text"
+                      class="text-none font-weight-bold menu-btn"
+                      variant="tonal"
                       color="red"
-                      rounded
+                      rounded="lg"
                       block
+                      prepend-icon="mdi-logout"
                       @click="logout"
                     >
                       Logout
@@ -250,21 +261,24 @@ const logout = async () => {
         </v-row>
       </v-app-bar>
 
-      <v-row class="mt-4 mx-0 mx-lg-16 pb-5 pt-10">
-        <v-col cols="12">
-          <v-row>
-            <v-col cols="12" class="px-6">
-              <h1 class="text-h4 text-green-darken-4 font-weight-bold">Find Your Perfect Boarding House</h1>
-            </v-col>
-            <v-col cols="12" class="d-flex justify-center align-center ga-2">
-              <div
-                class="d-inline-flex align-center justify-start rounded-lg px-3 ga-4 bg-white"
-                style="width: 100%; border: green solid 2px; "
-              >
+      <!-- Hero Section with Search -->
+      <div class="hero-section">
+        <div class="hero-overlay"></div>
+        <v-container class="hero-content">
+          <v-row class="justify-center">
+            <v-col cols="12" md="10" lg="8">
+              <h1 class="hero-title text-center mb-4">
+                Find Your Perfect Boarding House
+              </h1>
+              <p class="hero-subtitle text-center mb-8">
+                Discover comfortable and affordable student housing near you
+              </p>
+              <div class="modern-search-bar">
+                <v-icon class="search-icon" color="green-darken-2">mdi-magnify</v-icon>
                 <v-text-field
-                  class="mb-2 w-100"
-                  density="compact"
-                  label="Search"
+                  class="search-input"
+                  density="comfortable"
+                  placeholder="Search by name, location, or amenities..."
                   variant="plain"
                   hide-details
                   single-line
@@ -274,368 +288,441 @@ const logout = async () => {
               </div>
             </v-col>
           </v-row>
-        </v-col>
+        </v-container>
+      </div>
 
-        <v-col cols="12" md="3" lg="2">
-          <v-expansion-panels class="mb-6 border">
-            <v-expansion-panel>
-              <v-expansion-panel-title
-                expand-icon="mdi-menu-down"
-                class="px-5 py-5 font-weight-bold"
-              >
-                Filters
-              </v-expansion-panel-title>
-              <v-expansion-panel-text
-                class="font-weight-bold"
-              >
-                <div>
-                  <p>Price Range</p>
-                  <p>{{ priceRanges[priceRangeIndex].label }}</p>
+      <v-container class="content-container py-12">
+        <v-row>
+          <!-- Modern Filter Sidebar -->
+          <v-col cols="12" md="3" lg="3">
+            <v-card class="filter-card sticky-filters" elevation="2" rounded="xl">
+              <v-card-text class="pa-6">
+                <div class="d-flex align-center mb-6">
+                  <v-icon size="28" color="green-darken-2" class="mr-3">mdi-tune-variant</v-icon>
+                  <h3 class="text-h6 font-weight-bold">Filters</h3>
                 </div>
-                <v-slider
-                  v-model="priceRangeIndex"
-                  :max="priceRanges.length - 1"
-                  show-ticks="always"
-                  step="1"
-                  tick-size="4"
-                  color="green"
-                ></v-slider>
-
-                <p>Boarding House Type</p>
-                <v-select
-                  v-model="selectedType"
-                  color="green"
-                  density="compact"
-                  variant="outlined"
-                  :items="type"
-                  clearable
-                >
-                </v-select>
-
-                <p>Amenities</p>
-                <v-checkbox
-                  v-model="filter"
-                  :label="label"
-                  :value="label"
-                  v-for="(label, index) in filterValue"
-                  :key="index"
-                  color="success"
-                  hide-details
-                />
-              </v-expansion-panel-text>
-            </v-expansion-panel>
-          </v-expansion-panels>
-        </v-col>
-
-        <v-col cols="12" md="9" lg="10">
-          <v-row>
-            <v-col
-              v-for="post in postStore.posts"
-              :key="post.id"
-              cols="12" sm="6" lg="4"
-              class="d-flex justify-center align-center">
-              <v-card
-                class="rounded-lg border"
-                :elevation="7"
-                width="100%"
-              >
-                <v-card-text class="d-flex flex-column">
-                  <v-row>
-                    <v-col cols="12" md="8">
-                      <v-img
-                        class="bg-grey rounded-lg mb-5"
-                        :src="post.images[0]"
-                        width="100%"
-                        height="200"
-                        cover
-                      ></v-img>
-                    </v-col>
-                    <v-col cols="4" class="d-none d-md-block">
-                      <v-img
-                        class="bg-grey rounded-lg mb-5"
-                        :src="post.images[1]"
-                        width="100%"
-                        height="200"
-                        cover
-                      ></v-img>
-                    </v-col>
-                  </v-row>
-                  <p class="text-h7 font-weight-light text-disabled">{{ post.timeAgo }}</p>
-                  <p class="text-h5 font-weight-bold text-green-darken-3">{{ post.name }}</p>
-                  <p class="text-subtitle-2 text-disabled truncate">{{ post.address }}</p>
-                  <p class="text-h5 font-weight-bold text-green mb-2 px-1">₱{{ post.price }}.00/month</p>
-                  <div class="d-flex flex-wrap">
-                    <v-chip
-                      size="small"
-                      v-if="post.tags.length > 0"
-                      class="mr-1 mb-1 px-3"
-                      color="green"
-                    >
-                      {{ post.tags[0] || 'No tags' }}
-                    </v-chip>
-
-                    <v-chip
-                      size="small"
-                      v-if="post.tags.length > 1"
-                      class="mr-1 mb-1 px-3"
-                      color="green"
-                    >
-                      +{{ post.tags.length - 1 }} more
+                
+                <div class="filter-section mb-6">
+                  <h4 class="filter-label mb-3">Price Range</h4>
+                  <div class="price-display mb-4">
+                    <v-chip color="green" variant="flat" size="small">
+                      {{ priceRanges[priceRangeIndex].label || 'Any Price' }}
                     </v-chip>
                   </div>
-                </v-card-text>
-                <v-card-actions class="px-7 pb-7">
-                  <v-btn
-                    size="large"
-                    class="rounded-lg font-weight-bold bg-green text-body-2"
-                    block
-                    @click="openDialog(post)"
-                  >
-                    View Details
-                  </v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-col>
-          </v-row>
-        </v-col>
-      </v-row>
+                  <v-slider
+                    v-model="priceRangeIndex"
+                    :max="priceRanges.length - 1"
+                    show-ticks="always"
+                    step="1"
+                    tick-size="4"
+                    color="green-darken-2"
+                    track-color="green-lighten-4"
+                    thumb-label
+                  ></v-slider>
+                </div>
 
-      <v-dialog
-        v-model="postDialog.PostContent"
-        max-width="700"
-      >
-        <v-card style="overflow: hidden; border-radius: 20px">
-          <div class="overflow-y-auto">
-            <v-card-title class="d-flex align-center justify-center font-weight-bold"
-            >
-              <v-spacer class="px-4"></v-spacer>
-              <h4>{{ postDialog.owner_name }}'s Post</h4>
-              <v-spacer></v-spacer>
-              <v-btn
-                class="ma-2"
-                icon="mdi-close"
-                variant="text"
-                @click="postDialog.PostContent=false"
-              ></v-btn>
-            </v-card-title>
-            <v-divider></v-divider>
-            <v-card-text class="overflow-x-hidden">
-              <v-row>
-                <v-col cols="12" class="text-center">
-                  <h2>{{ postDialog.name }}</h2>
-                </v-col>
-                <v-col cols="12">
-                  <v-row>
-                    <v-col cols="8">
+                <div class="filter-section mb-6">
+                  <h4 class="filter-label mb-3">Housing Type</h4>
+                  <v-select
+                    v-model="selectedType"
+                    color="green-darken-2"
+                    density="comfortable"
+                    variant="outlined"
+                    :items="type"
+                    clearable
+                    rounded="lg"
+                    placeholder="Select type"
+                  >
+                  </v-select>
+                </div>
+
+                <div class="filter-section">
+                  <h4 class="filter-label mb-3">Amenities</h4>
+                  <v-checkbox
+                    v-model="filter"
+                    :label="label"
+                    :value="label"
+                    v-for="(label, index) in filterValue"
+                    :key="index"
+                    color="green-darken-2"
+                    hide-details
+                    class="amenity-checkbox"
+                  />
+                </div>
+              </v-card-text>
+            </v-card>
+          </v-col>
+
+          <!-- Modern Property Cards -->
+          <v-col cols="12" md="9" lg="9">
+            <div class="results-header mb-6">
+              <h3 class="text-h5 font-weight-bold">
+                {{ postStore.posts.length }} Properties Available
+              </h3>
+            </div>
+            <v-row>
+              <v-col
+                v-for="post in postStore.posts"
+                :key="post.id"
+                cols="12" sm="6" lg="4"
+                class="property-card-col">
+                <v-card
+                  class="property-card"
+                  elevation="0"
+                  rounded="xl"
+                  hover
+                >
+                  <div class="property-images">
+                    <v-img
+                      class="main-image"
+                      :src="post.images[0]"
+                      height="220"
+                      cover
+                      gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.3)"
+                    >
+                      <div class="image-overlay">
+                        <v-chip
+                          size="small"
+                          class="time-chip"
+                          color="white"
+                          variant="flat"
+                        >
+                          <v-icon size="14" class="mr-1">mdi-clock-outline</v-icon>
+                          {{ post.timeAgo }}
+                        </v-chip>
+                      </div>
+                    </v-img>
+                    <div class="secondary-images">
                       <v-img
-                        style="border-radius: 20px; cursor: pointer;"
-                        :src="postDialog.images[0]"
-                        @click="openCarousel(0)"
-                        aspect-ratio="1"
+                        v-if="post.images[1]"
+                        class="small-image"
+                        :src="post.images[1]"
+                        height="60"
                         cover
-                      >
-                      </v-img>
-                    </v-col>
-                    <v-col cols="4">
-                      <v-row>
-                        <v-col cols="12">
-                          <v-img
-                            style="border-radius: 20px; cursor: pointer;"
-                            :src="postDialog.images[1]"
-                            @click="openCarousel(1)"
-                            aspect-ratio="1"
-                            cover
-                          >
-                          </v-img>
-                        </v-col>
-                        <v-col cols="12">
-                          <v-img
-                            style="border-radius: 20px; cursor: pointer;"
-                            :src="postDialog.images[2]"
-                            @click="openCarousel(2)"
-                            aspect-ratio="1"
-                            cover
-                          >
-                            <div v-if="extraImagesCount > 0" class="overlay">
-                              <span style="font-size: clamp(5px, 3vw, 25px)">{{ extraImagesCount }}+ more</span>
-                            </div>
-                          </v-img>
-                        </v-col>
-                      </v-row>
-                    </v-col>
-                  </v-row>
-                </v-col>
-                <v-col cols="12" class="d-flex justify-space-between">
-                  <div v-if="postDialog.tags.length > 0">
-                    <div class="d-flex flex-wrap">
+                      ></v-img>
+                    </div>
+                  </div>
+                  
+                  <v-card-text class="pa-5">
+                    <h3 class="property-name mb-2">{{ post.name }}</h3>
+                    <div class="d-flex align-center mb-3">
+                      <v-icon size="16" color="grey-darken-1" class="mr-1">mdi-map-marker</v-icon>
+                      <p class="text-caption text-medium-emphasis location-text">
+                        {{ post.address }}
+                      </p>
+                    </div>
+                    
+                    <div class="price-section mb-4">
+                      <span class="price-amount">₱{{ post.price }}</span>
+                      <span class="price-period">/month</span>
+                    </div>
+                    
+                    <div class="tags-section mb-4">
                       <v-chip
                         size="small"
-                        v-for="(tag, index) in postDialog.tags"
-                        :key="index"
-                        color="green-darken-2"
-                        class="ma-1"
+                        v-if="post.tags.length > 0"
+                        class="tag-chip"
+                        color="green-lighten-5"
+                        text-color="green-darken-3"
                       >
-                        {{ tag }}
+                        {{ post.tags[0] }}
+                      </v-chip>
+                      <v-chip
+                        size="small"
+                        v-if="post.tags.length > 1"
+                        class="tag-chip"
+                        color="green-lighten-5"
+                        text-color="green-darken-3"
+                      >
+                        +{{ post.tags.length - 1 }}
                       </v-chip>
                     </div>
+                  </v-card-text>
+                  
+                  <v-card-actions class="px-5 pb-5">
+                    <v-btn
+                      size="large"
+                      class="view-details-btn"
+                      color="green-darken-2"
+                      rounded="lg"
+                      block
+                      elevation="0"
+                      @click="openDialog(post)"
+                    >
+                      <span class="font-weight-bold">View Details</span>
+                      <v-icon class="ml-2" size="18">mdi-arrow-right</v-icon>
+                    </v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-col>
+            </v-row>
+          </v-col>
+        </v-row>
+      </v-container>
+
+      <!-- Modern Property Details Dialog -->
+      <v-dialog
+        v-model="postDialog.PostContent"
+        max-width="900"
+        scrollable
+      >
+        <v-card class="detail-dialog" rounded="xl">
+          <v-card-title class="dialog-header pa-6">
+            <div class="d-flex align-center w-100">
+              <div>
+                <h2 class="text-h5 font-weight-bold mb-1">{{ postDialog.name }}</h2>
+                <p class="text-caption text-medium-emphasis">Posted by {{ postDialog.owner_name }}</p>
+              </div>
+              <v-spacer></v-spacer>
+              <v-btn
+                icon="mdi-close"
+                variant="text"
+                size="large"
+                @click="postDialog.PostContent=false"
+              ></v-btn>
+            </div>
+          </v-card-title>
+          
+          <v-divider></v-divider>
+          
+          <v-card-text class="pa-6">
+            <v-row>
+              <!-- Image Gallery -->
+              <v-col cols="12">
+                <div class="detail-gallery mb-6">
+                  <v-img
+                    class="main-detail-image"
+                    :src="postDialog.images[0]"
+                    @click="openCarousel(0)"
+                    aspect-ratio="16/9"
+                    cover
+                    rounded="lg"
+                  >
+                  </v-img>
+                  <div class="detail-thumbnails mt-3">
+                    <v-img
+                      v-for="(img, idx) in postDialog.images.slice(1, 4)"
+                      :key="idx"
+                      class="thumbnail-image"
+                      :src="img"
+                      @click="openCarousel(idx + 1)"
+                      aspect-ratio="1"
+                      cover
+                      rounded="lg"
+                    >
+                      <div v-if="idx === 2 && extraImagesCount > 0" class="thumbnail-overlay">
+                        <span class="overlay-text">+{{ extraImagesCount }}</span>
+                      </div>
+                    </v-img>
+                  </div>
+                </div>
+              </v-col>
+
+              <!-- Property Info -->
+              <v-col cols="12">
+                <div class="d-flex justify-space-between align-center mb-6">
+                  <div class="price-section-large">
+                    <span class="price-amount-large">₱{{ postDialog.price }}</span>
+                    <span class="price-period-large">/month</span>
                   </div>
                   <v-btn
-                    class="text-none"
-                    color="green"
+                    size="large"
+                    color="green-darken-2"
+                    rounded="lg"
+                    elevation="0"
+                    prepend-icon="mdi-calendar-check"
                     @click="openAddReservationDialog"
                   >
-                    Reservation
+                    <span class="font-weight-bold">Make Reservation</span>
                   </v-btn>
-                </v-col>
-                <v-col cols="12">
-                  <div class="d-flex flex-wrap mt-4 text-center" style="height: 300px; width: 100%; border-radius: 10px;">
-                      <l-map
-                        :use-global-leaflet="false"
-                        ref="map"
-                        zoom="15"
-                        :center="[postDialog.latitude, postDialog.longitude]"
-                        minZoom="15"
-                      >
-                        <l-tile-layer
-                          url="https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=sQh8Ib7Qh6Fp1elfR6K8"
-                          layer-type="base"
-                          name="OpenStreetMap"
-                        ></l-tile-layer>
-                        <l-marker :lat-lng="[postDialog.latitude, postDialog.longitude]"></l-marker>
+                </div>
+              </v-col>
 
-                      </l-map>
-                    </div>
-                </v-col>
-                <v-col cols="12" class="d-block">
-                  <div class="d-flex justify-space-between">
-                    <h2 class="text-subtitle-1"><v-icon>mdi-map-marker</v-icon>{{ postDialog.address }}</h2>
+              <!-- Tags -->
+              <v-col cols="12" v-if="postDialog.tags.length > 0">
+                <div class="tags-container mb-6">
+                  <v-chip
+                    v-for="(tag, index) in postDialog.tags"
+                    :key="index"
+                    color="green-lighten-5"
+                    text-color="green-darken-3"
+                    class="mr-2 mb-2"
+                    size="small"
+                  >
+                    {{ tag }}
+                  </v-chip>
+                </div>
+              </v-col>
 
+              <!-- Description -->
+              <v-col cols="12">
+                <div class="info-section mb-6">
+                  <h3 class="section-title mb-3">
+                    <v-icon color="green-darken-2" class="mr-2">mdi-information</v-icon>
+                    Description
+                  </h3>
+                  <p class="description-text">{{ postDialog.description }}</p>
+                </div>
+              </v-col>
+
+              <!-- Location -->
+              <v-col cols="12">
+                <div class="info-section mb-6">
+                  <h3 class="section-title mb-4">
+                    <v-icon color="green-darken-2" class="mr-2">mdi-map-marker</v-icon>
+                    Location
+                  </h3>
+                  <p class="text-body-2 mb-4 text-medium-emphasis">{{ postDialog.address }}</p>
+                  <div class="map-container">
+                    <l-map
+                      :use-global-leaflet="false"
+                      ref="map"
+                      zoom="15"
+                      :center="[postDialog.latitude, postDialog.longitude]"
+                      minZoom="15"
+                    >
+                      <l-tile-layer
+                        url="https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=sQh8Ib7Qh6Fp1elfR6K8"
+                        layer-type="base"
+                        name="OpenStreetMap"
+                      ></l-tile-layer>
+                      <l-marker :lat-lng="[postDialog.latitude, postDialog.longitude]"></l-marker>
+                    </l-map>
                   </div>
-                  <br>
-                  <h2 class="text-h6"><v-icon color="green" class="mr-5">mdi-tag</v-icon>₱{{ postDialog.price }}.00/month</h2>
-                </v-col>
-                <v-col cols="12">
-                  <h2 class="text-h6">{{ postDialog.description }}</h2>
-                </v-col>
-                <v-col cols="12" class="d-flex justify-center">
+                </div>
+              </v-col>
+
+              <!-- Reviews Section -->
+              <v-col cols="12">
+                <div class="reviews-section">
+                  <div class="reviews-header mb-6">
+                    <div class="d-flex justify-space-between align-center">
+                      <h3 class="section-title">
+                        <v-icon color="green-darken-2" class="mr-2">mdi-star</v-icon>
+                        Reviews ({{ postDialog.reviews.length }})
+                      </h3>
+                      <div class="rating-summary">
+                        <span class="rating-number">{{ postDialog.avgRating.toFixed(1) }}</span>
+                        <v-rating
+                          :size="20"
+                          :model-value="postDialog.avgRating"
+                          color="yellow-darken-3"
+                          half-increments
+                          readonly
+                          density="compact"
+                        ></v-rating>
+                      </div>
+                    </div>
+                  </div>
+
                   <v-btn
                     color="green-darken-2"
                     variant="outlined"
+                    rounded="lg"
                     block
+                    class="mb-6"
+                    prepend-icon="mdi-plus"
                     @click="sheet = !sheet"
                   >
-                    add review
+                    <span class="font-weight-bold">Write a Review</span>
                   </v-btn>
-                </v-col>
-                <v-divider class="mb-2"></v-divider>
-                <v-col cols="12">
 
-                  <div class="d-flex align-center px-5">
-                    <h3 class="pr-5">REVIEWS ({{ postDialog.reviews.length }})</h3>
-                    <v-spacer></v-spacer>
-                    <h3>{{ postDialog.avgRating.toFixed(1) }}</h3>
-                    <v-rating
-                      :size="21"
-                      :model-value="postDialog.avgRating"
-                      color="yellow-darken-3"
-                      half-increments
-                      readonly
-                    ></v-rating>
-                  </div>
-                  <div
-                    class="d-flex flex-column text-start py-5 px-5"
-                  >
+                  <div class="reviews-list">
                     <v-card
                       v-for="(review, index) in postDialog.reviews"
                       :key="index"
-                      class="mb-3 border border-b-lg"
-                      style="border-radius: 15px"
+                      class="review-card mb-4"
+                      elevation="0"
+                      rounded="xl"
+                      variant="outlined"
                     >
-                      <v-card-text>
-                        <div class="d-flex">
-                          <v-avatar
-                            size="40"
-                          >
-                            <v-img
-                              :src="review.reviewer_picture"
-                            >
-
-                            </v-img>
+                      <v-card-text class="pa-5">
+                        <div class="d-flex mb-4">
+                          <v-avatar size="48" class="review-avatar">
+                            <v-img :src="review.reviewer_picture"></v-img>
                           </v-avatar>
-                          <h3 class="font-weight-bold pl-4">{{ review.reviewer_name }}</h3>
-                          <v-spacer></v-spacer>
-                          <p class="text-caption text-muted">{{ review.timeAgo }}</p>
-                        </div>
-                        <v-divider class="mt-3"></v-divider>
-                        <div class="d-flex flex-column">
-                          <v-rating
-                            size="small"
-                            :model-value="review.reviewer_rating"
-                            color="yellow-darken-3"
-                            half-increments
-                            readonly
-                          ></v-rating>
-                          <div class="mx-3">
-                            <span style="font-size: 14px">{{ review.reviewer_comment }}</span>
+                          <div class="ml-4 flex-grow-1">
+                            <h4 class="font-weight-bold mb-1">{{ review.reviewer_name }}</h4>
+                            <p class="text-caption text-medium-emphasis">{{ review.timeAgo }}</p>
                           </div>
-
                         </div>
+                        <v-rating
+                          :size="18"
+                          :model-value="review.reviewer_rating"
+                          color="yellow-darken-3"
+                          half-increments
+                          readonly
+                          density="compact"
+                          class="mb-3"
+                        ></v-rating>
+                        <p class="review-text">{{ review.reviewer_comment }}</p>
                       </v-card-text>
                     </v-card>
                   </div>
-                </v-col>
-              </v-row>
-            </v-card-text>
-          </div>
-          <v-bottom-sheet
-            v-model="sheet"
-            inset
-          >
-            <v-card
-              class="text-center"
-              height="500"
-            >
-              <v-card-text class="d-flex flex-column">
-                <v-rating
-                  size="x-large"
-                  v-model="rating"
-                  color="yellow-darken-3"
-                  half-increments
-                ></v-rating>
-                <br>
+                </div>
+              </v-col>
+            </v-row>
+          </v-card-text>
+
+          <!-- Review Bottom Sheet -->
+          <v-bottom-sheet v-model="sheet" inset>
+            <v-card class="review-sheet" rounded="t-xl">
+              <v-card-text class="pa-8">
+                <h3 class="text-h6 font-weight-bold mb-6 text-center">Write Your Review</h3>
+                <div class="text-center mb-6">
+                  <v-rating
+                    size="large"
+                    v-model="rating"
+                    color="yellow-darken-3"
+                    half-increments
+                  ></v-rating>
+                </div>
                 <v-textarea
                   v-model="comment"
                   variant="outlined"
-                  label="Comment"
+                  label="Share your experience..."
                   auto-grow
+                  rows="4"
+                  rounded="lg"
+                  class="mb-4"
                 >
                 </v-textarea>
-                <div>
-                  <v-btn
-                    :loading="postStore.formAction.formProcess"
-                    block
-                    @click="addReview"
-                  >
-                    submit
-                  </v-btn>
-                </div>
+                <v-btn
+                  :loading="postStore.formAction.formProcess"
+                  block
+                  size="large"
+                  color="green-darken-2"
+                  rounded="lg"
+                  elevation="0"
+                  @click="addReview"
+                >
+                  <span class="font-weight-bold">Submit Review</span>
+                </v-btn>
               </v-card-text>
             </v-card>
           </v-bottom-sheet>
         </v-card>
       </v-dialog>
 
-      <v-dialog v-model="postDialog.carouselOpen" max-width="600">
-        <v-carousel v-if="postDialog.carouselOpen" hide-delimiters v-model="postDialog.carouselIndex">
-          <v-carousel-item
-            v-for="(img, index) in postDialog.images"
-            :key="index"
-            :src="img"
-            aspect-ratio="1"
-            cover
+      <!-- Image Carousel Dialog -->
+      <v-dialog v-model="postDialog.carouselOpen" max-width="800">
+        <v-card rounded="xl" class="carousel-card">
+          <v-carousel 
+            v-if="postDialog.carouselOpen" 
+            hide-delimiters 
+            v-model="postDialog.carouselIndex"
+            height="600"
+            show-arrows="hover"
           >
-          </v-carousel-item>
-        </v-carousel>
+            <v-carousel-item
+              v-for="(img, index) in postDialog.images"
+              :key="index"
+              :src="img"
+              cover
+            >
+            </v-carousel-item>
+          </v-carousel>
+        </v-card>
       </v-dialog>
 
       <AddReservation
@@ -654,23 +741,510 @@ const logout = async () => {
 </template>
 
 <style scoped>
-.overlay {
+/* Modern App Bar */
+.modern-appbar {
+  background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%) !important;
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.appbar-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%);
+  opacity: 0.95;
+}
+
+.logo-container {
+  background: white;
+  padding: 8px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(0, 0, 0, 0.6);
-  color: white;
-  font-size: 1.5rem;
-  height: 100%;
-  width: 100%;
-  position: absolute;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease;
 }
-.truncate {
-  display: block;
-  max-width: 180px;
+
+.logo-link:hover .logo-container {
+  transform: scale(1.05);
+}
+
+.brand-text {
+  font-size: 1.5rem;
+  letter-spacing: -0.5px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.profile-btn {
+  transition: transform 0.3s ease;
+}
+
+.profile-btn:hover {
+  transform: scale(1.05);
+}
+
+.profile-avatar {
+  border: 3px solid white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.profile-avatar-large {
+  border: 3px solid #4caf50;
+}
+
+.profile-menu {
+  background: white;
+  min-width: 300px;
+}
+
+.menu-btn {
+  transition: all 0.3s ease;
+}
+
+.menu-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* Hero Section */
+.hero-section {
+  position: relative;
+  background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 50%, #4caf50 100%);
+  padding: 100px 0 80px;
+  overflow: hidden;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
+               radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1) 0%, transparent 50%);
+  animation: heroGlow 10s ease-in-out infinite;
+}
+
+@keyframes heroGlow {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.8; }
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.1) 100%);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-title {
+  color: white;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 800;
+  letter-spacing: -1px;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  animation: fadeInUp 0.8s ease;
+}
+
+.hero-subtitle {
+  color: rgba(255, 255, 255, 0.95);
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-weight: 400;
+  animation: fadeInUp 0.8s ease 0.2s both;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modern-search-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 50px;
+  padding: 8px 24px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  animation: fadeInUp 0.8s ease 0.4s both;
+}
+
+.modern-search-bar:focus-within {
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+.search-icon {
+  font-size: 28px;
+  margin-right: 12px;
+}
+
+.search-input {
+  flex: 1;
+  font-size: 1.1rem;
+}
+
+/* Content Container */
+.content-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Filter Card */
+.filter-card {
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.sticky-filters {
+  position: sticky;
+  top: 100px;
+}
+
+.filter-section {
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.filter-label {
+  color: #2e7d32;
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.3px;
+}
+
+.price-display {
+  display: flex;
+  justify-content: center;
+}
+
+.amenity-checkbox {
+  margin-bottom: 8px;
+  transition: all 0.3s ease;
+}
+
+.amenity-checkbox:hover {
+  transform: translateX(4px);
+}
+
+/* Results Header */
+.results-header {
+  animation: fadeInUp 0.6s ease;
+}
+
+/* Property Cards */
+.property-card-col {
+  animation: fadeInUp 0.6s ease;
+}
+
+.property-card {
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.property-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
+  border-color: #4caf50;
+}
+
+.property-images {
+  position: relative;
+}
+
+.main-image {
+  border-radius: 0;
+  transition: transform 0.4s ease;
+}
+
+.property-card:hover .main-image {
+  transform: scale(1.05);
+}
+
+.image-overlay {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 2;
+}
+
+.time-chip {
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.95) !important;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+.secondary-images {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  display: flex;
+  gap: 8px;
+}
+
+.small-image {
+  width: 60px;
+  border-radius: 8px;
+  border: 2px solid white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.property-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1b5e20;
+  line-height: 1.3;
+}
+
+.location-text {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  max-width: 100%;
+}
+
+.price-section {
+  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+  padding: 12px 16px;
+  border-radius: 12px;
+  display: inline-block;
+}
+
+.price-amount {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #1b5e20;
+}
+
+.price-period {
+  font-size: 0.95rem;
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+.tags-section {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.tag-chip {
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+.view-details-btn {
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.view-details-btn:hover {
+  transform: translateX(4px);
+}
+
+/* Detail Dialog */
+.detail-dialog {
+  background: white;
+}
+
+.dialog-header {
+  background: linear-gradient(135deg, #f1f8f4 0%, #e8f5e9 100%);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.detail-gallery {
+  animation: fadeIn 0.6s ease;
+}
+
+.main-detail-image {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  border: 2px solid rgba(0, 0, 0, 0.08);
+}
+
+.main-detail-image:hover {
+  transform: scale(1.02);
+}
+
+.detail-thumbnails {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.thumbnail-image {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid rgba(0, 0, 0, 0.08);
+  position: relative;
+}
+
+.thumbnail-image:hover {
+  transform: scale(1.05);
+  border-color: #4caf50;
+}
+
+.thumbnail-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+}
+
+.overlay-text {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.price-section-large {
+  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+  padding: 16px 24px;
+  border-radius: 16px;
+  display: inline-block;
+}
+
+.price-amount-large {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #1b5e20;
+}
+
+.price-period-large {
+  font-size: 1.1rem;
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+.tags-container {
+  animation: fadeIn 0.6s ease;
+}
+
+.info-section {
+  animation: fadeIn 0.6s ease;
+}
+
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1b5e20;
+  display: flex;
+  align-items: center;
+}
+
+.description-text {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #424242;
+}
+
+.map-container {
+  height: 350px;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 2px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Reviews Section */
+.reviews-section {
+  animation: fadeIn 0.6s ease;
+}
+
+.reviews-header {
+  padding: 20px;
+  background: linear-gradient(135deg, #fff9e6 0%, #fff3cd 100%);
+  border-radius: 16px;
+}
+
+.rating-summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.rating-number {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #f57f17;
+}
+
+.review-card {
+  transition: all 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.review-card:hover {
+  transform: translateX(4px);
+  border-color: #4caf50;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.review-avatar {
+  border: 2px solid #4caf50;
+}
+
+.review-text {
+  color: #424242;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.review-sheet {
+  background: white;
+}
+
+.carousel-card {
+  overflow: hidden;
+}
+
+/* Responsive Design */
+@media (max-width: 960px) {
+  .sticky-filters {
+    position: static;
+  }
+  
+  .hero-section {
+    padding: 60px 0 50px;
+  }
+  
+  .modern-search-bar {
+    padding: 6px 20px;
+  }
 }
 </style>
-
