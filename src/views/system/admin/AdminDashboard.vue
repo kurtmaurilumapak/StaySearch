@@ -336,53 +336,6 @@ const maxActivityValue = computed(() => {
                   </v-col>
                 </v-row>
 
-                <!-- Quick Actions -->
-                <v-row class="mb-8">
-                  <v-col cols="12" md="6">
-                    <v-card 
-                      class="action-card pending-card" 
-                      elevation="0" 
-                      rounded="xl"
-                      @click="$router.push('/admin/request')"
-                    >
-                      <v-card-text class="pa-6">
-                        <div class="action-content">
-                          <div class="action-icon-wrapper pending-icon">
-                            <v-icon size="40" color="white">mdi-clock-outline</v-icon>
-                          </div>
-                          <div class="action-info">
-                            <h3 class="action-title">Pending Posts</h3>
-                            <p class="action-subtitle">Review awaiting approval</p>
-                          </div>
-                          <v-icon class="action-arrow" size="32">mdi-chevron-right</v-icon>
-                        </div>
-                      </v-card-text>
-                    </v-card>
-                  </v-col>
-
-                  <v-col cols="12" md="6">
-                    <v-card 
-                      class="action-card approved-card" 
-                      elevation="0" 
-                      rounded="xl"
-                      @click="$router.push('/admin/approved')"
-                    >
-                      <v-card-text class="pa-6">
-                        <div class="action-content">
-                          <div class="action-icon-wrapper approved-icon">
-                            <v-icon size="40" color="white">mdi-check-circle</v-icon>
-                          </div>
-                          <div class="action-info">
-                            <h3 class="action-title">Approved Posts</h3>
-                            <p class="action-subtitle">View active listings</p>
-                          </div>
-                          <v-icon class="action-arrow" size="32">mdi-chevron-right</v-icon>
-                        </div>
-                      </v-card-text>
-                    </v-card>
-                  </v-col>
-                </v-row>
-
                 <!-- Recent Posts Section -->
                 <v-row class="mb-8">
                   <v-col cols="12">
@@ -1033,13 +986,16 @@ const maxActivityValue = computed(() => {
   border-radius: 6px;
 }
 
-/* Action Cards */
-.action-card {
+/* Data Cards */
+.data-card {
   background: white;
   border: 1px solid rgba(0, 0, 0, 0.08);
-  cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  animation: fadeInUp 0.6s ease;
+  animation: fadeIn 0.6s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes fadeInUp {
@@ -1051,85 +1007,6 @@ const maxActivityValue = computed(() => {
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-.action-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
-}
-
-.pending-card:hover {
-  border-color: #ff9800;
-}
-
-.approved-card:hover {
-  border-color: #4caf50;
-}
-
-.action-content {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.action-icon-wrapper {
-  padding: 16px;
-  border-radius: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.3s ease;
-}
-
-.pending-icon {
-  background: linear-gradient(135deg, #ff9800 0%, #ffa726 100%);
-}
-
-.approved-icon {
-  background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
-}
-
-.action-card:hover .action-icon-wrapper {
-  transform: scale(1.1) rotate(5deg);
-}
-
-.action-info {
-  flex: 1;
-}
-
-.action-title {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #1b5e20;
-  margin-bottom: 4px;
-}
-
-.action-subtitle {
-  font-size: 0.9rem;
-  color: #616161;
-  margin: 0;
-}
-
-.action-arrow {
-  color: #9e9e9e;
-  transition: transform 0.3s ease;
-}
-
-.action-card:hover .action-arrow {
-  transform: translateX(8px);
-  color: #4caf50;
-}
-
-/* Data Cards */
-.data-card {
-  background: white;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  animation: fadeIn 0.6s ease;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
 }
 
 .data-card-header {
@@ -1248,10 +1125,6 @@ const maxActivityValue = computed(() => {
     font-size: 1.75rem;
   }
 
-  .action-title {
-    font-size: 1.1rem;
-  }
-
   .section-title {
     font-size: 1.25rem;
   }
@@ -1295,14 +1168,6 @@ const maxActivityValue = computed(() => {
 
   .stat-value {
     font-size: 1.5rem;
-  }
-
-  .action-content {
-    gap: 12px;
-  }
-
-  .action-arrow {
-    display: none;
   }
 
   .table-header,
