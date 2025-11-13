@@ -13,7 +13,6 @@ const drawer = ref(true)
 const currentPage = ref(1)
 const itemsPerPage = 5
 
-
 onMounted(() => {
   adminStore.fetchRecentPosts().then(() => {
     console.log(adminStore.boardinghouse);
@@ -31,6 +30,57 @@ const paginatedPostLogs = computed(() => {
 
 const totalPages = computed(() => Math.ceil(adminStore.postLogs.length / itemsPerPage))
 
+// Statistics calculations
+const statistics = computed(() => {
+  const logs = adminStore.postLogs
+  const posts = adminStore.boardinghouse
+  
+  return {
+    totalPosts: posts.length,
+    totalActivities: logs.length,
+    insertActions: logs.filter(log => log.action === 'INSERT').length,
+    updateActions: logs.filter(log => log.action === 'UPDATE').length,
+    deleteActions: logs.filter(log => log.action === 'DELETE').length,
+  }
+})
+
+// Activity chart data
+const activityChartData = computed(() => {
+  const logs = adminStore.postLogs
+  const last7Days = []
+  const today = new Date()
+  
+  for (let i = 6; i >= 0; i--) {
+    const date = new Date(today)
+    date.setDate(date.getDate() - i)
+    const dateStr = format(date, 'MMM dd')
+    
+    const dayLogs = logs.filter(log => {
+      const logDate = new Date(log.updated_at)
+      return format(logDate, 'MMM dd') === dateStr
+    })
+    
+    last7Days.push({
+      date: dateStr,
+      count: dayLogs.length,
+      inserts: dayLogs.filter(l => l.action === 'INSERT').length,
+      updates: dayLogs.filter(l => l.action === 'UPDATE').length,
+    })
+  }
+  
+  return last7Days
+})
+
+// Action distribution for pie chart
+const actionDistribution = computed(() => {
+  const stats = statistics.value
+  return [
+    { label: 'INSERT', value: stats.insertActions, color: '#4caf50' },
+    { label: 'UPDATE', value: stats.updateActions, color: '#ff9800' },
+    { label: 'DELETE', value: stats.deleteActions, color: '#f44336' },
+  ]
+})
+
 function nextPage() {
   if (currentPage.value < totalPages.value) {
     currentPage.value++
@@ -42,6 +92,11 @@ function previousPage() {
     currentPage.value--
   }
 }
+
+// Get max value for chart scaling
+const maxActivityValue = computed(() => {
+  return Math.max(...activityChartData.value.map(d => d.count), 1)
+})
 </script>
 
 <template>
@@ -105,6 +160,179 @@ function previousPage() {
                         <div class="decoration-circle circle-2"></div>
                       </div>
                     </div>
+                  </v-col>
+                </v-row>
+
+                <!-- Statistics Cards -->
+                <v-row class="mb-8">
+                  <v-col cols="12" sm="6" md="3">
+                    <div class="stat-card stat-card-primary">
+                      <div class="stat-icon-wrapper">
+                        <v-icon size="40" color="white">mdi-home-city</v-icon>
+                      </div>
+                      <div class="stat-content">
+                        <p class="stat-label">Total Posts</p>
+                        <h2 class="stat-value">{{ statistics.totalPosts }}</h2>
+                      </div>
+                      <div class="stat-trend">
+                        <v-icon size="20" color="success">mdi-trending-up</v-icon>
+                      </div>
+                    </div>
+                  </v-col>
+
+                  <v-col cols="12" sm="6" md="3">
+                    <div class="stat-card stat-card-success">
+                      <div class="stat-icon-wrapper">
+                        <v-icon size="40" color="white">mdi-plus-circle</v-icon>
+                      </div>
+                      <div class="stat-content">
+                        <p class="stat-label">New Inserts</p>
+                        <h2 class="stat-value">{{ statistics.insertActions }}</h2>
+                      </div>
+                      <div class="stat-trend">
+                        <v-icon size="20" color="success">mdi-trending-up</v-icon>
+                      </div>
+                    </div>
+                  </v-col>
+
+                  <v-col cols="12" sm="6" md="3">
+                    <div class="stat-card stat-card-warning">
+                      <div class="stat-icon-wrapper">
+                        <v-icon size="40" color="white">mdi-pencil</v-icon>
+                      </div>
+                      <div class="stat-content">
+                        <p class="stat-label">Updates</p>
+                        <h2 class="stat-value">{{ statistics.updateActions }}</h2>
+                      </div>
+                      <div class="stat-trend">
+                        <v-icon size="20" color="warning">mdi-trending-neutral</v-icon>
+                      </div>
+                    </div>
+                  </v-col>
+
+                  <v-col cols="12" sm="6" md="3">
+                    <div class="stat-card stat-card-info">
+                      <div class="stat-icon-wrapper">
+                        <v-icon size="40" color="white">mdi-chart-line</v-icon>
+                      </div>
+                      <div class="stat-content">
+                        <p class="stat-label">Total Activities</p>
+                        <h2 class="stat-value">{{ statistics.totalActivities }}</h2>
+                      </div>
+                      <div class="stat-trend">
+                        <v-icon size="20" color="info">mdi-information</v-icon>
+                      </div>
+                    </div>
+                  </v-col>
+                </v-row>
+
+                <!-- Charts Section -->
+                <v-row class="mb-8">
+                  <!-- Activity Trend Chart -->
+                  <v-col cols="12" lg="8">
+                    <v-card class="data-card" elevation="0" rounded="xl">
+                      <v-card-title class="data-card-header pa-6">
+                        <div class="d-flex align-center justify-space-between w-100">
+                          <div class="d-flex align-center">
+                            <div class="section-icon-wrapper mr-3">
+                              <v-icon color="blue-darken-2">mdi-chart-areaspline</v-icon>
+                            </div>
+                            <h2 class="section-title">Activity Trend (Last 7 Days)</h2>
+                          </div>
+                        </div>
+                      </v-card-title>
+                      <v-divider></v-divider>
+                      <v-card-text class="pa-6">
+                        <div class="chart-container">
+                          <div class="bar-chart">
+                            <div 
+                              v-for="(day, index) in activityChartData" 
+                              :key="index"
+                              class="bar-group"
+                            >
+                              <div class="bar-wrapper">
+                                <div class="bar-tooltip">
+                                  <div class="tooltip-content">
+                                    <p class="tooltip-title">{{ day.date }}</p>
+                                    <p class="tooltip-item">
+                                      <span class="tooltip-dot" style="background: #2196f3;"></span>
+                                      Total: {{ day.count }}
+                                    </p>
+                                    <p class="tooltip-item">
+                                      <span class="tooltip-dot" style="background: #4caf50;"></span>
+                                      Inserts: {{ day.inserts }}
+                                    </p>
+                                    <p class="tooltip-item">
+                                      <span class="tooltip-dot" style="background: #ff9800;"></span>
+                                      Updates: {{ day.updates }}
+                                    </p>
+                                  </div>
+                                </div>
+                                <div 
+                                  class="bar"
+                                  :style="{ 
+                                    height: `${(day.count / maxActivityValue) * 200}px`,
+                                    animationDelay: `${index * 0.1}s`
+                                  }"
+                                >
+                                  <span class="bar-value">{{ day.count }}</span>
+                                </div>
+                              </div>
+                              <span class="bar-label">{{ day.date }}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </v-card-text>
+                    </v-card>
+                  </v-col>
+
+                  <!-- Action Distribution -->
+                  <v-col cols="12" lg="4">
+                    <v-card class="data-card" elevation="0" rounded="xl">
+                      <v-card-title class="data-card-header pa-6">
+                        <div class="d-flex align-center">
+                          <div class="section-icon-wrapper mr-3">
+                            <v-icon color="purple-darken-2">mdi-chart-donut</v-icon>
+                          </div>
+                          <h2 class="section-title">Action Distribution</h2>
+                        </div>
+                      </v-card-title>
+                      <v-divider></v-divider>
+                      <v-card-text class="pa-6">
+                        <div class="donut-chart">
+                          <svg viewBox="0 0 200 200" class="donut-svg">
+                            <circle cx="100" cy="100" r="80" fill="none" stroke="#f5f5f5" stroke-width="40"/>
+                            <circle 
+                              v-for="(action, index) in actionDistribution" 
+                              :key="index"
+                              cx="100" 
+                              cy="100" 
+                              r="80" 
+                              fill="none" 
+                              :stroke="action.color"
+                              stroke-width="40"
+                              :stroke-dasharray="`${(action.value / statistics.totalActivities) * 502.65} 502.65`"
+                              :stroke-dashoffset="502.65 - actionDistribution.slice(0, index).reduce((sum, a) => sum + (a.value / statistics.totalActivities) * 502.65, 0)"
+                              class="donut-segment"
+                              :style="{ animationDelay: `${index * 0.2}s` }"
+                            />
+                            <text x="100" y="95" text-anchor="middle" class="donut-total-label">Total</text>
+                            <text x="100" y="115" text-anchor="middle" class="donut-total-value">{{ statistics.totalActivities }}</text>
+                          </svg>
+                        </div>
+                        <div class="chart-legend mt-6">
+                          <div 
+                            v-for="(action, index) in actionDistribution" 
+                            :key="index"
+                            class="legend-item"
+                          >
+                            <span class="legend-color" :style="{ background: action.color }"></span>
+                            <span class="legend-label">{{ action.label }}</span>
+                            <span class="legend-value">{{ action.value }}</span>
+                          </div>
+                        </div>
+                      </v-card-text>
+                    </v-card>
                   </v-col>
                 </v-row>
 
@@ -477,6 +705,334 @@ function previousPage() {
   }
 }
 
+/* Statistics Cards */
+.stat-card {
+  background: white;
+  padding: 24px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: fadeInUp 0.6s ease;
+  border: 2px solid transparent;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--card-color-1), var(--card-color-2));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+
+.stat-card:hover::before {
+  transform: scaleX(1);
+}
+
+.stat-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.stat-card-primary {
+  --card-color-1: #2196f3;
+  --card-color-2: #42a5f5;
+}
+
+.stat-card-success {
+  --card-color-1: #4caf50;
+  --card-color-2: #66bb6a;
+}
+
+.stat-card-warning {
+  --card-color-1: #ff9800;
+  --card-color-2: #ffa726;
+}
+
+.stat-card-info {
+  --card-color-1: #9c27b0;
+  --card-color-2: #ba68c8;
+}
+
+.stat-icon-wrapper {
+  padding: 16px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, var(--card-color-1), var(--card-color-2));
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease;
+}
+
+.stat-card:hover .stat-icon-wrapper {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.stat-content {
+  flex: 1;
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  color: #757575;
+  margin: 0 0 4px 0;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #212121;
+  margin: 0;
+  line-height: 1;
+}
+
+.stat-trend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Charts */
+.chart-container {
+  padding: 20px 0;
+  min-height: 280px;
+}
+
+/* Bar Chart */
+.bar-chart {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  height: 250px;
+  gap: 12px;
+  padding: 0 10px;
+}
+
+.bar-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  max-width: 80px;
+}
+
+.bar-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  height: 220px;
+}
+
+.bar {
+  width: 100%;
+  background: linear-gradient(180deg, #2196f3 0%, #1976d2 100%);
+  border-radius: 8px 8px 0 0;
+  position: relative;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  animation: barGrow 0.8s ease forwards;
+  transform-origin: bottom;
+  box-shadow: 0 -4px 12px rgba(33, 150, 243, 0.3);
+}
+
+@keyframes barGrow {
+  from {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+.bar:hover {
+  background: linear-gradient(180deg, #42a5f5 0%, #2196f3 100%);
+  box-shadow: 0 -6px 20px rgba(33, 150, 243, 0.5);
+  transform: scaleY(1.05);
+}
+
+.bar-value {
+  position: absolute;
+  top: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1976d2;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.bar:hover .bar-value {
+  opacity: 1;
+}
+
+.bar-label {
+  font-size: 0.75rem;
+  color: #616161;
+  font-weight: 600;
+  text-align: center;
+}
+
+.bar-tooltip {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 10;
+}
+
+.bar-wrapper:hover .bar-tooltip {
+  opacity: 1;
+}
+
+.tooltip-content {
+  background: rgba(33, 33, 33, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 12px 16px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  min-width: 160px;
+}
+
+.tooltip-title {
+  color: white;
+  font-weight: 700;
+  font-size: 0.875rem;
+  margin: 0 0 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: 6px;
+}
+
+.tooltip-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.8rem;
+  margin: 4px 0;
+}
+
+.tooltip-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* Donut Chart */
+.donut-chart {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.donut-svg {
+  width: 100%;
+  max-width: 250px;
+  height: auto;
+  transform: rotate(-90deg);
+}
+
+.donut-segment {
+  transition: all 0.3s ease;
+  animation: donutGrow 1s ease forwards;
+}
+
+@keyframes donutGrow {
+  from {
+    stroke-dasharray: 0 502.65;
+  }
+}
+
+.donut-segment:hover {
+  stroke-width: 45;
+  filter: brightness(1.1);
+}
+
+.donut-total-label {
+  font-size: 14px;
+  fill: #757575;
+  font-weight: 500;
+  transform: rotate(90deg);
+  transform-origin: center;
+}
+
+.donut-total-value {
+  font-size: 28px;
+  fill: #212121;
+  font-weight: 800;
+  transform: rotate(90deg);
+  transform-origin: center;
+}
+
+/* Chart Legend */
+.chart-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  background: #f5f5f5;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.legend-item:hover {
+  background: #e8f5e9;
+  transform: translateX(4px);
+}
+
+.legend-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.legend-label {
+  flex: 1;
+  font-weight: 600;
+  color: #424242;
+  font-size: 0.9rem;
+}
+
+.legend-value {
+  font-weight: 700;
+  color: #212121;
+  font-size: 1rem;
+  background: white;
+  padding: 4px 12px;
+  border-radius: 6px;
+}
+
 /* Action Cards */
 .action-card {
   background: white;
@@ -665,12 +1221,30 @@ function previousPage() {
 }
 
 /* Responsive */
+@media (max-width: 1280px) {
+  .bar-chart {
+    gap: 8px;
+  }
+  
+  .bar-group {
+    max-width: 60px;
+  }
+}
+
 @media (max-width: 960px) {
   .welcome-card {
     padding: 32px 24px;
   }
 
   .welcome-title {
+    font-size: 1.75rem;
+  }
+
+  .stat-card {
+    padding: 20px;
+  }
+
+  .stat-value {
     font-size: 1.75rem;
   }
 
@@ -690,6 +1264,11 @@ function previousPage() {
   .pagination-controls .v-btn {
     width: 100%;
   }
+  
+  .bar-chart {
+    gap: 6px;
+    padding: 0 5px;
+  }
 }
 
 @media (max-width: 600px) {
@@ -699,6 +1278,23 @@ function previousPage() {
 
   .welcome-card {
     padding: 24px 20px;
+  }
+
+  .stat-card {
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .stat-icon-wrapper {
+    padding: 12px;
+  }
+
+  .stat-icon-wrapper .v-icon {
+    font-size: 32px !important;
+  }
+
+  .stat-value {
+    font-size: 1.5rem;
   }
 
   .action-content {
@@ -713,6 +1309,31 @@ function previousPage() {
   .table-cell {
     font-size: 0.85rem;
     padding: 12px 8px;
+  }
+  
+  .bar-chart {
+    gap: 4px;
+    padding: 0;
+  }
+  
+  .bar-group {
+    max-width: 40px;
+  }
+  
+  .bar-label {
+    font-size: 0.65rem;
+  }
+  
+  .chart-container {
+    min-height: 240px;
+  }
+  
+  .bar-chart {
+    height: 200px;
+  }
+  
+  .bar-wrapper {
+    height: 180px;
   }
 }
 </style>
