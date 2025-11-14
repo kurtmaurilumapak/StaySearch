@@ -60,6 +60,28 @@ const onUpdate = (post) => {
   isUpdateDialogOpen.value = true
 }
 
+// Add this new method to handle post updates
+const handlePostUpdate = (updatedPost) => {
+  // Find and update the post in the store
+  const index = postStore.posts.findIndex(post => post.id === updatedPost.id)
+  if (index !== -1) {
+    postStore.posts[index] = updatedPost
+    
+    // Update timeAgo for the updated post
+    if (updatedPost.created_at) {
+      postStore.posts[index].timeAgo = formatDistanceToNow(new Date(updatedPost.created_at), { addSuffix: true })
+    }
+  }
+  
+  // Close the update dialog
+  isUpdateDialogOpen.value = false
+  
+  // If the detail dialog is open and showing this post, update it too
+  if (postDialog.value.PostContent && postDialog.value.boardingHouseId === updatedPost.id) {
+    openDialog(updatedPost)
+  }
+}
+
 const averageRating = computed(() => {
   if (postDialog.value.reviews && postDialog.value.reviews.length > 0) {
     const totalRating = postDialog.value.reviews.reduce((acc, review) => acc + review.rating, 0)
@@ -246,60 +268,49 @@ const onDelete = (post) => {
 
                       <!-- Actions -->
                       <v-card-actions class="px-5 pb-5">
-                        <v-btn
-                          size="large"
-                          class="view-btn"
-                          color="green-darken-2"
-                          rounded="lg"
-                          variant="tonal"
-                          block
-                          @click="openDialog(post)"
-                        >
-                          <span class="font-weight-bold">View Details</span>
-                        </v-btn>
-                        <v-menu location="start" rounded="lg">
-                          <template v-slot:activator="{ props }">
+                        <v-row dense>
+                          <v-col cols="12">
                             <v-btn
-                              icon
-                              variant="text"
-                              v-bind="props"
-                              class="action-menu-btn"
+                              size="large"
+                              class="view-btn"
+                              color="green-darken-2"
+                              rounded="lg"
+                              variant="tonal"
+                              block
+                              @click="openDialog(post)"
                             >
-                              <v-icon>mdi-dots-vertical</v-icon>
+                              <span class="font-weight-bold">View Details</span>
                             </v-btn>
-                          </template>
-
-                          <v-list class="action-menu" rounded="lg">
-                            <v-list-item class="menu-header">
-                              <v-list-item-title class="font-weight-bold text-caption">
-                                Actions
-                              </v-list-item-title>
-                            </v-list-item>
-                            <v-divider></v-divider>
-                            <v-list-item
-                              density="comfortable"
+                          </v-col>
+                          <v-col cols="6">
+                            <v-btn
+                              size="large"
+                              class="edit-btn"
+                              color="blue-darken-2"
+                              rounded="lg"
+                              variant="tonal"
+                              block
                               @click="onUpdate(post)"
-                              class="menu-item"
                             >
-                              <template v-slot:prepend>
-                                <v-icon color="blue-darken-2">mdi-pencil</v-icon>
-                              </template>
-                              <v-list-item-title class="font-weight-medium">Edit</v-list-item-title>
-                            </v-list-item>
-                            <v-list-item
-                              density="comfortable"
+                              <v-icon size="20" class="mr-2">mdi-pencil</v-icon>
+                              <span class="font-weight-bold">Edit</span>
+                            </v-btn>
+                          </v-col>
+                          <v-col cols="6">
+                            <v-btn
+                              size="large"
+                              class="delete-btn"
+                              color="red"
+                              rounded="lg"
+                              variant="tonal"
+                              block
                               @click="onDelete(post)"
-                              class="menu-item"
                             >
-                              <template v-slot:prepend>
-                                <v-icon color="red">mdi-delete</v-icon>
-                              </template>
-                              <v-list-item-title class="font-weight-medium text-red">
-                                Delete
-                              </v-list-item-title>
-                            </v-list-item>
-                          </v-list>
-                        </v-menu>
+                              <v-icon size="20" class="mr-2">mdi-delete</v-icon>
+                              <span class="font-weight-bold">Delete</span>
+                            </v-btn>
+                          </v-col>
+                        </v-row>
                       </v-card-actions>
                     </v-card>
                   </v-col>
