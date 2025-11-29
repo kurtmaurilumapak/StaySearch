@@ -21,7 +21,7 @@ export const useAdminStore = defineStore('adminStore', {
 
         if (error) throw error;
     
-        console.log('Fetched data:', data); // Log fetched data for debugging
+        console.log('Fetched data:', data);
         this.boardinghouse = data;
       } catch (error) {
         console.error('Failed to fetch boarding houses:', error.message);
@@ -31,9 +31,9 @@ export const useAdminStore = defineStore('adminStore', {
     async fetchBoardData2() {
       try {
         const { data, error } = await supabase
-          .from('admin_posts_data') // Replace with your table name
+          .from('admin_posts_data')
           .select('*')
-          .eq('status', 'approved'); // Fetch only pending cards
+          .eq('status', 'approved'); // This already excludes 'deleted' status
     
         if (error) throw error;
     
@@ -48,35 +48,58 @@ export const useAdminStore = defineStore('adminStore', {
     async approveCard(boardinghouseID) {
       try {
         const { error } = await supabase
-          .from('boarding_houses') // Replace with your table name
-          .update({ status: 'approved' }) // Update status to approved
-          .eq('id', boardinghouseID); // Match the card by ID
+          .from('boarding_houses')
+          .update({ status: 'approved' })
+          .eq('id', boardinghouseID);
     
         if (error) throw error;
     
-        // Remove approved card from local state
         this.boardinghouse = this.boardinghouse.filter((boardinghouse) => boardinghouse.id !== boardinghouseID);
       } catch (error) {
         console.error('Failed to approve card:', error.message);
       }
     },
     
-    // Reject a card and update its status in Supabase
     async rejectCard(boardinghouseID) {
       try {
         const { error } = await supabase
-          .from('boarding_houses') // Replace with your table name
-          .delete() // Remove from database
-          .eq('id', boardinghouseID); // Match the card by ID
+          .from('boarding_houses')
+          .delete()
+          .eq('id', boardinghouseID);
     
         if (error) throw error;
     
-        // Remove rejected card from local state
         this.boardinghouse = this.boardinghouse.filter((boardinghouse) => boardinghouse.id !== boardinghouseID);
       } catch (error) {
         console.error('Failed to reject card:', error.message);
       }
     },
+
+    // Soft delete function - marks post as deleted instead of removing
+    async deletePost(boardinghouseID) {
+      try {
+        // Update status to 'deleted' instead of actually deleting
+        const { error } = await supabase
+          .from('boarding_houses')
+          .update({ 
+            status: 'deleted',
+            deleted_at: new Date().toISOString()
+          })
+          .eq('id', boardinghouseID);
+    
+        if (error) throw error;
+    
+        // Remove from local state (since we only show approved posts)
+        this.boardinghouse = this.boardinghouse.filter((boardinghouse) => boardinghouse.id !== boardinghouseID);
+        
+        console.log('Post marked as deleted successfully');
+        return { success: true };
+      } catch (error) {
+        console.error('Failed to delete post:', error.message);
+        return { success: false, error: error.message };
+      }
+    },
+
     async fetchPostLogs() {
       try {
         const { data, error } = await supabase
@@ -92,6 +115,7 @@ export const useAdminStore = defineStore('adminStore', {
         console.error('Failed to fetch post logs:', error.message);
       }
     },
+
     async fetchRecentPosts() {
       try {
         const { data, error } = await supabase
@@ -108,6 +132,5 @@ export const useAdminStore = defineStore('adminStore', {
         console.error('Failed to fetch recent posts:', error.message);
       }
     }
-    ,
   }
 })

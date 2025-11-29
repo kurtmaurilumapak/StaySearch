@@ -11,6 +11,9 @@ const adminStore = useAdminStore();
 const totalBoardinghouses = computed(() => adminStore.boardinghouse.length);
 
 const drawer = ref(true)
+const deleteDialog = ref(false)
+const postToDelete = ref(null)
+const isDeleting = ref(false)
 
 onMounted(() => {
   adminStore.fetchBoardData2(); 
@@ -61,6 +64,40 @@ const averageRating = computed(() => {
   }
   return 0
 })
+
+const confirmDelete = (boardinghouse) => {
+  postToDelete.value = boardinghouse
+  deleteDialog.value = true
+}
+
+const handleDelete = async () => {
+  if (!postToDelete.value) return
+  
+  isDeleting.value = true
+  try {
+    const result = await adminStore.deletePost(postToDelete.value.id)
+    
+    if (result.success) {
+      // Close dialogs
+      deleteDialog.value = false
+      postDialog.value.PostContent = false
+      postToDelete.value = null
+    } else {
+      console.error('Delete failed:', result.error)
+      alert('Failed to delete post. Please try again.')
+    }
+  } catch (error) {
+    console.error('Error deleting post:', error)
+    alert('An error occurred while deleting the post.')
+  } finally {
+    isDeleting.value = false
+  }
+}
+
+const cancelDelete = () => {
+  deleteDialog.value = false
+  postToDelete.value = null
+}
 </script>
 
 <template>
@@ -159,17 +196,28 @@ const averageRating = computed(() => {
 
                       <v-divider class="mb-4"></v-divider>
 
-                      <v-btn 
-                        block
-                        size="large" 
-                        class="rounded-lg font-weight-bold text-none" 
-                        color="green-darken-1"
-                        elevation="0"
-                        @click="openDialog(boardinghouse)"
-                      >
-                        <v-icon start>mdi-eye</v-icon>
-                        View Details
-                      </v-btn>
+                      <div class="d-flex ga-2">
+                        <v-btn 
+                          size="large" 
+                          class="rounded-lg font-weight-bold text-none flex-grow-1" 
+                          color="green-darken-1"
+                          elevation="0"
+                          @click="openDialog(boardinghouse)"
+                        >
+                          <v-icon start>mdi-eye</v-icon>
+                          View
+                        </v-btn>
+                        <v-btn 
+                          size="large" 
+                          class="rounded-lg" 
+                          color="red-darken-1"
+                          elevation="0"
+                          icon
+                          @click="confirmDelete(boardinghouse)"
+                        >
+                          <v-icon>mdi-delete</v-icon>
+                        </v-btn>
+                      </div>
                     </v-card-text>
                   </v-card>
                 </v-col>
@@ -188,7 +236,54 @@ const averageRating = computed(() => {
         </v-col>
       </v-row>
 
-      <!-- Enhanced Dialog -->
+      <!-- Delete Confirmation Dialog -->
+      <v-dialog
+        v-model="deleteDialog"
+        max-width="500"
+      >
+        <v-card class="rounded-xl">
+          <v-card-title class="d-flex align-center py-4 px-6 bg-red-lighten-5">
+            <v-icon color="red-darken-1" size="large" class="mr-3">mdi-alert-circle</v-icon>
+            <span class="text-h6 font-weight-bold">Confirm Delete</span>
+          </v-card-title>
+          
+          <v-card-text class="pa-6">
+            <p class="text-body-1 mb-4">Are you sure you want to delete this boarding house post?</p>
+            <v-card class="rounded-lg pa-4" elevation="0" color="grey-lighten-4" v-if="postToDelete">
+              <h4 class="text-subtitle-1 font-weight-bold mb-2">{{ postToDelete.name }}</h4>
+              <p class="text-body-2 text-grey-darken-1 mb-1">Owner: {{ postToDelete.owner_name }}</p>
+              <p class="text-body-2 text-grey-darken-1 mb-0">Location: {{ postToDelete.address }}</p>
+            </v-card>
+            <v-alert type="warning" variant="tonal" class="mt-4">
+              This action cannot be undone. The post will be permanently removed from the system.
+            </v-alert>
+          </v-card-text>
+
+          <v-card-actions class="px-6 pb-4">
+            <v-spacer></v-spacer>
+            <v-btn
+              variant="text"
+              @click="cancelDelete"
+              :disabled="isDeleting"
+              class="text-none"
+            >
+              Cancel
+            </v-btn>
+            <v-btn
+              color="red-darken-1"
+              variant="flat"
+              @click="handleDelete"
+              :loading="isDeleting"
+              class="text-none px-6"
+            >
+              <v-icon start>mdi-delete</v-icon>
+              Delete Post
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
+      <!-- Enhanced Details Dialog -->
       <v-dialog
         v-model="postDialog.PostContent"
         max-width="800"
@@ -206,6 +301,15 @@ const averageRating = computed(() => {
                 <p class="text-caption text-grey-darken-1 mb-0">Property Details</p>
               </div>
             </div>
+            <v-btn
+              icon="mdi-delete"
+              variant="text"
+              color="red-darken-1"
+              size="small"
+              class="mr-2"
+              @click="confirmDelete({ id: postDialog.boardingHouseId, name: postDialog.name, owner_name: postDialog.owner_name, address: postDialog.address })"
+            >
+            </v-btn>
             <v-btn
               icon
               variant="text"
