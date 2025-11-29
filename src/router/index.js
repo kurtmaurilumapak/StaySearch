@@ -62,6 +62,12 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: '/messages',
+      name: 'Messages',
+      component: () => import('@/views/MessagesPage.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
       path: '/student/page',
       name: 'student',
       component: () => import('@/views/system/student/StudentInterface.vue'),
@@ -96,43 +102,53 @@ const router = createRouter({
 
 
 router.beforeEach(async (to, from, next) => {
-  const { data: { session } } = await supabase.auth.getSession();
-  const userRole = session?.user?.user_metadata?.role;
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    const userRole = session?.user?.user_metadata?.role;
+    const isAuthenticated = !!session;
 
-  const isAuthenticated = !!session;
-  if (isAuthenticated && to.name === 'select') {
-    if (userRole === 'owner') {
-      return next({ name: 'dashboard' });
-    } else if (userRole === 'student') {
-      return next({ name: 'student' });
+    // Allow navigation to these public routes without redirect
+    if (to.name === 'landing' && !isAuthenticated) {
+      return next();
     }
+
+    if (isAuthenticated && to.name === 'select') {
+      if (userRole === 'owner') {
+        return next({ name: 'dashboard' });
+      } else if (userRole === 'student') {
+        return next({ name: 'student' });
+      }
+      return next();
+    }
+
+    if (isAuthenticated && (to.name === 'login' || to.name === 'signup' || to.name === 'landing' || to.name === 'adminLogin')) {
+      if (userRole === 'owner') {
+        return next({ name: 'dashboard' });
+      } else if (userRole === 'student') {
+        return next({ name: 'student' });
+      } else if (userRole === 'admin') {
+        return next({ name: 'adminDashboard' });
+      } else {
+        return next({ name: 'select' });
+      }
+    }
+
+    if (to.meta.requiresAuth) {
+      if (!isAuthenticated) {
+        return next({ name: 'login' });
+      }
+
+      if (to.meta.role && userRole !== to.meta.role) {
+        console.log('Access denied: user role does not match');
+        return next({ name: 'unauthorized' });
+      }
+    }
+
+    next();
+  } catch (error) {
+    console.error('Router guard error:', error);
+    next();
   }
-
-  if (isAuthenticated && (to.name === 'login' || to.name === 'signup' || to.name === 'landing' || to.name === 'adminLogin')) {
-    if (userRole === 'owner') {
-      return next({ name: 'dashboard' });
-    } else if (userRole === 'student') {
-      return next({ name: 'student' });
-    } else if (userRole === 'admin') {
-      return next({ name: 'adminDashboard' });
-    }
-    else {
-      return next({ name: 'select' });
-    }
-  }
-
-  if (to.meta.requiresAuth) {
-    if (!isAuthenticated ) {
-      return next({ name: 'login' });
-    }
-
-    if (to.meta.role && userRole !== to.meta.role) {
-      console.log('Access denied: user role does not match');
-      return next({ name: 'unauthorized' });
-    }
-  }
-
-  next();
 });
 
 export default router

@@ -7,12 +7,14 @@ import reservationsIcon from '@/assets/navbar/reservation.png';
 import { useAuthStore } from '@/stores/authStore'
 import { useTheme } from 'vuetify'
 import { useUserStore } from '@/stores/userStore.js'
+import { useMessageStore } from '@/stores/messageStore'
 
 const router = useRouter()
 const route = useRoute()
 const theme = useTheme()
 const useAuth = useAuthStore()
 const userStore = useUserStore()
+const messageStore = useMessageStore()
 
 const nav = ref({
   navItems: [
@@ -37,6 +39,13 @@ const nav = ref({
       mdiIcon: 'mdi-calendar-check',
       description: 'Booking Management'
     },
+    { 
+      title: 'Messages', 
+      path: '/messages', 
+      icon: null,
+      mdiIcon: 'mdi-message-text',
+      description: 'Chat with Students'
+    },
   ],
   profile: {
     menu: false
@@ -56,6 +65,9 @@ const logout = async () => {
 
 onMounted(async () => {
   await userStore.fetchUserData()
+  if (userStore.userData?.id) {
+    await messageStore.fetchUnreadCount(userStore.userData.id)
+  }
 })
 
 const currentTime = computed(() => {
@@ -203,12 +215,20 @@ const currentTime = computed(() => {
         >
           <div class="nav-item-content">
             <div class="nav-icon-wrapper">
-              <img :src="item.icon" alt="icon" class="nav-custom-icon" />
+              <img v-if="item.icon" :src="item.icon" alt="icon" class="nav-custom-icon" />
+              <v-icon v-else size="24" class="nav-mdi-icon">{{ item.mdiIcon }}</v-icon>
             </div>
             <div class="nav-text">
               <span class="nav-title">{{ item.title }}</span>
               <span class="nav-description">{{ item.description }}</span>
             </div>
+            <v-badge
+              v-if="item.title === 'Messages' && messageStore.unreadCount > 0"
+              :content="messageStore.unreadCount"
+              color="red"
+              inline
+              class="nav-badge"
+            />
           </div>
           <div class="nav-item-indicator"></div>
         </RouterLink>
@@ -559,6 +579,20 @@ const currentTime = computed(() => {
 .nav-item:hover .nav-custom-icon,
 .nav-item-active .nav-custom-icon {
   filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);
+}
+
+.nav-mdi-icon {
+  color: #757575;
+  transition: color 0.3s ease;
+}
+
+.nav-item:hover .nav-mdi-icon,
+.nav-item-active .nav-mdi-icon {
+  color: white;
+}
+
+.nav-badge {
+  margin-left: auto;
 }
 
 .nav-text {

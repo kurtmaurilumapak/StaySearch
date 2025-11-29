@@ -6,6 +6,7 @@ import { usePostStore } from '@/stores/postStore'
 import { useAuthStore } from '@/stores/authStore'
 import { useTheme } from 'vuetify'
 import { useUserStore } from '@/stores/userStore'
+import { useMessageStore } from '@/stores/messageStore'
 import { LMap, LTileLayer, LMarker } from "@vue-leaflet/vue-leaflet";
 import "leaflet/dist/leaflet.css"
 import { formatDistanceToNow } from 'date-fns'
@@ -17,6 +18,7 @@ const theme = useTheme()
 const useAuth = useAuthStore()
 const postStore = usePostStore()
 const userStore = useUserStore()
+const messageStore = useMessageStore()
 
 const reservationsDialogOpen = ref(false)
 const openReservationsDialog = () => {
@@ -57,7 +59,17 @@ const postDialog = ref({
   images: [],
   carouselOpen: false,
   carouselIndex: 0,
-
+  address: '',
+  latitude: 0,
+  longitude: 0,
+  price: 0,
+  name: '',
+  description: '',
+  owner_name: '',
+  owner_id: null,
+  reviews: [],
+  avgRating: 0,
+  boardingHouseId: null
 })
 const extraImagesCount = computed(() => postDialog.value.images.length - 3)
 const openCarousel = (index) => {
@@ -66,26 +78,48 @@ const openCarousel = (index) => {
 }
 
 const openDialog = (post) => {
-  postDialog.value.PostContent = true
-  postDialog.value.tags = post.tags || []
-  postDialog.value.images = post.images || []
-  postDialog.value.address = post.address
-  postDialog.value.latitude = post.latitude
-  postDialog.value.longitude = post.longitude
-  postDialog.value.price = post.price
-  postDialog.value.name = post.name
-  postDialog.value.description = post.description
-  postDialog.value.owner_name = post.owner_name
-  postDialog.value.reviews = post.reviews || []
-  postDialog.value.avgRating = post.average_rating,
-  postDialog.value.boardingHouseId = post.id
-
-  postDialog.value.reviews?.forEach(review => {
-    if (review.created_at) {
-      review.timeAgo = formatDistanceToNow(new Date(review.created_at), { addSuffix: true });
+  try {
+    console.log('Opening dialog for post:', post)
+    
+    if (!post) {
+      console.error('Post is undefined')
+      return
     }
-  });
+    
+    postDialog.value.tags = post.tags || []
+    postDialog.value.images = post.images || []
+    postDialog.value.address = post.address || ''
+    postDialog.value.latitude = post.latitude || 0
+    postDialog.value.longitude = post.longitude || 0
+    postDialog.value.price = post.price || 0
+    postDialog.value.name = post.name || ''
+    postDialog.value.description = post.description || ''
+    postDialog.value.owner_name = post.owner_name || 'Unknown'
+    postDialog.value.owner_id = post.owner_id || post.user_id || null
+    postDialog.value.reviews = post.reviews || []
+    postDialog.value.avgRating = post.average_rating || 0
+    postDialog.value.boardingHouseId = post.id || null
 
+    console.log('Dialog data set:', {
+      name: postDialog.value.name,
+      owner_id: postDialog.value.owner_id,
+      boardingHouseId: postDialog.value.boardingHouseId
+    })
+
+    if (postDialog.value.reviews && Array.isArray(postDialog.value.reviews)) {
+      postDialog.value.reviews.forEach(review => {
+        if (review.created_at) {
+          review.timeAgo = formatDistanceToNow(new Date(review.created_at), { addSuffix: true });
+        }
+      });
+    }
+    
+    // Open dialog last to ensure all data is set
+    postDialog.value.PostContent = true
+    
+  } catch (error) {
+    console.error('Error opening dialog:', error)
+  }
 };
 
 const fetchPosts = async () => {
@@ -105,6 +139,11 @@ const fetchPosts = async () => {
 
     });
     await userStore.fetchUserData()
+    
+    // Fetch unread count after userData is loaded
+    if (userStore.userData?.id) {
+      await messageStore.fetchUnreadCount(userStore.userData.id)
+    }
   } catch (error) {
     console.error('Error fetching posts:', error)
   }
@@ -148,6 +187,60 @@ const logout = async () => {
   theme.global.name.value = 'light'
   await router.push('/login')
 }
+
+const contactOwner = async (boardingHouseId, ownerId) => {
+  try {
+    console.log('Contact owner clicked:', { 
+      boardingHouseId, 
+      ownerId, 
+      userId: userStore.userData?.id,
+      ownerName: postDialog.value.owner_name,
+      propertyName: postDialog.value.name
+    })
+    
+    if (!userStore.userData?.id) {
+      console.error('User data not loaded yet')
+      await userStore.fetchUserData()
+    }
+    
+    if (!ownerId) {
+      console.error('Owner ID is missing')
+      alert('Unable to contact owner. Owner information is missing.')
+      return
+    }
+    
+    // Close the property dialog
+    postDialog.value.PostContent = false
+    
+    // Create or get conversation
+    const conversation = await messageStore.createConversation(
+      userStore.userData.id, // student_id
+      ownerId, // owner_id (from post.owner_id)
+      boardingHouseId
+    )
+
+    console.log('Conversation created/retrieved:', conversation)
+
+    if (conversation) {
+      // Navigate to messages page with conversation details
+      await router.push({
+        path: '/messages',
+        query: { 
+          conversationId: conversation.id,
+          ownerId: ownerId,
+          ownerName: postDialog.value.owner_name,
+          propertyName: postDialog.value.name
+        }
+      })
+    } else {
+      console.error('Failed to create conversation')
+      alert('Unable to start conversation. Please check your database connection.')
+    }
+  } catch (error) {
+    console.error('Error starting conversation:', error)
+    alert('An error occurred: ' + error.message)
+  }
+}
 </script>
 
 
@@ -184,6 +277,24 @@ const logout = async () => {
           </v-col>
 
           <v-col cols="6" class="d-flex align-center justify-end pr-10">
+            <!-- Messages Button -->
+            <v-btn
+              icon
+              class="mr-3"
+              size="large"
+              @click="$router.push('/messages')"
+            >
+              <v-badge
+                v-if="messageStore.unreadCount > 0"
+                :content="messageStore.unreadCount"
+                color="red"
+                overlap
+              >
+                <v-icon>mdi-message-text</v-icon>
+              </v-badge>
+              <v-icon v-else>mdi-message-text-outline</v-icon>
+            </v-btn>
+
             <v-menu location="bottom" offset="10">
               <template v-slot:activator="{ props }">
                 <v-btn
@@ -520,21 +631,34 @@ const logout = async () => {
 
               <!-- Property Info -->
               <v-col cols="12">
-                <div class="d-flex justify-space-between align-center mb-6">
+                <div class="d-flex justify-space-between align-center mb-6 flex-wrap ga-3">
                   <div class="price-section-large">
                     <span class="price-amount-large">₱{{ postDialog.price }}</span>
                     <span class="price-period-large">/month</span>
                   </div>
-                  <v-btn
-                    size="large"
-                    color="green-darken-2"
-                    rounded="lg"
-                    elevation="0"
-                    prepend-icon="mdi-calendar-check"
-                    @click="openAddReservationDialog"
-                  >
-                    <span class="font-weight-bold">Make Reservation</span>
-                  </v-btn>
+                  <div class="d-flex ga-2 flex-wrap">
+                    <v-btn
+                      size="large"
+                      color="blue-darken-2"
+                      rounded="lg"
+                      elevation="0"
+                      variant="outlined"
+                      prepend-icon="mdi-message-text"
+                      @click="contactOwner(postDialog.boardingHouseId, postDialog.owner_id)"
+                    >
+                      <span class="font-weight-bold">Contact Owner</span>
+                    </v-btn>
+                    <v-btn
+                      size="large"
+                      color="green-darken-2"
+                      rounded="lg"
+                      elevation="0"
+                      prepend-icon="mdi-calendar-check"
+                      @click="openAddReservationDialog"
+                    >
+                      <span class="font-weight-bold">Make Reservation</span>
+                    </v-btn>
+                  </div>
                 </div>
               </v-col>
 

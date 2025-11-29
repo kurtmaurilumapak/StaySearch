@@ -42,11 +42,10 @@ const capitalizeFirstLetter = (field) => {
 }
 
 const onFormSubmit = async () => {
-  authStore.formAction.formErrorMessage = '';
-  authStore.formAction.formSuccessMessage = '';
-
-  await authStore.signUp();
-  if (!authStore.formAction.formErrorMessage) {
+  const { data, error } = await authStore.signUp();
+  
+  if (!error && data) {
+    // Successful signup
     if (authStore.formData.role === 'student') {
       await router.push('/student/page')
     }
