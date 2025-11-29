@@ -80,7 +80,7 @@ export const useAuthStore = defineStore('auth', {
 
       if (error) {
         this.formAction.formErrorMessage = 'Wrong email or password.'
-
+        this.formAction.formProcess = false
       } else {
         console.log('successfully logged in.')
         this.formAction.formProcess = false
