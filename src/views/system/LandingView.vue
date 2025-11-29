@@ -381,33 +381,14 @@ onUnmounted(() => {
           <v-col cols="12" lg="4" data-aos="fade-left">
             <div class="team-card">
               <h3 class="team-title">Our Team</h3>
-              <div class="team-members">
-                <div 
-                  v-for="member in [
-                    { name: 'Kurt Mauri Lumapak', role: 'System Architect', image: '@/assets/kurt.png', facebook: 'https://www.facebook.com/kurtniezas01' },
-                    { name: 'Ainor Jamal', role: 'Full-Stack Developer', image: '@/assets/ainor.png', facebook: 'https://www.facebook.com/ainor.jamal/9' },
-                    { name: 'Harold Florendo', role: 'Frontend Specialist', image: '@/assets/harold.png', facebook: 'https://www.facebook.com/harold.florendo.777' }
-                  ]"
-                  :key="member.name"
-                  class="team-member"
-                >
-                  <v-avatar size="80" class="member-avatar">
-                    <img :src="member.image" :alt="member.name" />
-                  </v-avatar>
-                  <div class="member-info">
-                    <h4 class="member-name">{{ member.name }}</h4>
-                    <p class="member-role">{{ member.role }}</p>
-                    <v-btn
-                      :href="member.facebook"
-                      color="primary"
-                      icon="mdi-facebook"
-                      variant="text"
-                      target="_blank"
-                      class="member-social"
-                      size="small"
-                    />
-                  </div>
-                </div>
+              <div class="team-members-list">
+                <p class="team-member-name">Ainor Jamal</p>
+                <p class="team-member-name">Reymart Eva</p>
+                <p class="team-member-name">Kurt Lumapak</p>
+                <p class="team-member-name">Brian Inguito</p>
+                <p class="team-member-name">May Estroga</p>
+                <p class="team-member-name">Jusalyn Gimao</p>
+                <p class="team-member-name">Ushyne Esclamado</p>
               </div>
             </div>
           </v-col>
@@ -723,45 +704,28 @@ onUnmounted(() => {
   text-align: center;
 }
 
-.team-member {
+.team-members-list {
   display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem;
-  border-radius: 15px;
-  transition: all 0.3s ease;
-  margin-bottom: 1rem;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
-.team-member:hover {
-  background: rgba(76, 175, 80, 0.05);
-  transform: translateX(5px);
-}
-
-.member-avatar {
-  border: 3px solid #4CAF50;
-  box-shadow: 0 4px 20px rgba(76, 175, 80, 0.3);
-}
-
-.member-info {
-  flex: 1;
-}
-
-.member-name {
-  font-size: 1.1rem;
-  font-weight: 600;
+.team-member-name {
+  font-size: 1.05rem;
+  font-weight: 500;
   color: #1a1a1a;
-  margin: 0 0 0.25rem 0;
+  margin: 0;
+  padding: 0.75rem 1rem;
+  background: rgba(76, 175, 80, 0.05);
+  border-radius: 10px;
+  border-left: 3px solid #4CAF50;
+  transition: all 0.3s ease;
 }
 
-.member-role {
-  color: #666;
-  margin: 0 0 0.5rem 0;
-  font-size: 0.9rem;
-}
-
-.member-social {
-  color: #4CAF50;
+.team-member-name:hover {
+  background: rgba(76, 175, 80, 0.1);
+  transform: translateX(5px);
+  border-left-width: 4px;
 }
 
 /* Modern Footer */
