@@ -15,8 +15,8 @@ const onLogin = async () => {
   authStore.formAction.formSuccessMessage = ''
 
   const { data, error } = await authStore.signIn()
-  window.location.reload();
-  if (!error) {
+  
+  if (!error && data) {
     const role = data.user.user_metadata.role
 
     if (role === 'student') {
@@ -26,9 +26,8 @@ const onLogin = async () => {
     }
     authStore.resetForm();
   } else {
-    authStore.formAction.formErrorMessage = error.message
+    authStore.formAction.formErrorMessage = error?.message || 'Login failed'
   }
-  authStore.formAction.formProcess = false
 }
 </script>
 

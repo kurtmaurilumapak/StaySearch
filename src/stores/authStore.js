@@ -19,6 +19,8 @@ export const useAuthStore = defineStore('auth', {
     // SIGNUP
     async signUp() {
       this.formAction.formProcess = true;
+      this.formAction.formErrorMessage = '';
+      this.formAction.formSuccessMessage = '';
       await new Promise((resolve) => setTimeout(resolve, 1000))
 
       const fullName = `${this.formData.firstname} ${this.formData.lastname}`
@@ -37,6 +39,8 @@ export const useAuthStore = defineStore('auth', {
 
       if (error) {
         this.formAction.formErrorMessage = error.message;
+        this.formAction.formProcess = false;
+        return { data: null, error };
       } else if (data) {
         // After successful signup, insert name into public_users table
         const { user } = data;
@@ -51,13 +55,18 @@ export const useAuthStore = defineStore('auth', {
 
         if (insertError) {
           this.formAction.formErrorMessage = insertError.message;
+          this.formAction.formProcess = false;
+          return { data: null, error: insertError };
         } else {
           console.log('Successfully created an account and saved user details.');
           this.formAction.formSuccessMessage = 'Successfully created an account and saved your information.';
+          this.formAction.formProcess = false;
+          return { data, error: null };
         }
-        this.formAction.formProcess = false;
       }
 
+      this.formAction.formProcess = false;
+      return { data: null, error: new Error('Unknown error occurred') };
     },
 
     // LOGIN

@@ -1,4 +1,4 @@
-//import './assets/main.css'
+import './assets/main.css'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { mask } from 'vue-the-mask'
@@ -34,3 +34,5 @@ app.use(router)
 app.use(vuetify)
 
 app.mount('#app')
+
+console.log('Vue app mounted successfully!')
